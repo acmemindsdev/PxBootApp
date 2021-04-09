@@ -1,0 +1,20 @@
+{
+  "pxboost": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-pxboost-pxboost-122717-authRole",
+      "UnauthRoleArn": "arn:aws:iam::234041866374:role/amplify-pxboost-pxboost-122717-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::234041866374:role/amplify-pxboost-pxboost-122717-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-pxboost-pxboost-122717-deployment",
+      "UnauthRoleName": "amplify-pxboost-pxboost-122717-unauthRole",
+      "StackName": "amplify-pxboost-pxboost-122717",
+      "StackId": "arn:aws:cloudformation:us-east-1:234041866374:stack/amplify-pxboost-pxboost-122717/8228f0d0-976e-11eb-bb80-122ae4ce5d77",
+      "AmplifyAppId": "d31ov0xpwtoxj2"
+    },
+    "categories": {
+      "auth": {
+        "pxboost9fe9e5d6": {}
+      }
+    }
+  }
+}
