@@ -21,7 +21,7 @@
 
 // Convert all .js extension into .ts and .jsx into .tsx
 
-### AWS Installation
+## AWS Installation
 
 install the Amplify CLI.
 
@@ -34,7 +34,7 @@ Configure Amplify by running the following command:
 amplify configure will ask you to sign into the AWS Console.
 Once you’re signed in, Amplify CLI will ask you to create an IAM user.
 
-# Step 1
+#### Step 1
 
 Specify the AWS Region
 ? region: # Your preferred region
@@ -44,7 +44,7 @@ Complete the user creation using the AWS console
 
 Once the user is created, Amplify CLI will ask you to provide the accessKeyId and the secretAccessKey to connect Amplify CLI with your newly created IAM user.
 
-# Step 2
+##### Step 2
 
 Enter the access key of the newly created user:
 ? accessKeyId: # YOUR_ACCESS_KEY_ID
@@ -54,13 +54,13 @@ This would update/create the AWS Profile in your local machine
 
 Successfully set up the new user.
 
-# Step 3
+#### Step 3
 
 - amplify init
 
 ## Authentication with Amplify
 
-# Create authentication service
+### Create authentication service
 
 - amplify add auth // ("amplify update auth" if already configured)
 
@@ -94,7 +94,7 @@ To deploy the service, run the push command:
 
 - npm install aws-amplify amazon-cognito-identity-js @react-native-community/netinfo
 
-# Pod install for ios
+### Pod install for ios
 
 - cd ios
 - pod install
