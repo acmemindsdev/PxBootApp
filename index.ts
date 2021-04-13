@@ -3,7 +3,7 @@
  */
 
 import {AppRegistry} from 'react-native';
-import App from './src/root/App';
+import App from './src/screens/App';
 // @ts-ignore
 import {name as appName} from './app.json';
 

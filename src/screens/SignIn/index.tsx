@@ -1,5 +1,4 @@
-import React from 'react';
-import {Fragment} from 'react';
+import React, {Fragment} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,10 +10,10 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-
+import ForgotPassword from '../ForgotPassword';
 import Amplify, {Auth, Hub} from 'aws-amplify';
 import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
-import awsconfig from '../../aws-exports';
+import awsconfig from '../../../aws-exports';
 Amplify.configure(awsconfig);
 
 const initialState = {
@@ -256,7 +255,12 @@ export default class SignIn extends React.Component {
                   placeholderTextColor="white"
                   onChangeText={val => this.onChangeText('username', val)}
                 />
-                <Button title="Forgot Password" onPress={this.forgotPassword} />
+                <Button
+                  title="Forgot Password"
+                  // onPress={() => {
+                  //   this.props.navigation.navigate('ForgotPassword');
+                  // }}
+                />
               </Fragment>
             )}
             {this.state.showResetPassword && (
