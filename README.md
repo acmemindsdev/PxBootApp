@@ -13,11 +13,11 @@
 
 // Run Below commands on terminal
 
-- yarn add --dev typescript
-- yarn add --dev react-native-typescript-transformer
-- yarn tsc --init --pretty --jsx react
-- touch rn-cli.config.js
-- yarn add --dev @types/react @types/react-native
+- `yarn add --dev typescript`
+- `yarn add --dev react-native-typescript-transformer`
+- `yarn tsc --init --pretty --jsx react`
+- `touch rn-cli.config.js`
+- `yarn add --dev @types/react @types/react-native`
 
 // Convert all .js extension into .ts and .jsx into .tsx
 
@@ -25,11 +25,11 @@
 
 install the Amplify CLI.
 
-- npm install -g @aws-amplify/cli
+- `npm install -g @aws-amplify/cli`
 
 Configure Amplify by running the following command:
 
-- amplify configure
+- `amplify configure`
 
 amplify configure will ask you to sign into the AWS Console.
 Once you’re signed in, Amplify CLI will ask you to create an IAM user.
@@ -56,13 +56,13 @@ Successfully set up the new user.
 
 #### Step 3
 
-- amplify init
+- `amplify init`
 
 ## Authentication with Amplify
 
 ### Create authentication service
 
-- amplify add auth // ("amplify update auth" if already configured)
+- `amplify add auth` // ("amplify update auth" if already configured)
 
 Do you want to use the default authentication and security configuration?
 
@@ -88,15 +88,15 @@ Enter redirectSignOut Url
 
 To deploy the service, run the push command:
 
-- amplify push
+- `amplify push`
 
 ## Add Amplify to your app:
 
-- npm install aws-amplify amazon-cognito-identity-js @react-native-community/netinfo
+- `npm install aws-amplify amazon-cognito-identity-js @react-native-community/netinfo`
 
 ### Pod install for ios
 
-- cd ios
-- pod install
+- `cd ios`
+- `pod install`
 
 // Add Deep linking for iOS and Android

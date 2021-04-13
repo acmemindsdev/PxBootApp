@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {Fragment} from 'react';
 import {
@@ -20,17 +12,9 @@ import {
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 import Amplify, {Auth, Hub} from 'aws-amplify';
 import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
-import awsconfig from './aws-exports';
+import awsconfig from '../../aws-exports';
 Amplify.configure(awsconfig);
 
 const initialState = {
