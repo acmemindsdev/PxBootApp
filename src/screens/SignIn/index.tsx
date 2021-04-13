@@ -257,9 +257,9 @@ export default class SignIn extends React.Component {
                 />
                 <Button
                   title="Forgot Password"
-                  // onPress={() => {
-                  //   this.props.navigation.navigate('ForgotPassword');
-                  // }}
+                  onPress={() => {
+                    console.log('here');
+                  }}
                 />
               </Fragment>
             )}
