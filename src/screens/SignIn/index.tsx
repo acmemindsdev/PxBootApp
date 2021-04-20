@@ -6,17 +6,27 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  Button,
   useColorScheme,
   View,
+  Button,
 } from 'react-native';
 import ForgotPassword from '../ForgotPassword';
 import Amplify, {Auth, Hub} from 'aws-amplify';
 import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
 import awsconfig from '../../../aws-exports';
+import { StackActions } from "@react-navigation/native";
+
+
+
+//import { Button } from 'react-native-paper';
+import withLogoLayout from 'src/containers/layouts/AuthLayout';
+import SignInLayout from './SignIn';
 Amplify.configure(awsconfig);
 
-const initialState = {
+
+ export default withLogoLayout(SignInLayout)
+
+/* const initialState = {
   username: '',
   password: '',
   code: '',
@@ -29,7 +39,7 @@ const initialState = {
   showLogin: false,
   showResetPassword: false,
 };
-
+const pushAction = StackActions.push('ForgotPassword', { user: 'Wojtek' });
 export default class SignIn extends React.Component {
   state = {
     username: '',
@@ -201,10 +211,10 @@ export default class SignIn extends React.Component {
                   placeholderTextColor="white"
                   onChangeText={val => this.onChangeText('phone_number', val)}
                 />
-                <Button title="Sign Up" onPress={this.signUp} />
+                 <Button title={"Sign Up"} onPress={this.signUp} ></Button>
               </Fragment>
             )}
-            {this.state.showConfirmationForm && (
+            {!this.state.showConfirmationForm && (
               <Fragment>
                 <TextInput
                   style={styles.input}
@@ -258,7 +268,7 @@ export default class SignIn extends React.Component {
                 <Button
                   title="Forgot Password"
                   onPress={() => {
-                    console.log('here');
+                    this.props.navigation.dispatch(pushAction)
                   }}
                 />
               </Fragment>
@@ -341,3 +351,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+*/
