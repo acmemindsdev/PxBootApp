@@ -1,20 +1,22 @@
-import React, {Fragment, useState} from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   Button,
   useColorScheme,
   View,
 } from 'react-native';
-
-import Amplify, {Auth, Hub} from 'aws-amplify';
-import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
+import { TextInput } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Amplify, { Auth, Hub } from 'aws-amplify';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import awsconfig from '../../../aws-exports';
 import MobileNumberInput from 'src/components/MobileNumberInput';
+import { MainView, PasswordInput, PasswordIcon } from './SignIn.styled';
+
 Amplify.configure(awsconfig);
 
 const SignInLayout = () => {
@@ -67,55 +69,64 @@ const SignInLayout = () => {
   };
 
   return (
-      <ScrollView>
-        <MobileNumberInput/>
-        <View style={styles.container}>
-          {!showResetPassword && (
-            <Fragment>
-              <TextInput
-                style={styles.input}
-                placeholder="Username"
-                autoCapitalize="none"
-                autoCorrect={false}
-                placeholderTextColor="white"
-                onChangeText={val => onChangeText('username', val)}
-              />
-              <Button title="Forgot Password" onPress={forgotPassword} />
-            </Fragment>
-          )}
-          {showResetPassword && (
-            <Fragment>
-              <TextInput
-                style={styles.input}
-                placeholder="Verification Code"
-                autoCapitalize="none"
-                autoCorrect={false}
-                placeholderTextColor="white"
-                onChangeText={val => onChangeText('code', val)}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="New Password"
-                autoCapitalize="none"
-                // secureTextEntry={true}
-                placeholderTextColor="white"
-                onChangeText={val => onChangeText('new_password', val)}
-              />
-              <Button title="Submit"onPress={forgotPasswordSubmit} />
-            </Fragment>
-          )}
-          <Button
-            title="Resend Verification Code"
-            onPress={resendVerificationCode}
+    <MainView>
+      <MobileNumberInput />
+      <PasswordInput
+        mode={'outlined'}
+        label="Password"
+        right={
+          <PasswordInput.Icon
+            name={() => <PasswordIcon size={25} name="eye-off-outline" />}
           />
-        </View>
-      </ScrollView>
+        }
+      />
+      <View style={styles.container}>
+        {!showResetPassword && (
+          <Fragment>
+            <TextInput
+              style={styles.input}
+              placeholder="Username"
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholderTextColor="white"
+              onChangeText={val => onChangeText('username', val)}
+            />
+            <Button title="Forgot Password" onPress={forgotPassword} />
+          </Fragment>
+        )}
+        {showResetPassword && (
+          <Fragment>
+            <TextInput
+              style={styles.input}
+              placeholder="Verification Code"
+              autoCapitalize="none"
+              autoCorrect={false}
+              placeholderTextColor="white"
+              onChangeText={val => onChangeText('code', val)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="New Password"
+              autoCapitalize="none"
+              // secureTextEntry={true}
+              placeholderTextColor="white"
+              onChangeText={val => onChangeText('new_password', val)}
+            />
+            <Button title="Submit" onPress={forgotPasswordSubmit} />
+          </Fragment>
+        )}
+        <Button
+          title="Resend Verification Code"
+          onPress={resendVerificationCode}
+        />
+      </View>
+    </MainView>
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-      fontSize: 18,
+    fontSize: 18,
     fontWeight: '500',
     height: 55,
     backgroundColor: '#42A5F5',

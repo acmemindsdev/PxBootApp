@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,20 +11,17 @@ import {
   Button,
 } from 'react-native';
 import ForgotPassword from '../ForgotPassword';
-import Amplify, {Auth, Hub} from 'aws-amplify';
-import {CognitoHostedUIIdentityProvider} from '@aws-amplify/auth';
+import Amplify, { Auth, Hub } from 'aws-amplify';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import awsconfig from '../../../aws-exports';
-import { StackActions } from "@react-navigation/native";
-
-
+import { StackActions } from '@react-navigation/native';
 
 //import { Button } from 'react-native-paper';
 import withLogoLayout from 'src/containers/layouts/AuthLayout';
 import SignInLayout from './SignIn';
 Amplify.configure(awsconfig);
 
-
- export default withLogoLayout(SignInLayout)
+export default withLogoLayout(SignInLayout);
 
 /* const initialState = {
   username: '',

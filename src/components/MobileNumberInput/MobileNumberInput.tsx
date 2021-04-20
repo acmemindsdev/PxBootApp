@@ -1,11 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
-import { TextInput } from 'react-native-paper';
+import { View, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   ContainerView,
   CountryCodeInput,
   NumberInput,
+  CountryCodeText,
 } from './MobileNumberInput.styled';
+import { Text } from 'react-native-paper';
 
 const MobileNumberInput = () => {
   return (
@@ -13,18 +15,15 @@ const MobileNumberInput = () => {
       <TouchableOpacity onPress={() => console.log('yusuf')}>
         <CountryCodeInput
           mode={'outlined'}
-          label={'+91'}
-          render={() => <View />}
+          render={() => <CountryCodeText>+1</CountryCodeText>}
           right={
             <CountryCodeInput.Icon
-              name={() => (
-                <Image source={require('src/assets/images/logo.png')} />
-              )}
+              name={() => <Icon size={25} name="angle-down" />}
             />
           }
         />
       </TouchableOpacity>
-      <NumberInput mode={'outlined'} label="Phone number" />
+      <NumberInput mode={'outlined'} label="Mobile Number" />
     </ContainerView>
   );
 };
