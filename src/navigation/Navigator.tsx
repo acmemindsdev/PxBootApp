@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 // Screens
 import SignIn from 'src/screens/SignIn';
 import ForgotPassword from 'src/screens/ForgotPassword';
+import CountryList from 'src/screens/CountryList';
 
 const RootStack = createStackNavigator();
 
@@ -18,6 +19,7 @@ const Navigation = () => {
           options={{ headerShown: false }}
         />
         <RootStack.Screen name="ForgotPassword" component={ForgotPassword} />
+        <RootStack.Screen name="Select a Country" component={CountryList} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

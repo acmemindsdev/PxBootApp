@@ -16,10 +16,11 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import awsconfig from '../../../aws-exports';
 import MobileNumberInput from 'src/components/MobileNumberInput';
 import { MainView, PasswordInput, PasswordIcon } from './SignIn.styled';
+import { StackActions } from '@react-navigation/native';
 
 Amplify.configure(awsconfig);
 
-const SignInLayout = () => {
+const SignInLayout = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [new_password, setNew_password] = useState('');
@@ -67,10 +68,10 @@ const SignInLayout = () => {
       console.log('error Resend Code: ', err);
     }
   };
-
+  const pushAction = StackActions.push('Select a Country');
   return (
     <MainView>
-      <MobileNumberInput />
+      <MobileNumberInput navigation={navigation} />
       <PasswordInput
         mode={'outlined'}
         label="Password"
@@ -79,6 +80,10 @@ const SignInLayout = () => {
             name={() => <PasswordIcon size={25} name="eye-off-outline" />}
           />
         }
+      />
+      <Button
+        title="Forgot Password"
+        onPress={() => navigation.dispatch(pushAction)}
       />
       <View style={styles.container}>
         {!showResetPassword && (

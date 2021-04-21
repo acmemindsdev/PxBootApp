@@ -57,7 +57,7 @@ export default class SignIn extends React.Component {
   constructor(props: any) {
     super(props);
     Hub.listen('auth', data => {
-      const {payload} = data;
+      const { payload } = data;
       if (payload && payload.data) {
         this.onAuthEvent(payload);
         console.log(
@@ -65,62 +65,62 @@ export default class SignIn extends React.Component {
           payload.data.username + ' has ' + JSON.stringify(payload.data),
         );
       } else {
-        this.setState({faceBookLogin: false});
+        this.setState({ faceBookLogin: false });
       }
     });
   }
 
   onAuthEvent(payload: any) {
     if (payload && payload.value) {
-      this.setState({faceBookLogin: true});
+      this.setState({ faceBookLogin: true });
     } else {
-      this.setState({faceBookLogin: false});
+      this.setState({ faceBookLogin: false });
     }
   }
 
   // state = initialState;
   onChangeText = (key: string, value: string) => {
-    this.setState({[key]: value});
+    this.setState({ [key]: value });
   };
   signIn = async () => {
-    const {username, password} = this.state;
+    const { username, password } = this.state;
     try {
       const user = await Auth.signIn(username, password);
       console.log('user successfully signed in!', user);
-      this.setState({user, showLogin: true});
+      this.setState({ user, showLogin: true });
     } catch (err) {
       console.log('error:', err);
     }
   };
 
   signUp = async () => {
-    const {username, password, email, phone_number} = this.state;
+    const { username, password, email, phone_number } = this.state;
     try {
       const success = await Auth.signUp({
         username,
         password,
-        attributes: {email, phone_number},
+        attributes: { email, phone_number },
       });
       console.log('user successfully signed up!: ', success);
-      this.setState({showConfirmationForm: true});
+      this.setState({ showConfirmationForm: true });
     } catch (err) {
       console.log('error signing up: ', err);
     }
   };
   confirmSignUp = async () => {
-    const {username, authenticationCode} = this.state;
+    const { username, authenticationCode } = this.state;
     try {
       await Auth.confirmSignUp(username, authenticationCode);
       console.log('successully signed up!');
       alert('User signed up successfully!');
-      this.setState({...initialState});
+      this.setState({ ...initialState });
     } catch (err) {
       console.log('error confirming signing up: ', err);
     }
   };
 
   confirmSignIn = async () => {
-    const {user, authenticationCode} = this.state;
+    const { user, authenticationCode } = this.state;
     try {
       await Auth.confirmSignIn(user, authenticationCode);
       console.log('user successfully signed in!', user);
@@ -133,37 +133,37 @@ export default class SignIn extends React.Component {
     try {
       await Auth.signOut();
       console.log('user successfully signed out!');
-      this.setState({showLogin: false});
+      this.setState({ showLogin: false });
     } catch (error) {
       console.log('error signing out: ', error);
     }
   };
 
   forgotPassword = async () => {
-    const {username} = this.state;
+    const { username } = this.state;
     try {
       await Auth.forgotPassword(username);
       console.log('Forgot Password Requested Sent');
-      this.setState({showResetPassword: true});
+      this.setState({ showResetPassword: true });
     } catch (err) {
       console.log('error Forgot Password Requested: ', err);
     }
   };
 
   forgotPasswordSubmit = async () => {
-    const {username, new_password, code} = this.state;
+    const { username, new_password, code } = this.state;
     try {
       await Auth.forgotPasswordSubmit(username, code, new_password);
       console.log('Password Changed Successfully');
       alert('Password Changed Successfully');
-      this.setState({showResetPassword: false});
+      this.setState({ showResetPassword: false });
     } catch (err) {
       console.log('error Forgot Password Submit: ', err);
     }
   };
 
   resendVerificationCode = async () => {
-    const {username} = this.state;
+    const { username } = this.state;
     try {
       await Auth.resendSignUp(username);
       console.log('Resend Code Successfully');
@@ -208,7 +208,7 @@ export default class SignIn extends React.Component {
                   placeholderTextColor="white"
                   onChangeText={val => this.onChangeText('phone_number', val)}
                 />
-                 <Button title={"Sign Up"} onPress={this.signUp} ></Button>
+                <Button title={'Sign Up'} onPress={this.signUp}></Button>
               </Fragment>
             )}
             {!this.state.showConfirmationForm && (
@@ -265,7 +265,7 @@ export default class SignIn extends React.Component {
                 <Button
                   title="Forgot Password"
                   onPress={() => {
-                    this.props.navigation.dispatch(pushAction)
+                    this.props.navigation.dispatch(pushAction);
                   }}
                 />
               </Fragment>

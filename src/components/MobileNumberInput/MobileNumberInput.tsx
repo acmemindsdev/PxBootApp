@@ -6,21 +6,24 @@ import {
   CountryCodeInput,
   NumberInput,
   CountryCodeText,
+  CountryCodeView,
 } from './MobileNumberInput.styled';
 import { Text } from 'react-native-paper';
+import { StackActions } from '@react-navigation/native';
 
-const MobileNumberInput = () => {
+const MobileNumberInput = ({ navigation }) => {
+  const pushAction = StackActions.push('Select a Country');
   return (
     <ContainerView>
-      <TouchableOpacity onPress={() => console.log('yusuf')}>
+      <TouchableOpacity onPress={() => navigation.dispatch(pushAction)}>
         <CountryCodeInput
           mode={'outlined'}
-          render={() => <CountryCodeText>+1</CountryCodeText>}
-          right={
-            <CountryCodeInput.Icon
-              name={() => <Icon size={25} name="angle-down" />}
-            />
-          }
+          render={() => (
+            <CountryCodeView>
+              <CountryCodeText>+1</CountryCodeText>
+              <Icon size={25} name="angle-down" />
+            </CountryCodeView>
+          )}
         />
       </TouchableOpacity>
       <NumberInput mode={'outlined'} label="Mobile Number" />
