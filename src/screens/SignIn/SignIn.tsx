@@ -14,9 +14,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import awsconfig from '../../../aws-exports';
-import MobileNumberInput from 'src/components/MobileNumberInput';
+import { MobileNumberInput, SocialLogin } from 'src/components';
 import { MainView, PasswordInput, PasswordIcon } from './SignIn.styled';
 import { StackActions } from '@react-navigation/native';
+import { ContainedButton, TextButton } from 'src/components/Button';
 
 Amplify.configure(awsconfig);
 
@@ -81,50 +82,16 @@ const SignInLayout = ({ navigation }) => {
           />
         }
       />
-      <Button
-        title="Forgot Password"
-        onPress={() => navigation.dispatch(pushAction)}
-      />
-      <View style={styles.container}>
-        {!showResetPassword && (
-          <Fragment>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholderTextColor="white"
-              onChangeText={val => onChangeText('username', val)}
-            />
-            <Button title="Forgot Password" onPress={forgotPassword} />
-          </Fragment>
-        )}
-        {showResetPassword && (
-          <Fragment>
-            <TextInput
-              style={styles.input}
-              placeholder="Verification Code"
-              autoCapitalize="none"
-              autoCorrect={false}
-              placeholderTextColor="white"
-              onChangeText={val => onChangeText('code', val)}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              autoCapitalize="none"
-              // secureTextEntry={true}
-              placeholderTextColor="white"
-              onChangeText={val => onChangeText('new_password', val)}
-            />
-            <Button title="Submit" onPress={forgotPasswordSubmit} />
-          </Fragment>
-        )}
-        <Button
-          title="Resend Verification Code"
-          onPress={resendVerificationCode}
-        />
-      </View>
+      <TextButton align="right" onPress={() => console.log('fdfd')}>
+        {'Forgot Password?'}
+      </TextButton>
+      <ContainedButton
+        fullWidth
+        align="right"
+        onPress={() => console.log('fdfd')}>
+        {'Log In'}
+      </ContainedButton>
+      <SocialLogin navigation={navigation} />
     </MainView>
   );
 };

@@ -1,4 +1,5 @@
 import { colors } from './colors';
+import sizes from './sizes';
 import { configureFonts, DefaultTheme } from 'react-native-paper';
 const fontConfig = {
   ios: {
@@ -7,33 +8,33 @@ const fontConfig = {
       fontWeight: 'normal',
     },
     medium: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
     light: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
     thin: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
   },
   android: {
     regular: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
     medium: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
     light: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
     thin: {
-      fontFamily: 'Lato-BoldItalic',
+      fontFamily: 'Lato-Regular',
       fontWeight: 'normal',
     },
   },
@@ -53,4 +54,5 @@ const AppTheme = {
 export default {
   colors,
   AppTheme,
+  sizes,
 };

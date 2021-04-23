@@ -23,7 +23,7 @@ Amplify.configure(awsconfig);
 
 export default withLogoLayout(SignInLayout);
 
-/* const initialState = {
+/*const initialState = {
   username: '',
   password: '',
   code: '',
@@ -110,8 +110,8 @@ export default class SignIn extends React.Component {
   confirmSignUp = async () => {
     const { username, authenticationCode } = this.state;
     try {
-      await Auth.confirmSignUp(username, authenticationCode);
-      console.log('successully signed up!');
+      const user = await Auth.confirmSignUp(username, authenticationCode);
+      console.log('successully signed up!', user);
       alert('User signed up successfully!');
       this.setState({ ...initialState });
     } catch (err) {
@@ -211,7 +211,7 @@ export default class SignIn extends React.Component {
                 <Button title={'Sign Up'} onPress={this.signUp}></Button>
               </Fragment>
             )}
-            {!this.state.showConfirmationForm && (
+            {this.state.showConfirmationForm && (
               <Fragment>
                 <TextInput
                   style={styles.input}
