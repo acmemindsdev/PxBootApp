@@ -1,9 +1,15 @@
 import React from 'react';
 import { CountrySelection } from 'react-native-country-list';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
+import { connect } from 'react-redux';
+import { setSelectedCountry } from 'src/state/auth/authActions';
+import { getDialCode } from 'src/state/auth/authReducer';
 
-const CountryList = () => {
-  const onCountrySelection = (item: any) => {};
+const CountryList = ({ navigation, setSelectedCountry, dialCode }) => {
+  const onCountrySelection = (item: any) => {
+    setSelectedCountry(item);
+    navigation?.goBack();
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -15,4 +21,11 @@ const CountryList = () => {
   );
 };
 
-export default CountryList;
+export default connect(
+  state => ({
+    dialCode: getDialCode(state),
+  }),
+  {
+    setSelectedCountry,
+  },
+)(CountryList);

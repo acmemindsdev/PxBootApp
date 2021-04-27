@@ -2,6 +2,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'src/theme';
 import styled from 'styled-components/native';
 import { TextInput } from 'src/components';
+import { TextInput as RNPTextInput } from 'react-native-paper';
 
 export const MainView = styled.View``;
 
@@ -12,7 +13,7 @@ export const PasswordIcon = styled(Icon)`
 
 export const PasswordInput = styled(TextInput)`
   margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 `;
 export const BottomView = styled.View`
   flex-direction: row;

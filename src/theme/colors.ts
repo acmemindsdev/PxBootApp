@@ -6,8 +6,8 @@ const gray = {
   50: '#80868B',
   40: '#DADCE0',
   30: '#E6E6E6',
-  20: '#E6E6E6',
-  10: '#F7F7F7',
+  20: '#F7F7F7',
+  10: '#F9F9F9',
 };
 
 const green = {
@@ -85,6 +85,7 @@ const blue = {
 export const colors = {
   primary: '#5382F6',
   secondary: '#034C81',
+  errorRed: '#CC1414',
   black90: gray[90],
   white: '#ffffff',
   black: '#000000',

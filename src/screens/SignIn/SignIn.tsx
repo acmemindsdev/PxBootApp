@@ -26,89 +26,59 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
+import { connect } from 'react-redux';
+import { setSelectedCountry } from 'src/state/auth/authActions';
+import { getDialCode } from 'src/state/auth/authReducer';
 
 Amplify.configure(awsconfig);
 
 const SignInLayout = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [showResetPassword, setShowResetPassword] = useState(false);
-  const [new_password, setNew_password] = useState('');
-  const [code, setCode] = useState('');
+  const [number, setNumber] = useState('');
+  const [dialCode, setDialCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(true);
+  const [fetchError, setFetchError] = useState('');
 
-  // state = initialState;
-  const onChangeText = (key: string, value: string) => {
-    if (key === 'username') {
-      setUsername(value);
-    }
-    if (key === 'new_password') {
-      setNew_password(value);
-    }
-    if (key === 'code') {
-      setCode(value);
-    }
-  };
-
-  const forgotPassword = async () => {
-    try {
-      await Auth.forgotPassword(username);
-      console.log('Forgot Password Requested Sent');
-      setShowResetPassword(true);
-    } catch (err) {
-      console.log('error Forgot Password Requested: ', err);
-    }
-  };
-
-  const forgotPasswordSubmit = async () => {
-    try {
-      await Auth.forgotPasswordSubmit(username, code, new_password);
-      console.log('Password Changed Successfully');
-      alert('Password Changed Successfully');
-      setShowResetPassword(false);
-    } catch (err) {
-      console.log('error Forgot Password Submit: ', err);
-    }
-  };
-
-  const resendVerificationCode = async () => {
-    try {
-      await Auth.resendSignUp(username);
-      console.log('Resend Code Successfully');
-    } catch (err) {
-      console.log('error Resend Code: ', err);
-    }
-  };
-  const pushAction = StackActions.push('Select a Country');
   return (
-    <MainView>
+    <>
       <StatusBar barStyle="dark-content" />
-      <MobileNumberInput navigation={navigation} />
-      <PasswordInput
-        mode={'outlined'}
-        label="Password"
-        right={
-          <PasswordInput.Icon
-            name={() => <PasswordIcon size={25} name="eye-off-outline" />}
-          />
-        }
-      />
-      <TextButton
-        align="right"
-        onPress={() => navigation?.push('Forgot Password', {})}>
-        {'Forgot Password?'}
-      </TextButton>
-      <ContainedButton fullWidth onPress={() => console.log('fdfd')}>
-        {'Log In'}
-      </ContainedButton>
-      <SocialLogin navigation={navigation} />
-      <BottomView>
-        <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
-          <Text1>{'New to PX Boost? '}</Text1>
-          <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
-            {'Register'}
-          </Text1>
+      <MainView>
+        <MobileNumberInput
+          navigation={navigation}
+          onChangeDialCode={code => setDialCode(code)}
+          onChangeMobileNumber={number => setNumber(number)}
+          error={false}
+        />
+        <PasswordInput
+          label="Password"
+          secureTextEntry={showPassword}
+          rightIcon={<PasswordIcon size={25} name="eye-off-outline" />}
+          onIconPress={() => setShowPassword(!showPassword)}
+          onChangeText={text => setPassword(text)}
+          errorText={''}
+        />
+        <TextButton
+          align="right"
+          onPress={() => navigation?.push('Forgot Password', {})}>
+          {'Forgot Password?'}
         </TextButton>
-      </BottomView>
-    </MainView>
+        <ContainedButton
+          fullWidth
+          onPress={() => console.log('fdfd')}
+          disabled={!(dialCode && number && password)}>
+          {'Log In'}
+        </ContainedButton>
+        <SocialLogin navigation={navigation} />
+        <BottomView>
+          <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
+            <Text1>{'New to PX Boost? '}</Text1>
+            <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
+              {'Register'}
+            </Text1>
+          </TextButton>
+        </BottomView>
+      </MainView>
+    </>
   );
 };
 
@@ -131,4 +101,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInLayout;
+export default connect(
+  state => ({
+    dialCode: getDialCode(state),
+  }),
+  {
+    setSelectedCountry,
+  },
+)(SignInLayout);

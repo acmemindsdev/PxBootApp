@@ -1,7 +1,8 @@
 import styled from 'styled-components/native';
 import { Text, TextInput as RNPTextInput } from 'react-native-paper';
 import { TextInput } from 'src/components';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text1 } from 'src/components/Typography';
+import theme from 'src/theme';
 
 export const ContainerView = styled.View`
   flex-direction: row;
@@ -11,6 +12,7 @@ export const ContainerView = styled.View`
 export const CountryCodeInput = styled(TextInput)`
   width: 90px;
   justify-content: center;
+  background-color: ${theme.colors.gray10};
 `;
 
 export const NumberInput = styled(RNPTextInput).attrs({
@@ -33,4 +35,9 @@ export const CountryCodeView = styled.View`
   flex: 1;
   align-items: center;
   padding: 12px;
+`;
+
+export const ErrorText = styled(Text1)`
+  margin-top: 6px;
+  color: ${theme.colors.errorRed};
 `;

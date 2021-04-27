@@ -1,6 +1,7 @@
 import { colors } from './colors';
 import sizes from './sizes';
 import { configureFonts, DefaultTheme } from 'react-native-paper';
+import { color } from 'react-native-reanimated';
 const fontConfig = {
   ios: {
     regular: {
@@ -47,6 +48,7 @@ const AppTheme = {
     primary: colors.primary,
     text: colors.black90,
     background: colors.white,
+    error: colors.errorRed,
   },
   fonts: configureFonts(fontConfig),
 };

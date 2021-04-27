@@ -18,6 +18,9 @@ import { MobileNumberInput, SocialLogin } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
+import { connect } from 'react-redux';
+import { setSelectedCountry } from 'src/state/auth/authActions';
+import { getDialCode } from 'src/state/auth/authReducer';
 
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
@@ -98,4 +101,11 @@ const ForgotPassword = ({ navigation }) => {
   );
 };
 
-export default ForgotPassword;
+export default connect(
+  state => ({
+    dialCode: getDialCode(state),
+  }),
+  {
+    setSelectedCountry,
+  },
+)(ForgotPassword);

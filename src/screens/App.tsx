@@ -18,16 +18,20 @@ import awsconfig from '../../aws-exports';
 import Navigation from 'src/navigation/Navigator';
 import theme from 'src/theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider as StateProvider } from 'react-redux';
+import store from 'src/state/store';
 
 Amplify.configure(awsconfig);
 
 const App = () => {
   return (
-    <PaperProvider theme={theme.AppTheme}>
-      <SafeAreaProvider>
-        <Navigation />
-      </SafeAreaProvider>
-    </PaperProvider>
+    <StateProvider store={store}>
+      <PaperProvider theme={theme.AppTheme}>
+        <SafeAreaProvider>
+          <Navigation />
+        </SafeAreaProvider>
+      </PaperProvider>
+    </StateProvider>
   );
 };
 
