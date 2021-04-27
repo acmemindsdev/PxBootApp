@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
-import { TextInput, Text } from 'react-native-paper';
-import theme from 'src/theme';
+import { Text, TextInput as RNPTextInput } from 'react-native-paper';
+import { TextInput } from 'src/components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export const ContainerView = styled.View`
@@ -13,7 +13,11 @@ export const CountryCodeInput = styled(TextInput)`
   justify-content: center;
 `;
 
-export const NumberInput = styled(TextInput)`
+export const NumberInput = styled(RNPTextInput).attrs({
+  theme: {
+    roundness: 6,
+  },
+})`
   flex: 1;
   margin-left: 12px;
 `;

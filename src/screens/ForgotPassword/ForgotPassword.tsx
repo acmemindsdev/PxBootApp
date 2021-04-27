@@ -4,32 +4,28 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
+  TextInput,
   Button,
   useColorScheme,
   View,
 } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Amplify, { Auth, Hub } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
-import awsconfig from '../../../aws-exports';
-import { MobileNumberInput, SocialLogin } from 'src/components';
 import {
   MainView,
-  PasswordInput,
-  PasswordIcon,
+  ActionButtonContainer,
   BottomView,
-} from './SignIn.styled';
-import { StackActions } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+} from './ForgotPassword.styled';
+import { MobileNumberInput, SocialLogin } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 
+import Amplify, { Auth, Hub } from 'aws-amplify';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+import awsconfig from '../../../aws-exports';
+
 Amplify.configure(awsconfig);
 
-const SignInLayout = ({ navigation }) => {
+const ForgotPassword = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [new_password, setNew_password] = useState('');
@@ -77,29 +73,19 @@ const SignInLayout = ({ navigation }) => {
       console.log('error Resend Code: ', err);
     }
   };
-  const pushAction = StackActions.push('Select a Country');
+
   return (
     <MainView>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <MobileNumberInput navigation={navigation} />
-      <PasswordInput
-        mode={'outlined'}
-        label="Password"
-        right={
-          <PasswordInput.Icon
-            name={() => <PasswordIcon size={25} name="eye-off-outline" />}
-          />
-        }
-      />
-      <TextButton
-        align="right"
-        onPress={() => navigation?.push('Forgot Password', {})}>
-        {'Forgot Password?'}
-      </TextButton>
-      <ContainedButton fullWidth onPress={() => console.log('fdfd')}>
-        {'Log In'}
-      </ContainedButton>
-      <SocialLogin navigation={navigation} />
+      <ActionButtonContainer>
+        <ContainedButton
+          fullWidth
+          align="right"
+          onPress={() => console.log('fdfd')}>
+          {'Send Reset Code'}
+        </ContainedButton>
+      </ActionButtonContainer>
       <BottomView>
         <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
           <Text1>{'New to PX Boost? '}</Text1>
@@ -112,23 +98,4 @@ const SignInLayout = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  input: {
-    fontSize: 18,
-    fontWeight: '500',
-    height: 55,
-    backgroundColor: '#42A5F5',
-    margin: 10,
-    color: 'white',
-    padding: 8,
-    borderRadius: 14,
-  },
-  container: {
-    flex: 1,
-    color: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
-
-export default SignInLayout;
+export default ForgotPassword;

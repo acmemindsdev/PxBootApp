@@ -84,7 +84,7 @@ const blue = {
 
 export const colors = {
   primary: '#5382F6',
-  secondary: '#bdbdbd',
+  secondary: '#034C81',
   black90: gray[90],
   white: '#ffffff',
   black: '#000000',
