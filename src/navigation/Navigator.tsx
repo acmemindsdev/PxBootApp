@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import SignIn from 'src/screens/SignIn';
 import ForgotPassword from 'src/screens/ForgotPassword';
 import CountryList from 'src/screens/CountryList';
+import ResetPassword from 'src/screens/ResetPassword';
 
 const RootStack = createStackNavigator();
 
@@ -49,6 +50,14 @@ const Navigation = () => {
             headerStyle: customHeaderStyle,
           }}
           component={ForgotPassword}
+        />
+        <RootStack.Screen
+          name="Reset Password"
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: customHeaderStyle,
+          }}
+          component={ResetPassword}
         />
         <RootStack.Screen
           name="Select a Country"

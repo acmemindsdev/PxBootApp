@@ -4,17 +4,18 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  TextInput,
   Button,
-  useColorScheme,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
-  BottomView,
-} from './ForgotPassword.styled';
-import { MobileNumberInput, SocialLogin } from 'src/components';
+  CombineTextView,
+  TextInputStyled,
+  ContentView,
+} from './ResetPassword.styled';
+import { PasswordHint, TextInput } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
@@ -32,7 +33,7 @@ interface IProps {
   navigation: any;
 }
 
-const ForgotPassword = ({ navigation }: IProps) => {
+const ResetPassword = ({ navigation }: IProps) => {
   const [username, setUsername] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [new_password, setNew_password] = useState('');
@@ -84,31 +85,54 @@ const ForgotPassword = ({ navigation }: IProps) => {
   };
 
   return (
-    <MainView>
+    <>
       <StatusBar barStyle="light-content" />
-      <MobileNumberInput
-        navigation={navigation}
-        onChangeDialCode={code => setDialCode(code)}
-        onChangeMobileNumber={number => setNumber(number)}
-        error={false}
-      />
-      <ActionButtonContainer>
-        <ContainedButton
-          fullWidth
-          disabled={!(dialCode && number)}
-          onPress={() => navigation?.push('Reset Password', {})}>
-          {'Send Reset Code'}
-        </ContainedButton>
-      </ActionButtonContainer>
-      <BottomView>
-        <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
-          <Text1>{'New to PX Boost? '}</Text1>
-          <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
-            {'Register'}
-          </Text1>
-        </TextButton>
-      </BottomView>
-    </MainView>
+      <MainView>
+        <CombineTextView>
+          <Text1>{'Did not receive Code? '}</Text1>
+          <TouchableOpacity>
+            <Text1 fontWeight={FontWeights.bold} color={theme.colors.primary}>
+              {'Resend SMS'}
+            </Text1>
+          </TouchableOpacity>
+        </CombineTextView>
+        <ContentView>
+          <TextInput
+            label="Password Reset Code"
+            onChangeText={() => {}}
+            error={false}
+            errorText={''}
+          />
+        </ContentView>
+        <ContentView>
+          <TextInput
+            label="New Password"
+            secureTextEntry={true}
+            onChangeText={() => {}}
+            error={false}
+            errorText={''}
+          />
+          <PasswordHint passwordText={new_password} />
+        </ContentView>
+        <ContentView>
+          <TextInput
+            label="Confirm Password"
+            secureTextEntry={true}
+            onChangeText={() => {}}
+            error={false}
+            errorText={''}
+          />
+        </ContentView>
+        <ActionButtonContainer>
+          <ContainedButton
+            fullWidth
+            disabled={!(dialCode && number)}
+            onPress={() => console.log('fdfd')}>
+            {'Reset'}
+          </ContainedButton>
+        </ActionButtonContainer>
+      </MainView>
+    </>
   );
 };
 
@@ -119,4 +143,4 @@ export default connect(
   {
     setSelectedCountry,
   },
-)(ForgotPassword);
+)(ResetPassword);

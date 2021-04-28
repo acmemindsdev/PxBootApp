@@ -1,9 +1,13 @@
 import React from 'react';
 import { WrapperStyled, LogoContainer, LogoImageStyled } from './Auth.styled';
 
-export function withLogoLayout(
-  WrappedComponent: React.ComponentType,
-): React.FunctionComponent {
+interface IProps {
+  navigation?: any;
+}
+
+export function withLogoLayout<P extends IProps>(
+  WrappedComponent: React.ComponentType<P>,
+): React.FunctionComponent<P> {
   return props => {
     return (
       <WrapperStyled>

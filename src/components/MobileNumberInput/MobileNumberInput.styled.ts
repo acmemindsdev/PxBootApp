@@ -26,7 +26,7 @@ export const NumberInput = styled(RNPTextInput).attrs({
 
 export const CountryCodeText = styled(Text)`
   margin: auto 0px;
-  font-size: 16;
+  font-size: 16px;
 `;
 
 export const CountryCodeView = styled.View`

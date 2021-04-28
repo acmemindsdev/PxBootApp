@@ -86,6 +86,7 @@ export const colors = {
   primary: '#5382F6',
   secondary: '#034C81',
   errorRed: '#CC1414',
+  successGreen: '#268E6C',
   black90: gray[90],
   white: '#ffffff',
   black: '#000000',

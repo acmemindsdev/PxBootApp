@@ -16,7 +16,7 @@ export const GridView = styled.View`
 
 export const TitleText = styled(Text)`
   margin: 0px 20px;
-  font-size: 16;
+  font-size: 16px;
 `;
 
 export const ButtonContentView = styled.View`

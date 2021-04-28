@@ -5,12 +5,16 @@ import { IconButton, Caption } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, View, Image } from 'react-native';
 import theme from 'src/theme';
+import { useDispatch } from 'react-redux';
+import { socialLogin } from 'src/state/auth/authActions';
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 type IProp = {
   type: 'fb' | 'google' | 'apple';
 };
 
 const SocialLoginButton = (prop: IProp) => {
+  const dispatch = useDispatch();
   return (
     <ButtonContentView>
       {prop.type === 'fb' && (
@@ -19,7 +23,9 @@ const SocialLoginButton = (prop: IProp) => {
             icon={{ source: 'facebook', direction: 'ltr' }}
             color={theme.colors.primary}
             size={40}
-            onPress={() => console.log('dfdf')}
+            onPress={() =>
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Facebook))
+            }
           />
           <Caption style={{ marginTop: -8 }}>Facebook</Caption>
         </>
@@ -34,7 +40,9 @@ const SocialLoginButton = (prop: IProp) => {
               />
             )}
             size={40}
-            onPress={() => console.log('dfdf')}
+            onPress={() =>
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Google))
+            }
           />
           <Caption style={{ marginTop: -8 }}>Google</Caption>
         </>
@@ -45,7 +53,9 @@ const SocialLoginButton = (prop: IProp) => {
             icon={{ source: 'apple', direction: 'ltr' }}
             color={theme.colors.black}
             size={40}
-            onPress={() => console.log('dfdf')}
+            onPress={() =>
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Apple))
+            }
           />
           <Caption style={{ marginTop: -8 }}>Apple</Caption>
         </>

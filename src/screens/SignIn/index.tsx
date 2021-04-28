@@ -165,8 +165,8 @@ export default class SignIn extends React.Component {
   resendVerificationCode = async () => {
     const { username } = this.state;
     try {
-      await Auth.resendSignUp(username);
-      console.log('Resend Code Successfully');
+      const response = await Auth.resendSignUp('facebook_3824716184272229');
+      console.log('Resend Code Successfully', response);
     } catch (err) {
       console.log('error Resend Code: ', err);
     }
@@ -211,20 +211,18 @@ export default class SignIn extends React.Component {
                 <Button title={'Sign Up'} onPress={this.signUp}></Button>
               </Fragment>
             )}
-            {this.state.showConfirmationForm && (
-              <Fragment>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Authentication code"
-                  autoCapitalize="none"
-                  placeholderTextColor="white"
-                  onChangeText={val =>
-                    this.onChangeText('authenticationCode', val)
-                  }
-                />
-                <Button title="Confirm Sign Up" onPress={this.confirmSignUp} />
-              </Fragment>
-            )}
+            <Fragment>
+              <TextInput
+                style={styles.input}
+                placeholder="Authentication code"
+                autoCapitalize="none"
+                placeholderTextColor="white"
+                onChangeText={val =>
+                  this.onChangeText('authenticationCode', val)
+                }
+              />
+              <Button title="Confirm Sign Up" onPress={this.confirmSignUp} />
+            </Fragment>
             {!this.state.showLogin && (
               <Fragment>
                 <TextInput

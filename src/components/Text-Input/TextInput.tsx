@@ -15,7 +15,7 @@ type CustomTextInput = {
   withMask?: string;
   helperText?: string;
   rightIcon?: ReactNode;
-  onIconPress: any;
+  onIconPress?: any;
 };
 
 export type ExtendedTextInputProps = CustomTextInput & RNTextInputProps;
@@ -29,7 +29,6 @@ export function TextInput(props: ExtendedTextInputProps) {
     style,
     ...restProps
   } = props;
-  const element = <TextInputStyled.icon name={() => <Text>dfd</Text>} />;
   let Input = (
     <TextInputStyled
       mode={'outlined'}

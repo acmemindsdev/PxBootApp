@@ -1,7 +1,5 @@
-import React, { Fragment, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -27,17 +25,50 @@ import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import { setSelectedCountry } from 'src/state/auth/authActions';
-import { getDialCode } from 'src/state/auth/authReducer';
+import {
+  setSelectedCountry,
+  requestLogin,
+  socialLogin,
+} from 'src/state/auth/authActions';
+import {
+  getDialCode,
+  isLoading,
+  fetchError,
+  getLoginData,
+  fetchErrorMessage,
+} from 'src/state/auth/authReducer';
+// import { requestLogin } from 'src/services/cognitoMethods';
 
 Amplify.configure(awsconfig);
 
-const SignInLayout = ({ navigation }) => {
+interface IProps {
+  navigation?: any;
+  requestLogin?: any;
+  responseData?: any;
+  fetchError?: boolean;
+  errorMessage?: string;
+}
+
+const SignInLayout = ({
+  navigation,
+  requestLogin,
+  responseData,
+  fetchError,
+  errorMessage,
+}) => {
   const [number, setNumber] = useState('');
   const [dialCode, setDialCode] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(true);
-  const [fetchError, setFetchError] = useState('');
+
+  const handleLogin = () => {
+    const userName = `+${dialCode}${number}`;
+    requestLogin(userName, password);
+  };
+
+  useEffect(() => {
+    console.log('data is', responseData);
+  }, [responseData]);
 
   return (
     <>
@@ -47,7 +78,7 @@ const SignInLayout = ({ navigation }) => {
           navigation={navigation}
           onChangeDialCode={code => setDialCode(code)}
           onChangeMobileNumber={number => setNumber(number)}
-          error={false}
+          error={fetchError}
         />
         <PasswordInput
           label="Password"
@@ -55,7 +86,8 @@ const SignInLayout = ({ navigation }) => {
           rightIcon={<PasswordIcon size={25} name="eye-off-outline" />}
           onIconPress={() => setShowPassword(!showPassword)}
           onChangeText={text => setPassword(text)}
-          errorText={''}
+          error={fetchError}
+          errorText={errorMessage}
         />
         <TextButton
           align="right"
@@ -64,7 +96,7 @@ const SignInLayout = ({ navigation }) => {
         </TextButton>
         <ContainedButton
           fullWidth
-          onPress={() => console.log('fdfd')}
+          onPress={handleLogin}
           disabled={!(dialCode && number && password)}>
           {'Log In'}
         </ContainedButton>
@@ -104,8 +136,13 @@ const styles = StyleSheet.create({
 export default connect(
   state => ({
     dialCode: getDialCode(state),
+    responseData: getLoginData(state),
+    loading: isLoading(state),
+    fetchError: fetchError(state),
+    errorMessage: fetchErrorMessage(state),
   }),
   {
     setSelectedCountry,
+    requestLogin,
   },
 )(SignInLayout);
