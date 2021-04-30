@@ -14,25 +14,24 @@ import {
   ActionButtonContainer,
   BottomView,
 } from './ForgotPassword.styled';
-import { MobileNumberInput, SocialLogin } from 'src/components';
+import { MobileNumberInput } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import { setSelectedCountry } from 'src/state/auth/authActions';
+import {
+  setSelectedCountry,
+  requestForgotPassword,
+} from 'src/state/auth/authActions';
 import { getDialCode } from 'src/state/auth/authReducer';
-
-import Amplify, { Auth, Hub } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
-import awsconfig from '../../../aws-exports';
-
-Amplify.configure(awsconfig);
+import get from 'lodash/get';
 
 interface IProps {
   navigation: any;
+  requestForgotPassword: any;
 }
 
-const ForgotPassword = ({ navigation }: IProps) => {
+const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
   const [username, setUsername] = useState('');
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [new_password, setNew_password] = useState('');
@@ -40,75 +39,48 @@ const ForgotPassword = ({ navigation }: IProps) => {
   const [number, setNumber] = useState('');
   const [dialCode, setDialCode] = useState('');
 
-  // state = initialState;
-  const onChangeText = (key: string, value: string) => {
-    if (key === 'username') {
-      setUsername(value);
-    }
-    if (key === 'new_password') {
-      setNew_password(value);
-    }
-    if (key === 'code') {
-      setCode(value);
-    }
-  };
-
-  const forgotPassword = async () => {
-    try {
-      await Auth.forgotPassword(username);
-      console.log('Forgot Password Requested Sent');
-      setShowResetPassword(true);
-    } catch (err) {
-      console.log('error Forgot Password Requested: ', err);
-    }
-  };
-
-  const forgotPasswordSubmit = async () => {
-    try {
-      await Auth.forgotPasswordSubmit(username, code, new_password);
-      console.log('Password Changed Successfully');
-      alert('Password Changed Successfully');
-      setShowResetPassword(false);
-    } catch (err) {
-      console.log('error Forgot Password Submit: ', err);
-    }
-  };
-
-  const resendVerificationCode = async () => {
-    try {
-      await Auth.resendSignUp(username);
-      console.log('Resend Code Successfully');
-    } catch (err) {
-      console.log('error Resend Code: ', err);
-    }
+  const handleSubmit = () => {
+    const userName = `+${dialCode}${number}`;
+    requestForgotPassword(userName).then(payload => {
+      if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
+        console.log('tedst data', payload);
+        navigation?.push('Reset Password', {});
+      } else {
+        console.log('tessssst data', payload);
+      }
+    });
   };
 
   return (
-    <MainView>
+    <>
       <StatusBar barStyle="light-content" />
-      <MobileNumberInput
-        navigation={navigation}
-        onChangeDialCode={code => setDialCode(code)}
-        onChangeMobileNumber={number => setNumber(number)}
-        error={false}
-      />
-      <ActionButtonContainer>
-        <ContainedButton
-          fullWidth
-          disabled={!(dialCode && number)}
-          onPress={() => navigation?.push('Reset Password', {})}>
-          {'Send Reset Code'}
-        </ContainedButton>
-      </ActionButtonContainer>
-      <BottomView>
-        <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
-          <Text1>{'New to PX Boost? '}</Text1>
-          <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
-            {'Register'}
-          </Text1>
-        </TextButton>
-      </BottomView>
-    </MainView>
+      <MainView>
+        <>
+          <MobileNumberInput
+            navigation={navigation}
+            onChangeDialCode={code => setDialCode(code)}
+            onChangeMobileNumber={number => setNumber(number)}
+            error={false}
+          />
+          <ActionButtonContainer>
+            <ContainedButton
+              fullWidth
+              disabled={!(dialCode && number)}
+              onPress={handleSubmit}>
+              {'Send Reset Code'}
+            </ContainedButton>
+          </ActionButtonContainer>
+        </>
+        <BottomView>
+          <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
+            <Text1>{'New to PX Boost? '}</Text1>
+            <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
+              {'Register'}
+            </Text1>
+          </TextButton>
+        </BottomView>
+      </MainView>
+    </>
   );
 };
 
@@ -117,6 +89,6 @@ export default connect(
     dialCode: getDialCode(state),
   }),
   {
-    setSelectedCountry,
+    requestForgotPassword,
   },
 )(ForgotPassword);

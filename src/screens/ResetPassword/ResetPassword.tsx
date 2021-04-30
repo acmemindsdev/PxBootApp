@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -13,75 +13,50 @@ import {
   ActionButtonContainer,
   CombineTextView,
   TextInputStyled,
-  ContentView,
 } from './ResetPassword.styled';
-import { PasswordHint, TextInput } from 'src/components';
+import { PasswordHint, TextInput, FormItem } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import { setSelectedCountry } from 'src/state/auth/authActions';
-import { getDialCode } from 'src/state/auth/authReducer';
-
-import Amplify, { Auth, Hub } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
-import awsconfig from '../../../aws-exports';
-
-Amplify.configure(awsconfig);
+import { requestForgotPassword } from 'src/state/auth/authActions';
+import { getUserName } from 'src/state/auth/authReducer';
+import {
+  Controller,
+  useForm,
+  FieldErrors,
+  useFormContext,
+} from 'react-hook-form';
 
 interface IProps {
   navigation: any;
+  requestForgotPassword: any;
+  userName: string;
 }
 
-const ResetPassword = ({ navigation }: IProps) => {
-  const [username, setUsername] = useState('');
-  const [showResetPassword, setShowResetPassword] = useState(false);
+const ResetPassword = (props: IProps) => {
   const [new_password, setNew_password] = useState('');
-  const [code, setCode] = useState('');
+  const [confirm_password, setConfirm_password] = useState('');
   const [number, setNumber] = useState('');
   const [dialCode, setDialCode] = useState('');
+  const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
 
-  // state = initialState;
-  const onChangeText = (key: string, value: string) => {
-    if (key === 'username') {
-      setUsername(value);
-    }
-    if (key === 'new_password') {
-      setNew_password(value);
-    }
-    if (key === 'code') {
-      setCode(value);
-    }
+  type FormData = {
+    code: string;
+    new_password: string;
+    confirm_password: string;
   };
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
 
-  const forgotPassword = async () => {
-    try {
-      await Auth.forgotPassword(username);
-      console.log('Forgot Password Requested Sent');
-      setShowResetPassword(true);
-    } catch (err) {
-      console.log('error Forgot Password Requested: ', err);
-    }
-  };
-
-  const forgotPasswordSubmit = async () => {
-    try {
-      await Auth.forgotPasswordSubmit(username, code, new_password);
-      console.log('Password Changed Successfully');
-      alert('Password Changed Successfully');
-      setShowResetPassword(false);
-    } catch (err) {
-      console.log('error Forgot Password Submit: ', err);
-    }
-  };
-
-  const resendVerificationCode = async () => {
-    try {
-      await Auth.resendSignUp(username);
-      console.log('Resend Code Successfully');
-    } catch (err) {
-      console.log('error Resend Code: ', err);
-    }
+  const onSubmit = data => {
+    console.log(data, 'data');
   };
 
   return (
@@ -90,44 +65,84 @@ const ResetPassword = ({ navigation }: IProps) => {
       <MainView>
         <CombineTextView>
           <Text1>{'Did not receive Code? '}</Text1>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => props.requestForgotPassword(props.userName)}>
             <Text1 fontWeight={FontWeights.bold} color={theme.colors.primary}>
               {'Resend SMS'}
             </Text1>
           </TouchableOpacity>
         </CombineTextView>
-        <ContentView>
-          <TextInput
-            label="Password Reset Code"
-            onChangeText={() => {}}
-            error={false}
-            errorText={''}
+        <FormItem>
+          <Controller
+            name="code"
+            control={control}
+            defaultValue=""
+            rules={{
+              validate: {
+                positive: value => parseInt(value) > 0,
+                lessThanTen: value => parseInt(value) < 10,
+              },
+              required: { value: true, message: 'dfdf' },
+            }}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Password Reset Code"
+                onChangeText={text => onChange(text)}
+                value={value}
+                error={!!errors.code}
+                errorText={errors.code?.message}
+              />
+            )}
           />
-        </ContentView>
-        <ContentView>
-          <TextInput
-            label="New Password"
-            secureTextEntry={true}
-            onChangeText={() => {}}
-            error={false}
-            errorText={''}
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="new_password"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <>
+                <TextInput
+                  label="New Password"
+                  secureTextEntry={true}
+                  onChangeText={text => onChange(text)}
+                  value={value}
+                  textContentType={'oneTimeCode'}
+                  onFocus={() => setActiveNewPasswordInput(true)}
+                  onBlur={() => setActiveNewPasswordInput(false)}
+                  error={false}
+                  errorText={''}
+                />
+                {activeNewPasswordInput && (
+                  <PasswordHint passwordText={value} />
+                )}
+              </>
+            )}
           />
-          <PasswordHint passwordText={new_password} />
-        </ContentView>
-        <ContentView>
-          <TextInput
-            label="Confirm Password"
-            secureTextEntry={true}
-            onChangeText={() => {}}
-            error={false}
-            errorText={''}
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="confirm_password"
+            control={control}
+            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Confirm Password"
+                secureTextEntry={true}
+                onChangeText={text => onChange(text)}
+                value={value}
+                textContentType={'oneTimeCode'}
+                error={false}
+                errorText={''}
+              />
+            )}
           />
-        </ContentView>
+        </FormItem>
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
-            disabled={!(dialCode && number)}
-            onPress={() => console.log('fdfd')}>
+            disabled={false}
+            onPress={handleSubmit(onSubmit)}>
             {'Reset'}
           </ContainedButton>
         </ActionButtonContainer>
@@ -138,9 +153,9 @@ const ResetPassword = ({ navigation }: IProps) => {
 
 export default connect(
   state => ({
-    dialCode: getDialCode(state),
+    userName: getUserName(state),
   }),
   {
-    setSelectedCountry,
+    requestForgotPassword,
   },
 )(ResetPassword);

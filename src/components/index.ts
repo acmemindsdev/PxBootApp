@@ -1,8 +1,9 @@
 import Divider from './Divider';
-import TextInput from './Text-Input';
+import TextInput from './TextInput';
 import MobileNumberInput from './MobileNumberInput';
 import SocialLogin from './SocialLogin';
 import PasswordHint from './PasswordHint';
+import FormItem from './FormItem';
 
 export {
   /**
@@ -16,4 +17,5 @@ export {
   MobileNumberInput,
   SocialLogin,
   PasswordHint,
+  FormItem,
 };

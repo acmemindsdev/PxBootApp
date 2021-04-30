@@ -1,22 +1,26 @@
 import React from 'react';
 import { Title, Paragraph } from 'src/components/Typography';
-import { View } from 'react-native';
+import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { WrapperStyled, LogoContainer, LogoImageStyled } from './Auth.styled';
-import { RouteProp } from '@react-navigation/native';
+import get from 'lodash/get';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { getUserName } from 'src/state/auth/authReducer';
+import { useSelector } from 'react-redux';
 
 interface IProps {
   navigation: any;
   route: any;
+  getUserName: any;
 }
 
 export function withTitleLayout<P extends IProps>(
   WrappedComponent: React.ComponentType<P>,
 ): React.FunctionComponent<P> {
   return props => {
+    const userName = useSelector(state => getUserName(state));
     let title = '';
     let description = '';
-    switch (props.route.name) {
+    switch (get(props.route, 'name', '')) {
       case 'Forgot Password':
         title = 'Trouble Logging In?';
         description =
@@ -24,20 +28,36 @@ export function withTitleLayout<P extends IProps>(
         break;
       case 'Reset Password':
         title = 'Reset Password';
-        description =
-          'A password reset code has been sent on +1 2025550143 on an SMS';
+        description = `A password reset code has been sent on ${userName} on an SMS`;
         break;
       default:
-        title = 'grids';
         break;
     }
+
     return (
       <WrapperStyled>
-        <View style={{ marginBottom: 20 }}>
-          <Title>{title}</Title>
-          <Paragraph>{description}</Paragraph>
-        </View>
-        <WrappedComponent {...props} />
+        <KeyboardAvoidingView
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+          }}
+          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={100}>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            //  onContentSizeChange={this.onContentSizeChange}
+          >
+            <View style={{ marginBottom: 20 }}>
+              <Title>{title}</Title>
+              <Paragraph>{description}</Paragraph>
+            </View>
+            <WrappedComponent {...props} />
+          </ScrollView>
+        </KeyboardAvoidingView>
       </WrapperStyled>
     );
   };

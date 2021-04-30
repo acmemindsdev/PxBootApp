@@ -5,6 +5,7 @@ import { TextInput } from 'react-native-paper';
 
 export const MainView = styled.View`
   flex: 1;
+  justify-content: space-between;
 `;
 
 export const ActionButtonContainer = styled.View`

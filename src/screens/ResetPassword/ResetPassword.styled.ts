@@ -18,7 +18,3 @@ export const CombineTextView = styled.View`
 `;
 
 export const TextInputStyled = styled(TextInput)``;
-
-export const ContentView = styled.View`
-  margin-bottom: 16px;
-`;

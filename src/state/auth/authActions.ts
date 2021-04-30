@@ -4,6 +4,13 @@ export const HANDLE_LOGIN_SUCCESS = 'HANDLE_LOGIN_SUCCESS';
 export const HANDLE_LOGIN_ERROR = 'HANDLE_LOGIN_ERROR';
 export const SOCIAL_LOGIN_SUCCESS = 'SOCIAL_LOGIN_SUCCESS';
 export const SOCIAL_LOGIN_ERROR = 'SOCIAL_LOGIN_ERROR';
+export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';
+export const FORGOT_PASSWORD_ERROR = 'FORGOT_PASSWORD_ERROR';
+export const FORGOT_PASSWORD_SUBMIT = 'FORGOT_PASSWORD_SUBMIT';
+export const FORGOT_PASSWORD_SUBMIT_SUCCESS = 'FORGOT_PASSWORD_SUBMIT_SUCCESS';
+export const FORGOT_PASSWORD_SUBMIT_ERROR = 'FORGOT_PASSWORD_SUBMIT_ERROR';
+export const USER_ID = 'FORGOT_PASSWORD_ERROR';
 
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
@@ -60,5 +67,61 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
         });
       }
     });
+  };
+};
+
+export const requestForgotPassword = (username: string) => {
+  return dispatch => {
+    dispatch({
+      type: FORGOT_PASSWORD,
+    });
+
+    return Auth.forgotPassword(username)
+      .then(json => {
+        console.log('success Yusuf:', json);
+        dispatch({
+          type: USER_ID,
+          payload: username,
+        });
+        return dispatch({
+          type: FORGOT_PASSWORD_SUCCESS,
+          payload: json,
+        });
+      })
+      .catch(err => {
+        console.log('error Yusuf:', err);
+        return dispatch({
+          type: FORGOT_PASSWORD_ERROR,
+          payload: err,
+        });
+      });
+  };
+};
+
+export const forgotPasswordSubmit = (
+  username: string,
+  code: string,
+  password: string,
+) => {
+  return dispatch => {
+    dispatch({
+      type: FORGOT_PASSWORD_SUBMIT,
+    });
+
+    return Auth.forgotPasswordSubmit(username, code, password)
+      .then(json => {
+        console.log('success', json);
+        return dispatch({
+          type: FORGOT_PASSWORD_SUBMIT_SUCCESS,
+          payload: json,
+        });
+      })
+      .catch(err => {
+        console.log('error Yusuf:', err);
+        return dispatch({
+          type: FORGOT_PASSWORD_SUBMIT_ERROR,
+          payload: err,
+        });
+      });
   };
 };
