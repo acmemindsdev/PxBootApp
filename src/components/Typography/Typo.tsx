@@ -2,6 +2,7 @@ import React from 'react';
 import { Title as RNTitle } from 'react-native-paper';
 import {
   TitleStyled,
+  SubheadingStyled,
   ParagraphStyled,
   Text1Styled,
   Text2Styled,
@@ -25,6 +26,10 @@ type IProps = CustomTextProp & RNTitleProps;
 
 export function Title(props: IProps) {
   return <TitleStyled {...props} />;
+}
+
+export function Subheading(props: IProps) {
+  return <SubheadingStyled {...props} />;
 }
 
 export function Paragraph(props: IProps) {

@@ -10,6 +10,7 @@ import SignIn from 'src/screens/SignIn';
 import ForgotPassword from 'src/screens/ForgotPassword';
 import CountryList from 'src/screens/CountryList';
 import ResetPassword from 'src/screens/ResetPassword';
+import ResetPasswordSuccess from 'src/screens/ResetPasswordSuccess';
 
 const RootStack = createStackNavigator();
 
@@ -58,6 +59,11 @@ const Navigation = () => {
             headerStyle: customHeaderStyle,
           }}
           component={ResetPassword}
+        />
+        <RootStack.Screen
+          name="Reset Password Success"
+          options={{ headerShown: false }}
+          component={ResetPasswordSuccess}
         />
         <RootStack.Screen
           name="Select a Country"

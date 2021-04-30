@@ -10,7 +10,7 @@ export const FORGOT_PASSWORD_ERROR = 'FORGOT_PASSWORD_ERROR';
 export const FORGOT_PASSWORD_SUBMIT = 'FORGOT_PASSWORD_SUBMIT';
 export const FORGOT_PASSWORD_SUBMIT_SUCCESS = 'FORGOT_PASSWORD_SUBMIT_SUCCESS';
 export const FORGOT_PASSWORD_SUBMIT_ERROR = 'FORGOT_PASSWORD_SUBMIT_ERROR';
-export const USER_ID = 'FORGOT_PASSWORD_ERROR';
+export const USER_ID = 'USER_ID';
 
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';

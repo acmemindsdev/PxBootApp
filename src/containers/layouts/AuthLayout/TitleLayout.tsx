@@ -1,5 +1,5 @@
 import React from 'react';
-import { Title, Paragraph } from 'src/components/Typography';
+import { Title, Paragraph, Text1 } from 'src/components/Typography';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { WrapperStyled, LogoContainer, LogoImageStyled } from './Auth.styled';
 import get from 'lodash/get';

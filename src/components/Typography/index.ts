@@ -1,3 +1,10 @@
-import { Title, Paragraph, Text1, Text2, FontWeights } from './Typo';
+import {
+  Title,
+  Subheading,
+  Paragraph,
+  Text1,
+  Text2,
+  FontWeights,
+} from './Typo';
 
-export { Title, Paragraph, Text1, Text2, FontWeights };
+export { Title, Subheading, Paragraph, Text1, Text2, FontWeights };

@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { Title, Paragraph, Text } from 'react-native-paper';
+import { Title, Subheading, Paragraph, Text } from 'react-native-paper';
 import theme from 'src/theme';
 import { CustomTextProp } from './Typo';
 import { StyledProps } from 'styled-components';
@@ -21,6 +21,15 @@ export const TitleStyled = styled(Title)<CustomTextProp>`
     props.color ? props.color : theme.colors.black90};
   font-size: 24px;
   line-height: 29px;
+`;
+
+export const SubheadingStyled = styled(Subheading)<CustomTextProp>`
+  font-weight: ${(props: CustomTextProp) =>
+    props.fontWeight ? props.fontWeight : 700};
+  color: ${(props: CustomTextProp) =>
+    props.color ? props.color : theme.colors.black90};
+  font-size: 18px;
+  line-height: 22px;
 `;
 
 export const ParagraphStyled = styled(Paragraph)<CustomTextProp>`

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { isValidElement, useEffect } from 'react';
 import { WrapperView, RowView, IconStyled } from './PasswordHint.styled';
 import { Text1 } from 'src/components/Typography';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -6,6 +6,7 @@ import theme from 'src/theme';
 
 type IProps = {
   passwordText: string;
+  isValid: any;
 };
 
 type HintProp = {
@@ -13,10 +14,22 @@ type HintProp = {
   validated: boolean;
 };
 
-const PasswordHint = ({ passwordText }: IProps) => {
+const PasswordHint = ({ passwordText, isValid }: IProps) => {
   const specialCharacterFormat = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
   const upperCaseFormat = /[A-Z]/;
   const lowerCaseFormat = /[a-z]/;
+
+  const validPasswordFormat = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~A-Za-z]/;
+
+  useEffect(() => {
+    const valid =
+      specialCharacterFormat.test(passwordText) &&
+      upperCaseFormat.test(passwordText) &&
+      lowerCaseFormat.test(passwordText) &&
+      passwordText.length >= 10;
+
+    isValid(valid);
+  }, [passwordText]);
 
   const Hint = ({ hintText, validated }: HintProp) => {
     return validated ? (

@@ -1,63 +1,87 @@
 import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Button,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StatusBar, TouchableOpacity } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
   CombineTextView,
-  TextInputStyled,
 } from './ResetPassword.styled';
 import { PasswordHint, TextInput, FormItem } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import { requestForgotPassword } from 'src/state/auth/authActions';
-import { getUserName } from 'src/state/auth/authReducer';
 import {
-  Controller,
-  useForm,
-  FieldErrors,
-  useFormContext,
-} from 'react-hook-form';
+  requestForgotPassword,
+  forgotPasswordSubmit,
+} from 'src/state/auth/authActions';
+import { getUserName } from 'src/state/auth/authReducer';
+import { Controller, useForm } from 'react-hook-form';
+import useYupValidationResolver from 'src/validation/resolver';
+import { resetPasswordSchema } from 'src/validation/authValidation';
+import get from 'lodash/get';
 
 interface IProps {
   navigation: any;
   requestForgotPassword: any;
+  forgotPasswordSubmit: any;
   userName: string;
 }
 
 const ResetPassword = (props: IProps) => {
-  const [new_password, setNew_password] = useState('');
-  const [confirm_password, setConfirm_password] = useState('');
-  const [number, setNumber] = useState('');
-  const [dialCode, setDialCode] = useState('');
+  const [isValidPassword, setIsValidPassword] = useState(false);
+  const [submitEnable, setSubmitEnable] = useState(false);
   const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
 
   type FormData = {
     code: string;
     new_password: string;
     confirm_password: string;
+    buttonDisable: string;
   };
+
+  const resolver = useYupValidationResolver(resetPasswordSchema);
   const {
-    register,
-    setValue,
+    getValues,
     handleSubmit,
     control,
-    reset,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    resolver,
+    defaultValues: {
+      code: '',
+      new_password: '',
+      confirm_password: '',
+    },
+  });
 
-  const onSubmit = data => {
+  const onSubmit = (data: FormData) => {
     console.log(data, 'data');
+    props
+      .forgotPasswordSubmit('props.userName', data.code, data.confirm_password)
+      .then(payload => {
+        if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
+          console.log('tedst data', payload);
+          props.navigation?.push('Reset Password Success', {});
+        } else {
+          console.log('tessssst data', payload);
+        }
+      });
   };
+
+  const checkSubmitDisabled = () => {
+    if (
+      getValues().confirm_password.length === 0 ||
+      getValues().code.length === 0
+    ) {
+      setSubmitEnable(false);
+    } else {
+      setSubmitEnable(true);
+    }
+  };
+
+  useEffect(() => {
+    checkSubmitDisabled();
+  }, []);
 
   return (
     <>
@@ -77,17 +101,13 @@ const ResetPassword = (props: IProps) => {
             name="code"
             control={control}
             defaultValue=""
-            rules={{
-              validate: {
-                positive: value => parseInt(value) > 0,
-                lessThanTen: value => parseInt(value) < 10,
-              },
-              required: { value: true, message: 'dfdf' },
-            }}
             render={({ field: { onChange, value } }) => (
               <TextInput
                 label="Password Reset Code"
-                onChangeText={text => onChange(text)}
+                onChangeText={text => {
+                  onChange(text);
+                  checkSubmitDisabled();
+                }}
                 value={value}
                 error={!!errors.code}
                 errorText={errors.code?.message}
@@ -105,7 +125,9 @@ const ResetPassword = (props: IProps) => {
                 <TextInput
                   label="New Password"
                   secureTextEntry={true}
-                  onChangeText={text => onChange(text)}
+                  onChangeText={text => {
+                    onChange(text);
+                  }}
                   value={value}
                   textContentType={'oneTimeCode'}
                   onFocus={() => setActiveNewPasswordInput(true)}
@@ -114,7 +136,13 @@ const ResetPassword = (props: IProps) => {
                   errorText={''}
                 />
                 {activeNewPasswordInput && (
-                  <PasswordHint passwordText={value} />
+                  <PasswordHint
+                    passwordText={value}
+                    isValid={(value: boolean) => {
+                      setIsValidPassword(value);
+                      checkSubmitDisabled();
+                    }}
+                  />
                 )}
               </>
             )}
@@ -129,11 +157,14 @@ const ResetPassword = (props: IProps) => {
               <TextInput
                 label="Confirm Password"
                 secureTextEntry={true}
-                onChangeText={text => onChange(text)}
+                onChangeText={text => {
+                  onChange(text);
+                  checkSubmitDisabled();
+                }}
                 value={value}
                 textContentType={'oneTimeCode'}
-                error={false}
-                errorText={''}
+                error={!!errors.confirm_password}
+                errorText={errors.confirm_password?.message}
               />
             )}
           />
@@ -141,7 +172,7 @@ const ResetPassword = (props: IProps) => {
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
-            disabled={false}
+            disabled={!(submitEnable && isValidPassword)}
             onPress={handleSubmit(onSubmit)}>
             {'Reset'}
           </ContainedButton>
@@ -157,5 +188,6 @@ export default connect(
   }),
   {
     requestForgotPassword,
+    forgotPasswordSubmit,
   },
 )(ResetPassword);

@@ -8,8 +8,8 @@ const buttons = {
     height: 42,
   },
   lg: {
-    width: 292,
-    height: 42,
+    width: 240,
+    height: 48,
   },
   xl: {
     width: '100%',
