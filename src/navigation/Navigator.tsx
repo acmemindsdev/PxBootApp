@@ -11,8 +11,15 @@ import ForgotPassword from 'src/screens/ForgotPassword';
 import CountryList from 'src/screens/CountryList';
 import ResetPassword from 'src/screens/ResetPassword';
 import ResetPasswordSuccess from 'src/screens/ResetPasswordSuccess';
+import SignUpOptions from 'src/screens/SignUpOptions';
 
 const RootStack = createStackNavigator();
+
+// Set Navigation Enum
+export const NavigationScreen = {
+  signUpOptions: 'Sign Up Options',
+  login: 'login',
+};
 
 const Navigation = () => {
   const HeaderLogo = () => {
@@ -40,7 +47,7 @@ const Navigation = () => {
           ),
         }}>
         <RootStack.Screen
-          name="Home"
+          name={NavigationScreen.login}
           component={SignIn}
           options={{ headerShown: false }}
         />
@@ -72,6 +79,11 @@ const Navigation = () => {
             headerTintColor: 'white',
           }}
           component={CountryList}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.signUpOptions}
+          component={SignUpOptions}
+          options={{ headerShown: false }}
         />
       </RootStack.Navigator>
     </NavigationContainer>

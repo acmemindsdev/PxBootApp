@@ -37,6 +37,7 @@ import {
   getLoginData,
   fetchErrorMessage,
 } from 'src/state/auth/authReducer';
+import { NavigationScreen } from 'src/navigation/Navigator';
 // import { requestLogin } from 'src/services/cognitoMethods';
 
 Amplify.configure(awsconfig);
@@ -55,7 +56,7 @@ const SignInLayout = ({
   responseData,
   fetchError,
   errorMessage,
-}) => {
+}: IProps) => {
   const [number, setNumber] = useState('');
   const [dialCode, setDialCode] = useState('');
   const [password, setPassword] = useState('');
@@ -102,7 +103,11 @@ const SignInLayout = ({
         </ContainedButton>
         <SocialLogin navigation={navigation} />
         <BottomView>
-          <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
+          <TextButton
+            style={{ bottom: 0, alignSelf: 'flex-end' }}
+            onPress={() =>
+              navigation?.push(NavigationScreen.signUpOptions, {})
+            }>
             <Text1>{'New to PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
               {'Register'}

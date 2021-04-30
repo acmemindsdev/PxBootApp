@@ -7,6 +7,7 @@ import {
 import { Image, StatusBar } from 'react-native';
 import { Subheading } from 'src/components/Typography';
 import { ContainedButton } from 'src/components/Button';
+import { NavigationScreen } from 'src/navigation/Navigator';
 
 type IProps = {
   navigation: any;
@@ -26,7 +27,7 @@ const ResetPasswordSuccess = ({ navigation }: IProps) => {
         <ContentView>
           <ContainedButton
             large
-            onPress={() => navigation?.navigate('Home', {})}>
+            onPress={() => navigation?.navigate(NavigationScreen.login, {})}>
             {'Log In'}
           </ContainedButton>
         </ContentView>
