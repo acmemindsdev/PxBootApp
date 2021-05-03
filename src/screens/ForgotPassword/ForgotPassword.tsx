@@ -25,6 +25,7 @@ import {
 } from 'src/state/auth/authActions';
 import { getDialCode } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
+import { NavigationScreen } from 'src/navigation/Navigator';
 
 interface IProps {
   navigation: any;
@@ -44,7 +45,7 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
     requestForgotPassword(userName).then(payload => {
       if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
         console.log('tedst data', payload);
-        navigation?.push('Reset Password', {});
+        navigation?.push(NavigationScreen.resetPassword, {});
       } else {
         console.log('tessssst data', payload);
       }

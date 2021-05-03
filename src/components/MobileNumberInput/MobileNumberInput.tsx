@@ -13,6 +13,7 @@ import { TextInput } from 'react-native-paper';
 import { StackActions } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { getDialCode } from 'src/state/auth/authReducer';
+import { NavigationScreen } from 'src/navigation/Navigator';
 
 type IProp = {
   navigation: any;
@@ -23,7 +24,7 @@ type IProp = {
 };
 
 const MobileNumberInput = (prop: IProp) => {
-  const pushAction = StackActions.push('Select a Country');
+  const pushAction = StackActions.push(NavigationScreen.selectCountry);
   const dialCode = useSelector(state => getDialCode(state));
 
   useEffect(() => {

@@ -92,7 +92,7 @@ const SignInLayout = ({
         />
         <TextButton
           align="right"
-          onPress={() => navigation?.push('Forgot Password', {})}>
+          onPress={() => navigation?.push(NavigationScreen.forgotPassword, {})}>
           {'Forgot Password?'}
         </TextButton>
         <ContainedButton

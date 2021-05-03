@@ -6,6 +6,8 @@ import get from 'lodash/get';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { getUserName } from 'src/state/auth/authReducer';
 import { useSelector } from 'react-redux';
+import { NavigationScreen } from 'src/navigation/Navigator';
+import isEmpty from 'lodash/isEmpty';
 
 interface IProps {
   navigation: any;
@@ -21,14 +23,18 @@ export function withTitleLayout<P extends IProps>(
     let title = '';
     let description = '';
     switch (get(props.route, 'name', '')) {
-      case 'Forgot Password':
+      case NavigationScreen.forgotPassword:
         title = 'Trouble Logging In?';
         description =
           'Enter your mobile number and we will send reset code to get back into your account.';
         break;
-      case 'Reset Password':
+      case NavigationScreen.resetPassword:
         title = 'Reset Password';
         description = `A password reset code has been sent on ${userName} on an SMS`;
+        break;
+      case NavigationScreen.signUp:
+        title = 'Register';
+        description = '';
         break;
       default:
         break;
@@ -53,7 +59,7 @@ export function withTitleLayout<P extends IProps>(
           >
             <View style={{ marginBottom: 20 }}>
               <Title>{title}</Title>
-              <Paragraph>{description}</Paragraph>
+              {!isEmpty(description) && <Paragraph>{description}</Paragraph>}
             </View>
             <WrappedComponent {...props} />
           </ScrollView>

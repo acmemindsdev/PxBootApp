@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Screens
 import SignIn from 'src/screens/SignIn';
+import SignUp from 'src/screens/SignUp';
 import ForgotPassword from 'src/screens/ForgotPassword';
 import CountryList from 'src/screens/CountryList';
 import ResetPassword from 'src/screens/ResetPassword';
@@ -17,8 +18,13 @@ const RootStack = createStackNavigator();
 
 // Set Navigation Enum
 export const NavigationScreen = {
+  login: 'Login',
+  signUp: 'Sign Up',
   signUpOptions: 'Sign Up Options',
-  login: 'login',
+  forgotPassword: 'Forgot Password',
+  resetPassword: 'Reset Password',
+  resetPasswordSuccess: 'Reset Password Success',
+  selectCountry: 'Select a Country',
 };
 
 const Navigation = () => {
@@ -52,7 +58,15 @@ const Navigation = () => {
           options={{ headerShown: false }}
         />
         <RootStack.Screen
-          name="Forgot Password"
+          name={NavigationScreen.signUp}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: customHeaderStyle,
+          }}
+          component={SignUp}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.forgotPassword}
           options={{
             headerTitle: () => <HeaderLogo />,
             headerStyle: customHeaderStyle,
@@ -60,7 +74,7 @@ const Navigation = () => {
           component={ForgotPassword}
         />
         <RootStack.Screen
-          name="Reset Password"
+          name={NavigationScreen.resetPassword}
           options={{
             headerTitle: () => <HeaderLogo />,
             headerStyle: customHeaderStyle,
@@ -68,12 +82,12 @@ const Navigation = () => {
           component={ResetPassword}
         />
         <RootStack.Screen
-          name="Reset Password Success"
+          name={NavigationScreen.resetPasswordSuccess}
           options={{ headerShown: false }}
           component={ResetPasswordSuccess}
         />
         <RootStack.Screen
-          name="Select a Country"
+          name={NavigationScreen.selectCountry}
           options={{
             headerStyle: customHeaderStyle,
             headerTintColor: 'white',

@@ -11,21 +11,25 @@ interface IProps {
   navigation: any;
 }
 
-const SignUpOptions = ({ navigation }: IProps) => {
-  const handleLogin = () => {};
+const SignUpOptions = (props: IProps) => {
+  const handleRegister = () => {
+    props.navigation?.push(NavigationScreen.signUp, {});
+  };
 
   return (
     <>
       <StatusBar barStyle="dark-content" />
       <MainView>
-        <ContainedButton fullWidth onPress={handleLogin}>
+        <ContainedButton fullWidth onPress={handleRegister}>
           {'Register with Mobile Number'}
         </ContainedButton>
-        <SocialLogin navigation={navigation} isRegister />
+        <SocialLogin navigation={props.navigation} isRegister />
         <BottomView>
           <TextButton
             style={{ bottom: 0, alignSelf: 'flex-end' }}
-            onPress={() => navigation?.navigate(NavigationScreen.login, {})}>
+            onPress={() =>
+              props.navigation?.navigate(NavigationScreen.login, {})
+            }>
             <Text1>{'Already on PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
               {'Log In'}

@@ -1,6 +1,5 @@
 import styled from 'styled-components/native';
-import { Text, TextInput as RNPTextInput } from 'react-native-paper';
-import { TextInput } from 'src/components';
+import { Text, TextInput } from 'react-native-paper';
 import { Text1 } from 'src/components/Typography';
 import theme from 'src/theme';
 
@@ -9,13 +8,17 @@ export const ContainerView = styled.View`
   justify-content: space-between;
 `;
 
-export const CountryCodeInput = styled(TextInput)`
+export const CountryCodeInput = styled(TextInput).attrs({
+  theme: {
+    roundness: 6,
+  },
+})`
   width: 90px;
   justify-content: center;
   background-color: ${theme.colors.gray10};
 `;
 
-export const NumberInput = styled(RNPTextInput).attrs({
+export const NumberInput = styled(TextInput).attrs({
   theme: {
     roundness: 6,
   },

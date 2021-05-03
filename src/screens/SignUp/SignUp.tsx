@@ -4,9 +4,14 @@ import {
   MainView,
   ActionButtonContainer,
   CombineTextView,
-} from './ResetPassword.styled';
-import { PasswordHint, TextInput, FormItem } from 'src/components';
-import { ContainedButton, TextButton } from 'src/components/Button';
+} from './SignUp.styled';
+import {
+  PasswordHint,
+  TextInput,
+  FormItem,
+  MobileNumberInput,
+} from 'src/components';
+import { ContainedButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
@@ -19,7 +24,6 @@ import { Controller, useForm } from 'react-hook-form';
 import useYupValidationResolver from 'src/validation/resolver';
 import { resetPasswordSchema } from 'src/validation/authValidation';
 import get from 'lodash/get';
-import { NavigationScreen } from 'src/navigation/Navigator';
 
 interface IProps {
   navigation: any;
@@ -28,15 +32,19 @@ interface IProps {
   userName: string;
 }
 
-const ResetPassword = (props: IProps) => {
+const SignUp = (props: IProps) => {
   const [isValidPassword, setIsValidPassword] = useState(false);
   const [submitEnable, setSubmitEnable] = useState(false);
   const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
 
   type FormData = {
-    code: string;
-    new_password: string;
-    confirm_password: string;
+    firstName: string;
+    lastName: string;
+    mobileNumber: string;
+    dateOfBirth: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
   };
 
   const resolver = useYupValidationResolver(resetPasswordSchema);
@@ -48,20 +56,28 @@ const ResetPassword = (props: IProps) => {
   } = useForm<FormData>({
     resolver,
     defaultValues: {
-      code: '',
-      new_password: '',
-      confirm_password: '',
+      firstName: '',
+      lastName: '',
+      mobileNumber: '',
+      dateOfBirth: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
   const onSubmit = (data: FormData) => {
     console.log(data, 'data');
     props
-      .forgotPasswordSubmit('props.userName', data.code, data.confirm_password)
+      .forgotPasswordSubmit(
+        'props.userName',
+        data.firstName,
+        data.confirmPassword,
+      )
       .then(payload => {
         if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
           console.log('tedst data', payload);
-          props.navigation?.push(NavigationScreen.resetPasswordSuccess, {});
+          props.navigation?.push('Reset Password Success', {});
         } else {
           console.log('tessssst data', payload);
         }
@@ -70,8 +86,8 @@ const ResetPassword = (props: IProps) => {
 
   const checkSubmitDisabled = () => {
     if (
-      getValues().confirm_password.length === 0 ||
-      getValues().code.length === 0
+      getValues().confirmPassword.length === 0 ||
+      getValues().firstName.length === 0
     ) {
       setSubmitEnable(false);
     } else {
@@ -87,43 +103,100 @@ const ResetPassword = (props: IProps) => {
     <>
       <StatusBar barStyle="light-content" />
       <MainView>
-        <CombineTextView>
-          <Text1>{'Did not receive Code? '}</Text1>
-          <TouchableOpacity
-            onPress={() => props.requestForgotPassword(props.userName)}>
-            <Text1 fontWeight={FontWeights.bold} color={theme.colors.primary}>
-              {'Resend SMS'}
-            </Text1>
-          </TouchableOpacity>
-        </CombineTextView>
         <FormItem>
           <Controller
-            name="code"
+            name="firstName"
             control={control}
-            defaultValue=""
             render={({ field: { onChange, value } }) => (
               <TextInput
-                label="Password Reset Code"
+                label="First Name"
                 onChangeText={text => {
                   onChange(text);
                   checkSubmitDisabled();
                 }}
                 value={value}
-                error={!!errors.code}
-                errorText={errors.code?.message}
+                error={!!errors.firstName}
+                errorText={errors.firstName?.message}
               />
             )}
           />
         </FormItem>
         <FormItem>
           <Controller
-            name="new_password"
+            name="lastName"
             control={control}
-            defaultValue=""
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Last Name"
+                onChangeText={text => {
+                  onChange(text);
+                  checkSubmitDisabled();
+                }}
+                value={value}
+                error={!!errors.lastName}
+                errorText={errors.lastName?.message}
+              />
+            )}
+          />
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="mobileNumber"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <MobileNumberInput
+                navigation={props.navigation}
+                onChangeDialCode={code => {}}
+                onChangeMobileNumber={number => {}}
+                error={false}
+              />
+            )}
+          />
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="dateOfBirth"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Date of Birth"
+                onChangeText={text => {
+                  onChange(text);
+                  checkSubmitDisabled();
+                }}
+                value={value}
+                error={!!errors.dateOfBirth}
+                errorText={errors.dateOfBirth?.message}
+              />
+            )}
+          />
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <TextInput
+                label="Email Address"
+                onChangeText={text => {
+                  onChange(text);
+                  checkSubmitDisabled();
+                }}
+                value={value}
+                error={!!errors.email}
+                errorText={errors.email?.message}
+              />
+            )}
+          />
+        </FormItem>
+        <FormItem>
+          <Controller
+            name="password"
+            control={control}
             render={({ field: { onChange, value } }) => (
               <>
                 <TextInput
-                  label="New Password"
+                  label="Password"
                   secureTextEntry={true}
                   onChangeText={text => {
                     onChange(text);
@@ -150,7 +223,7 @@ const ResetPassword = (props: IProps) => {
         </FormItem>
         <FormItem>
           <Controller
-            name="confirm_password"
+            name="confirmPassword"
             control={control}
             defaultValue=""
             render={({ field: { onChange, value } }) => (
@@ -163,8 +236,8 @@ const ResetPassword = (props: IProps) => {
                 }}
                 value={value}
                 textContentType={'oneTimeCode'}
-                error={!!errors.confirm_password}
-                errorText={errors.confirm_password?.message}
+                error={!!errors.confirmPassword}
+                errorText={errors.confirmPassword?.message}
               />
             )}
           />
@@ -174,7 +247,7 @@ const ResetPassword = (props: IProps) => {
             fullWidth
             disabled={!(submitEnable && isValidPassword)}
             onPress={handleSubmit(onSubmit)}>
-            {'Reset'}
+            {'Register'}
           </ContainedButton>
         </ActionButtonContainer>
       </MainView>
@@ -190,4 +263,4 @@ export default connect(
     requestForgotPassword,
     forgotPasswordSubmit,
   },
-)(ResetPassword);
+)(SignUp);
