@@ -88,7 +88,9 @@ const ResetPassword = (props: IProps) => {
       <StatusBar barStyle="light-content" />
       <MainView>
         <CombineTextView>
-          <Text1>{'Did not receive Code? '}</Text1>
+          <Text1 style={{ opacity: 0.6 }} color={theme.colors.black90}>
+            {'Did not receive Code? '}
+          </Text1>
           <TouchableOpacity
             onPress={() => props.requestForgotPassword(props.userName)}>
             <Text1 fontWeight={FontWeights.bold} color={theme.colors.primary}>

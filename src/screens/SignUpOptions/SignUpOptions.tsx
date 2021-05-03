@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { SocialLogin } from 'src/components';
-import { MainView, BottomView } from './SignUpOptions.styled';
+import {
+  MainView,
+  BottomView,
+  TextContainerView,
+} from './SignUpOptions.styled';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
@@ -24,6 +28,31 @@ const SignUpOptions = (props: IProps) => {
           {'Register with Mobile Number'}
         </ContainedButton>
         <SocialLogin navigation={props.navigation} isRegister />
+        <TextContainerView>
+          <Text1
+            style={{ marginTop: 12, opacity: 0.6 }}
+            color={theme.colors.black90}>
+            {'By Continuing, you agree to the '}
+          </Text1>
+          <Text1
+            color={theme.colors.primary}
+            fontWeight={FontWeights.bold}
+            onPress={() => {}}
+            style={{ marginTop: 12 }}>
+            {'Terms & Conditions'}
+          </Text1>
+          <Text1
+            style={{ marginTop: 12, opacity: 0.6 }}
+            color={theme.colors.black90}>
+            {' and '}
+          </Text1>
+          <Text1
+            color={theme.colors.primary}
+            fontWeight={FontWeights.bold}
+            style={{ marginTop: 12 }}>
+            {'Privacy Policy'}
+          </Text1>
+        </TextContainerView>
         <BottomView>
           <TextButton
             style={{ bottom: 0, alignSelf: 'flex-end' }}

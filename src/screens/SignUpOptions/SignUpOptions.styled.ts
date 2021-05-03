@@ -14,3 +14,10 @@ export const BottomView = styled.View`
   bottom: 20px;
   flex: 1;
 `;
+
+export const TextContainerView = styled.View`
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-content: center;
+`;

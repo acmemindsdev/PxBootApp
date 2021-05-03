@@ -55,6 +55,7 @@ export function withTitleLayout<P extends IProps>(
             scrollEnabled={true}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
+            keyboardShouldPersistTaps={'handled'}
             //  onContentSizeChange={this.onContentSizeChange}
           >
             <View style={{ marginBottom: 20 }}>

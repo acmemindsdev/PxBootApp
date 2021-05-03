@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, TouchableOpacity } from 'react-native';
+import { StatusBar, TouchableOpacity, View } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
@@ -12,22 +12,24 @@ import {
   MobileNumberInput,
 } from 'src/components';
 import { ContainedButton } from 'src/components/Button';
-import { Text1, FontWeights } from 'src/components/Typography';
-import theme from 'src/theme';
 import { connect } from 'react-redux';
 import {
-  requestForgotPassword,
+  registerUser,
   forgotPasswordSubmit,
+  REGISTER_USER_SUCCESS,
 } from 'src/state/auth/authActions';
 import { getUserName } from 'src/state/auth/authReducer';
 import { Controller, useForm } from 'react-hook-form';
 import useYupValidationResolver from 'src/validation/resolver';
-import { resetPasswordSchema } from 'src/validation/authValidation';
+import { signUpSchema } from 'src/validation/authValidation';
 import get from 'lodash/get';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import isEmpty from 'lodash/isEmpty';
 
 interface IProps {
   navigation: any;
-  requestForgotPassword: any;
+  registerUser: any;
   forgotPasswordSubmit: any;
   userName: string;
 }
@@ -36,6 +38,8 @@ const SignUp = (props: IProps) => {
   const [isValidPassword, setIsValidPassword] = useState(false);
   const [submitEnable, setSubmitEnable] = useState(false);
   const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [dialCode, setDialCode] = useState('');
 
   type FormData = {
     firstName: string;
@@ -47,9 +51,10 @@ const SignUp = (props: IProps) => {
     confirmPassword: string;
   };
 
-  const resolver = useYupValidationResolver(resetPasswordSchema);
+  const resolver = useYupValidationResolver(signUpSchema);
   const {
     getValues,
+    setValue,
     handleSubmit,
     control,
     formState: { errors },
@@ -68,14 +73,20 @@ const SignUp = (props: IProps) => {
 
   const onSubmit = (data: FormData) => {
     console.log(data, 'data');
+    // Phone number and also username
+    const phoneNumber = `+${dialCode}${data.mobileNumber}`;
     props
-      .forgotPasswordSubmit(
-        'props.userName',
+      .registerUser(
+        phoneNumber,
         data.firstName,
+        data.lastName,
+        phoneNumber,
+        data.dateOfBirth,
+        data.email,
         data.confirmPassword,
       )
       .then(payload => {
-        if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
+        if (get(payload, 'type') === REGISTER_USER_SUCCESS) {
           console.log('tedst data', payload);
           props.navigation?.push('Reset Password Success', {});
         } else {
@@ -85,14 +96,34 @@ const SignUp = (props: IProps) => {
   };
 
   const checkSubmitDisabled = () => {
+    const value = getValues();
     if (
-      getValues().confirmPassword.length === 0 ||
-      getValues().firstName.length === 0
+      value.firstName !== '' &&
+      value.lastName !== '' &&
+      value.mobileNumber !== '' &&
+      value.dateOfBirth !== '' &&
+      value.email !== '' &&
+      value.confirmPassword !== ''
     ) {
-      setSubmitEnable(false);
-    } else {
       setSubmitEnable(true);
+    } else {
+      setSubmitEnable(false);
     }
+  };
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleDateConfirm = date => {
+    console.log('A date has been picked: ', date);
+    const dateValue = moment(date).format('DD/MM/YYYY');
+    setValue('dateOfBirth', dateValue);
+    hideDatePicker();
   };
 
   useEffect(() => {
@@ -146,8 +177,8 @@ const SignUp = (props: IProps) => {
             render={({ field: { onChange, value } }) => (
               <MobileNumberInput
                 navigation={props.navigation}
-                onChangeDialCode={code => {}}
-                onChangeMobileNumber={number => {}}
+                onChangeDialCode={code => setDialCode(code)}
+                onChangeMobileNumber={number => onChange(number)}
                 error={false}
               />
             )}
@@ -158,17 +189,35 @@ const SignUp = (props: IProps) => {
             name="dateOfBirth"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <TextInput
-                label="Date of Birth"
-                onChangeText={text => {
-                  onChange(text);
-                  checkSubmitDisabled();
-                }}
-                value={value}
-                error={!!errors.dateOfBirth}
-                errorText={errors.dateOfBirth?.message}
-              />
+              <TouchableOpacity onPress={showDatePicker}>
+                <TextInput
+                  label="Date of Birth"
+                  onChangeText={text => {
+                    onChange(text);
+                    checkSubmitDisabled();
+                  }}
+                  value={value}
+                  error={!!errors.dateOfBirth}
+                  errorText={errors.dateOfBirth?.message}
+                  pointerEvents="none"
+                  focusable={false}
+                  editable={false}
+                />
+              </TouchableOpacity>
             )}
+          />
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            date={
+              !isEmpty(getValues('dateOfBirth'))
+                ? moment(getValues('dateOfBirth'), 'DD/MM/YYYY').toDate()
+                : new Date()
+            }
+            mode="date"
+            maximumDate={moment().subtract(2, 'years').toDate()}
+            headerTextIOS="Select Birth Date"
+            onConfirm={handleDateConfirm}
+            onCancel={hideDatePicker}
           />
         </FormItem>
         <FormItem>
@@ -260,7 +309,7 @@ export default connect(
     userName: getUserName(state),
   }),
   {
-    requestForgotPassword,
+    registerUser,
     forgotPasswordSubmit,
   },
 )(SignUp);

@@ -1,5 +1,19 @@
 import * as yup from 'yup';
-import React, { useCallback } from 'react';
+
+export const signUpSchema = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  mobileNumber: yup.string().required(),
+  dateOfBirth: yup.string().required(),
+  email: yup.string().required().email('This email is invalid'),
+  password: yup.string().required(),
+  confirmPassword: yup
+    .string()
+    .required()
+    .test('confirmPassword', 'Passwords do not match', function (val) {
+      return val === this.parent.password;
+    }),
+});
 
 export const resetPasswordSchema = yup.object().shape({
   code: yup.string().required(),

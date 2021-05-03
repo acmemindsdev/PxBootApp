@@ -73,7 +73,9 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
           </ActionButtonContainer>
         </>
         <BottomView>
-          <TextButton style={{ bottom: 0, alignSelf: 'flex-end' }}>
+          <TextButton
+            style={{ bottom: 0, alignSelf: 'flex-end' }}
+            onPress={() => navigation?.navigate(NavigationScreen.signUp, {})}>
             <Text1>{'New to PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
               {'Register'}

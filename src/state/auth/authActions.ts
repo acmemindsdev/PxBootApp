@@ -4,6 +4,9 @@ export const HANDLE_LOGIN_SUCCESS = 'HANDLE_LOGIN_SUCCESS';
 export const HANDLE_LOGIN_ERROR = 'HANDLE_LOGIN_ERROR';
 export const SOCIAL_LOGIN_SUCCESS = 'SOCIAL_LOGIN_SUCCESS';
 export const SOCIAL_LOGIN_ERROR = 'SOCIAL_LOGIN_ERROR';
+export const REGISTER_USER = 'REGISTER_USER';
+export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
+export const REGISTER_USER_ERROR = 'REGISTER_USER_ERROR';
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';
 export const FORGOT_PASSWORD_ERROR = 'FORGOT_PASSWORD_ERROR';
@@ -15,6 +18,8 @@ export const USER_ID = 'USER_ID';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+import { string } from 'yup/lib/locale';
+import React from 'react';
 
 Amplify.configure(awsconfig);
 
@@ -67,6 +72,42 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
         });
       }
     });
+  };
+};
+
+export const registerUser = (
+  username: string, // Should be phone number with dial code
+  given_name: string,
+  family_name: string,
+  phone_number: string,
+  birthdate: string,
+  email: string,
+  password: string,
+) => {
+  return dispatch => {
+    dispatch({
+      type: REGISTER_USER,
+    });
+
+    return Auth.signUp({
+      username,
+      password,
+      attributes: { given_name, family_name, phone_number, birthdate, email },
+    })
+      .then(json => {
+        console.log('success Yusuf:', json);
+        return dispatch({
+          type: REGISTER_USER_SUCCESS,
+          payload: json,
+        });
+      })
+      .catch(err => {
+        console.log('error Yusuf:', err);
+        return dispatch({
+          type: REGISTER_USER_ERROR,
+          payload: err,
+        });
+      });
   };
 };
 
