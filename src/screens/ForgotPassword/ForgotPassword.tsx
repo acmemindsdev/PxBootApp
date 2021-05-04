@@ -1,31 +1,20 @@
-import React, { Fragment, useState } from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  TextInput,
-  Button,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
   BottomView,
 } from './ForgotPassword.styled';
-import { MobileNumberInput } from 'src/components';
+import { MobileNumberInput, FormItem } from 'src/components';
 import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import {
-  setSelectedCountry,
-  requestForgotPassword,
-} from 'src/state/auth/authActions';
-import { getDialCode } from 'src/state/auth/authReducer';
+import { requestForgotPassword } from 'src/state/auth/authActions';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
+import { Controller, useForm } from 'react-hook-form';
 
 interface IProps {
   navigation: any;
@@ -33,23 +22,47 @@ interface IProps {
 }
 
 const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
-  const [username, setUsername] = useState('');
-  const [showResetPassword, setShowResetPassword] = useState(false);
-  const [new_password, setNew_password] = useState('');
-  const [code, setCode] = useState('');
-  const [number, setNumber] = useState('');
+  const [submitEnable, setSubmitEnable] = useState(false);
   const [dialCode, setDialCode] = useState('');
+  const [fetchErrorMessage, setFetchErrorMessage] = useState('');
 
-  const handleSubmit = () => {
-    const userName = `+${dialCode}${number}`;
-    requestForgotPassword(userName).then(payload => {
-      if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
-        console.log('tedst data', payload);
+  type FormData = {
+    mobileNumber: string;
+  };
+
+  const {
+    handleSubmit,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    const userName = `+${dialCode}${data.mobileNumber}`;
+    requestForgotPassword(userName).then(response => {
+      if (get(response, 'type') === 'FORGOT_PASSWORD_SUCCESS') {
+        console.log('tedst data', response);
         navigation?.push(NavigationScreen.resetPassword, {});
       } else {
-        console.log('tessssst data', payload);
+        console.log('tessssst data', response);
+        if (get(response, 'payload.code', '') === 'UserNotFoundException') {
+          setFetchErrorMessage(
+            'This account does not exist. Register to create account.',
+          );
+        } else {
+          setFetchErrorMessage('Something went wrong, Please try again later.');
+        }
       }
     });
+  };
+
+  const checkSubmitDisabled = () => {
+    const value = getValues();
+    if (value.mobileNumber !== '') {
+      setSubmitEnable(true);
+    } else {
+      setSubmitEnable(false);
+    }
   };
 
   return (
@@ -57,17 +70,39 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
       <StatusBar barStyle="light-content" />
       <MainView>
         <>
-          <MobileNumberInput
-            navigation={navigation}
-            onChangeDialCode={code => setDialCode(code)}
-            onChangeMobileNumber={number => setNumber(number)}
-            error={false}
-          />
+          <FormItem>
+            <Controller
+              name="mobileNumber"
+              control={control}
+              defaultValue=""
+              rules={{
+                validate: {
+                  valid: v => v.length === 10,
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <MobileNumberInput
+                  navigation={navigation}
+                  onChangeDialCode={code => setDialCode(code)}
+                  onChangeMobileNumber={number => {
+                    onChange(number);
+                    checkSubmitDisabled();
+                  }}
+                  error={!!errors.mobileNumber || !isEmpty(fetchErrorMessage)}
+                  errorText={
+                    errors.mobileNumber?.type === 'valid'
+                      ? 'Phone number invalid'
+                      : fetchErrorMessage
+                  }
+                />
+              )}
+            />
+          </FormItem>
           <ActionButtonContainer>
             <ContainedButton
               fullWidth
-              disabled={!(dialCode && number)}
-              onPress={handleSubmit}>
+              disabled={!(dialCode && submitEnable)}
+              onPress={handleSubmit(onSubmit)}>
               {'Send Reset Code'}
             </ContainedButton>
           </ActionButtonContainer>
@@ -75,7 +110,9 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
         <BottomView>
           <TextButton
             style={{ bottom: 0, alignSelf: 'flex-end' }}
-            onPress={() => navigation?.navigate(NavigationScreen.signUp, {})}>
+            onPress={() =>
+              navigation?.navigate(NavigationScreen.signUpOptions, {})
+            }>
             <Text1>{'New to PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
               {'Register'}
@@ -87,11 +124,6 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
   );
 };
 
-export default connect(
-  state => ({
-    dialCode: getDialCode(state),
-  }),
-  {
-    requestForgotPassword,
-  },
-)(ForgotPassword);
+export default connect(state => ({}), {
+  requestForgotPassword,
+})(ForgotPassword);

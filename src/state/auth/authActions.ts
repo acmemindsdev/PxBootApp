@@ -42,7 +42,7 @@ export const requestLogin = (username: string, password: string) => {
         });
       })
       .catch(err => {
-        console.log('error Yusuf:', err);
+        console.log('error:', err);
         return dispatch({
           type: HANDLE_LOGIN_ERROR,
           payload: err,

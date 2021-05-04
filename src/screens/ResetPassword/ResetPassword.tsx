@@ -13,6 +13,7 @@ import { connect } from 'react-redux';
 import {
   requestForgotPassword,
   forgotPasswordSubmit,
+  FORGOT_PASSWORD_SUBMIT_SUCCESS,
 } from 'src/state/auth/authActions';
 import { getUserName } from 'src/state/auth/authReducer';
 import { Controller, useForm } from 'react-hook-form';
@@ -57,9 +58,9 @@ const ResetPassword = (props: IProps) => {
   const onSubmit = (data: FormData) => {
     console.log(data, 'data');
     props
-      .forgotPasswordSubmit('props.userName', data.code, data.confirm_password)
+      .forgotPasswordSubmit(props.userName, data.code, data.confirm_password)
       .then(payload => {
-        if (get(payload, 'type') != 'FORGOT_PASSWORD_SUCCESS') {
+        if (get(payload, 'type') === FORGOT_PASSWORD_SUBMIT_SUCCESS) {
           console.log('tedst data', payload);
           props.navigation?.push(NavigationScreen.resetPasswordSuccess, {});
         } else {

@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar, TouchableOpacity, View } from 'react-native';
-import {
-  MainView,
-  ActionButtonContainer,
-  CombineTextView,
-} from './SignUp.styled';
+import { MainView, ActionButtonContainer, IconStyled } from './SignUp.styled';
 import {
   PasswordHint,
   TextInput,
@@ -197,6 +193,10 @@ const SignUp = (props: IProps) => {
                     checkSubmitDisabled();
                   }}
                   value={value}
+                  rightIcon={
+                    <IconStyled size={25} name="calendar-range-outline" />
+                  }
+                  onIconPress={showDatePicker}
                   error={!!errors.dateOfBirth}
                   errorText={errors.dateOfBirth?.message}
                   pointerEvents="none"

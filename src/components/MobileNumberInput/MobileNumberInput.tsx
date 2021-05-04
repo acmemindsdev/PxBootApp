@@ -9,7 +9,7 @@ import {
   CountryCodeView,
   ErrorText,
 } from './MobileNumberInput.styled';
-import { TextInput } from 'react-native-paper';
+import isEmpty from 'lodash/isEmpty';
 import { StackActions } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { getDialCode } from 'src/state/auth/authReducer';
@@ -56,7 +56,9 @@ const MobileNumberInput = (prop: IProp) => {
           keyboardType="numeric"
         />
       </ContainerView>
-      {prop.errorText && prop.error && <ErrorText>{prop.errorText}</ErrorText>}
+      {!isEmpty(prop.errorText) && prop.error && (
+        <ErrorText>{prop.errorText}</ErrorText>
+      )}
     </>
   );
 };

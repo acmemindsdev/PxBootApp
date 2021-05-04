@@ -36,6 +36,10 @@ export function withTitleLayout<P extends IProps>(
         title = 'Register';
         description = '';
         break;
+      case NavigationScreen.confirmMobileNumber:
+        title = 'Confirm Mobile Number';
+        description = 'A verification code will be sent to your mobile number';
+        break;
       default:
         break;
     }

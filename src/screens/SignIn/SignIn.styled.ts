@@ -2,7 +2,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'src/theme';
 import styled from 'styled-components/native';
 import { TextInput } from 'src/components';
-import { TextInput as RNPTextInput } from 'react-native-paper';
 
 export const MainView = styled.View`
   flex: 1;
