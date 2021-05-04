@@ -24,3 +24,13 @@ export const ButtonContentView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+export const ActivityIndicatorView = styled.View`
+  margin-top: 20px;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+`;

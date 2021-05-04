@@ -2,6 +2,7 @@ export const SELECTED_COUNTRY = 'SELECTED_COUNTRY';
 export const HANDLE_LOGIN = 'HANDLE_LOGIN';
 export const HANDLE_LOGIN_SUCCESS = 'HANDLE_LOGIN_SUCCESS';
 export const HANDLE_LOGIN_ERROR = 'HANDLE_LOGIN_ERROR';
+export const SOCIAL_LOGIN = 'SOCIAL_LOGIN';
 export const SOCIAL_LOGIN_SUCCESS = 'SOCIAL_LOGIN_SUCCESS';
 export const SOCIAL_LOGIN_ERROR = 'SOCIAL_LOGIN_ERROR';
 export const REGISTER_USER = 'REGISTER_USER';
@@ -18,10 +19,9 @@ export const USER_ID = 'USER_ID';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
-import { string } from 'yup/lib/locale';
-import React from 'react';
 
 Amplify.configure(awsconfig);
+const busListeners = {};
 
 export const setSelectedCountry = item => ({
   type: SELECTED_COUNTRY,
@@ -52,27 +52,47 @@ export const requestLogin = (username: string, password: string) => {
 };
 
 export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
-  Auth.federatedSignIn({
-    provider: provider,
-  });
   return dispatch => {
-    return Hub.listen('auth', data => {
+    Auth.federatedSignIn({
+      provider: provider,
+    });
+    return registerListener('auth', 'social', data => {
       const { payload } = data;
-
-      if (payload && payload.data) {
-        console.log('Yusuf1111:', JSON.stringify(payload.data));
-        return dispatch({
+      console.log('auth response', JSON.stringify(payload));
+      if (payload.event === 'codeFlow') {
+        console.log('auth initialize');
+        dispatch({
+          type: SOCIAL_LOGIN,
+        });
+      }
+      if (payload.event === 'signIn') {
+        console.log('a user has signed in!');
+        dispatch({
           type: SOCIAL_LOGIN_SUCCESS,
           payload: JSON.stringify(payload.data),
         });
-      } else {
-        return dispatch({
-          type: SOCIAL_LOGIN_ERROR,
-          payload: JSON.stringify(payload.data),
-        });
+      }
+      if (payload.event === 'signOut') {
+        console.log('a user has signed out!');
       }
     });
   };
+};
+
+/* Adds a listener to under the UNIQUE name, to the channel
+  If a listener with the name already exists, it will be removed
+  before this one is added
+  @param channel
+  @param name
+  @param callback
+ */
+const registerListener = (channel, name, callback) => {
+  const previousListener = busListeners[name];
+  if (!!previousListener) {
+    Hub.remove(channel, previousListener);
+  }
+  busListeners[name] = callback;
+  Hub.listen(channel, busListeners[name]);
 };
 
 export const registerUser = (

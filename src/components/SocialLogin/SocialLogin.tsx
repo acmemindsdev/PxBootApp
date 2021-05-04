@@ -1,17 +1,42 @@
-import React from 'react';
-import { MainView, GridView, TitleText } from './SocialLogin.styled';
+import React, { useEffect } from 'react';
+import {
+  MainView,
+  GridView,
+  TitleText,
+  ActivityIndicatorView,
+} from './SocialLogin.styled';
 import { Divider } from 'src/components';
 import { Button, Text } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 import SocialLoginButton from './SocialLoginButton';
+import { connect, useSelector } from 'react-redux';
+import {
+  getSocialLoginData,
+  isSocialLoginResponseLoading,
+} from 'src/state/auth/authReducer';
+import { NavigationScreen } from 'src/navigation/Navigator';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import theme from 'src/theme';
 
 type IProp = {
-  navigation: object;
+  navigation: any;
   isRegister?: boolean;
+  isLoading?: boolean;
+  responseData?: any;
 };
 
-export const SocialLogin = (prop: IProp) => {
+const SocialLogin = (prop: IProp) => {
+  const isLoading = useSelector(state => isSocialLoginResponseLoading(state));
+  const responseData = useSelector(state => getSocialLoginData(state));
+
+  useEffect(() => {
+    if (!isEmpty(get(responseData, 'username', ''))) {
+      prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
+    }
+  }, [responseData]);
+
   return (
     <MainView>
       <GridView>
@@ -21,12 +46,17 @@ export const SocialLogin = (prop: IProp) => {
         </TitleText>
         <Divider style={{ flex: 1 }} />
       </GridView>
-      <GridView>
+      <GridView style={{ opacity: isLoading ? 0.2 : 1 }}>
         <SocialLoginButton type="fb" />
         <SocialLoginButton type="google" />
         <SocialLoginButton type="apple" />
       </GridView>
       <Divider />
+      {isLoading && (
+        <ActivityIndicatorView>
+          <ActivityIndicator size="large" color={theme.colors.primary} />
+        </ActivityIndicatorView>
+      )}
     </MainView>
   );
 };
@@ -39,3 +69,5 @@ const styles = StyleSheet.create({
     height: 250,
   },
 });
+
+export default SocialLogin;
