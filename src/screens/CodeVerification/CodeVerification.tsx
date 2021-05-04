@@ -7,7 +7,6 @@ import {
   OtpInputsStyled,
   styles,
 } from './CodeVerification.syled';
-import { Title } from 'src/components/Typography';
 import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import { requestForgotPassword } from 'src/state/auth/authActions';
@@ -22,8 +21,6 @@ interface IProps {
   navigation: any;
   requestForgotPassword: any;
 }
-
-type RNPTitleProps = React.ComponentProps<typeof Title>;
 
 const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
   const [code, setCode] = useState('');
