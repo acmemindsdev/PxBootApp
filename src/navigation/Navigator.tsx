@@ -14,6 +14,7 @@ import ResetPassword from 'src/screens/ResetPassword';
 import ResetPasswordSuccess from 'src/screens/ResetPasswordSuccess';
 import SignUpOptions from 'src/screens/SignUpOptions';
 import ConfirmMobileNumber from 'src/screens/ConfirmMobileNumber';
+import CodeVerification from 'src/screens/CodeVerification';
 
 const RootStack = createStackNavigator();
 
@@ -27,6 +28,7 @@ export const NavigationScreen = {
   resetPasswordSuccess: 'Reset Password Success',
   selectCountry: 'Select a Country',
   confirmMobileNumber: 'Confirm Mobile Number',
+  codeVerification: 'Code Verification',
 };
 
 const Navigation = () => {
@@ -108,6 +110,14 @@ const Navigation = () => {
             headerStyle: customHeaderStyle,
           }}
           component={ConfirmMobileNumber}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.codeVerification}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: customHeaderStyle,
+          }}
+          component={CodeVerification}
         />
       </RootStack.Navigator>
     </NavigationContainer>

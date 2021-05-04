@@ -33,6 +33,8 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    navigation?.push(NavigationScreen.codeVerification, {});
+    return;
     const userName = `+${dialCode}${data.mobileNumber}`;
     requestForgotPassword(userName).then(response => {
       if (get(response, 'type') === 'FORGOT_PASSWORD_SUCCESS') {

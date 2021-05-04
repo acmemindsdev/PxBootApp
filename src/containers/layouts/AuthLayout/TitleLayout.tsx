@@ -40,6 +40,10 @@ export function withTitleLayout<P extends IProps>(
         title = 'Confirm Mobile Number';
         description = 'A verification code will be sent to your mobile number';
         break;
+      case NavigationScreen.codeVerification:
+        title = 'Mobile Number Verification';
+        description = `A verification code has been sent to your mobile number ${userName}`;
+        break;
       default:
         break;
     }
