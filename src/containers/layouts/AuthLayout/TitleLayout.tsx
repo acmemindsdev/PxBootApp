@@ -1,13 +1,19 @@
 import React from 'react';
-import { Title, Paragraph, Text1 } from 'src/components/Typography';
+import {
+  Title,
+  Paragraph,
+  Text1,
+  FontWeights,
+} from 'src/components/Typography';
 import { View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { WrapperStyled, LogoContainer, LogoImageStyled } from './Auth.styled';
 import get from 'lodash/get';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { getUserName } from 'src/state/auth/authReducer';
+import { getMobileNumber } from 'src/state/auth/authReducer';
 import { useSelector } from 'react-redux';
 import { NavigationScreen } from 'src/navigation/Navigator';
 import isEmpty from 'lodash/isEmpty';
+import theme from 'src/theme';
 
 interface IProps {
   navigation: any;
@@ -19,34 +25,66 @@ export function withTitleLayout<P extends IProps>(
   WrappedComponent: React.ComponentType<P>,
 ): React.FunctionComponent<P> {
   return props => {
-    const userName = useSelector(state => getUserName(state));
+    const mobileNumber = useSelector(state => getMobileNumber(state));
     let title = '';
-    let description = '';
-    switch (get(props.route, 'name', '')) {
-      case NavigationScreen.forgotPassword:
-        title = 'Trouble Logging In?';
-        description =
-          'Enter your mobile number and we will send reset code to get back into your account.';
-        break;
-      case NavigationScreen.resetPassword:
-        title = 'Reset Password';
-        description = `A password reset code has been sent on ${userName} on an SMS`;
-        break;
-      case NavigationScreen.signUp:
-        title = 'Register';
-        description = '';
-        break;
-      case NavigationScreen.confirmMobileNumber:
-        title = 'Confirm Mobile Number';
-        description = 'A verification code will be sent to your mobile number';
-        break;
-      case NavigationScreen.codeVerification:
-        title = 'Mobile Number Verification';
-        description = `A verification code has been sent to your mobile number ${userName}`;
-        break;
-      default:
-        break;
-    }
+
+    const Title_Description = () => {
+      switch (get(props.route, 'name', '')) {
+        case NavigationScreen.forgotPassword:
+          return (
+            <>
+              <Title>{'Trouble Logging In?'}</Title>
+              <Paragraph>
+                {
+                  'Enter your mobile number and we will send reset code to get back into your account.'
+                }
+              </Paragraph>
+            </>
+          );
+        case NavigationScreen.resetPassword:
+          return (
+            <>
+              <Title>{'Reset Password'}</Title>
+              <Paragraph>
+                {'A password reset code has been sent on '}
+                <Paragraph
+                  fontWeight={FontWeights.bold}
+                  color={theme.colors.black90}>
+                  {mobileNumber}
+                </Paragraph>
+                {' on an SMS'}
+              </Paragraph>
+            </>
+          );
+        case NavigationScreen.signUp:
+          return <Title>{'Register'}</Title>;
+        case NavigationScreen.confirmMobileNumber:
+          return (
+            <>
+              <Title>{'Confirm Mobile Number'}</Title>
+              <Paragraph>
+                {'A verification code will be sent to your mobile number'}
+              </Paragraph>
+            </>
+          );
+        case NavigationScreen.codeVerification:
+          return (
+            <>
+              <Title>{'Mobile Number Verification'}</Title>
+              <Paragraph>
+                {'A verification code has been sent to your mobile number '}
+                <Paragraph
+                  fontWeight={FontWeights.bold}
+                  color={theme.colors.black90}>
+                  {mobileNumber}
+                </Paragraph>
+              </Paragraph>
+            </>
+          );
+        default:
+          return null;
+      }
+    };
 
     return (
       <WrapperStyled>
@@ -66,10 +104,7 @@ export function withTitleLayout<P extends IProps>(
             keyboardShouldPersistTaps={'handled'}
             //  onContentSizeChange={this.onContentSizeChange}
           >
-            <View style={{ marginBottom: 20 }}>
-              <Title>{title}</Title>
-              {!isEmpty(description) && <Paragraph>{description}</Paragraph>}
-            </View>
+            <View style={{ marginBottom: 20 }}>{Title_Description()}</View>
             <WrappedComponent {...props} />
           </ScrollView>
         </KeyboardAvoidingView>

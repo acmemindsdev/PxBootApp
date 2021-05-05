@@ -12,6 +12,7 @@ import ForgotPassword from 'src/screens/ForgotPassword';
 import CountryList from 'src/screens/CountryList';
 import ResetPassword from 'src/screens/ResetPassword';
 import ResetPasswordSuccess from 'src/screens/ResetPasswordSuccess';
+import VerificationSuccess from 'src/screens/VerificationSuccess';
 import SignUpOptions from 'src/screens/SignUpOptions';
 import ConfirmMobileNumber from 'src/screens/ConfirmMobileNumber';
 import CodeVerification from 'src/screens/CodeVerification';
@@ -29,6 +30,7 @@ export const NavigationScreen = {
   selectCountry: 'Select a Country',
   confirmMobileNumber: 'Confirm Mobile Number',
   codeVerification: 'Code Verification',
+  verificationSuccess: 'Verification Success',
 };
 
 const Navigation = () => {
@@ -89,6 +91,11 @@ const Navigation = () => {
           name={NavigationScreen.resetPasswordSuccess}
           options={{ headerShown: false }}
           component={ResetPasswordSuccess}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.verificationSuccess}
+          options={{ headerShown: false }}
+          component={VerificationSuccess}
         />
         <RootStack.Screen
           name={NavigationScreen.selectCountry}

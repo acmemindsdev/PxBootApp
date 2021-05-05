@@ -1,20 +1,44 @@
 export const SELECTED_COUNTRY = 'SELECTED_COUNTRY';
+
+// Login
 export const HANDLE_LOGIN = 'HANDLE_LOGIN';
 export const HANDLE_LOGIN_SUCCESS = 'HANDLE_LOGIN_SUCCESS';
 export const HANDLE_LOGIN_ERROR = 'HANDLE_LOGIN_ERROR';
+
+// Social Login
 export const SOCIAL_LOGIN = 'SOCIAL_LOGIN';
 export const SOCIAL_LOGIN_SUCCESS = 'SOCIAL_LOGIN_SUCCESS';
 export const SOCIAL_LOGIN_ERROR = 'SOCIAL_LOGIN_ERROR';
+
+// Register User
 export const REGISTER_USER = 'REGISTER_USER';
 export const REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS';
 export const REGISTER_USER_ERROR = 'REGISTER_USER_ERROR';
+
+// Forgot Password
 export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
 export const FORGOT_PASSWORD_SUCCESS = 'FORGOT_PASSWORD_SUCCESS';
 export const FORGOT_PASSWORD_ERROR = 'FORGOT_PASSWORD_ERROR';
+
+// Forgot Password Submit
 export const FORGOT_PASSWORD_SUBMIT = 'FORGOT_PASSWORD_SUBMIT';
 export const FORGOT_PASSWORD_SUBMIT_SUCCESS = 'FORGOT_PASSWORD_SUBMIT_SUCCESS';
 export const FORGOT_PASSWORD_SUBMIT_ERROR = 'FORGOT_PASSWORD_SUBMIT_ERROR';
+
+// Verification Code Submit
+export const VERIFICATION_CODE_SUBMIT = 'VERIFICATION_CODE_SUBMIT';
+export const VERIFICATION_CODE_SUBMIT_SUCCESS =
+  'VERIFICATION_CODE_SUBMIT_SUCCESS';
+export const VERIFICATION_CODE_SUBMIT_ERROR = 'VERIFICATION_CODE_SUBMIT_ERROR';
+
+// Resend Verification Code
+export const RESEND_CODE = 'RESEND_CODE';
+export const RESEND_CODE_SUCCESS = 'RESEND_CODE_SUCCESS';
+export const RESEND_CODE_ERROR = 'RESEND_CODE_ERROR';
+
+// Temporary UserName
 export const USER_ID = 'USER_ID';
+export const MOBILE_NUMBER = 'MOBILE_NUMBER';
 
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import awsconfig from '../../../aws-exports';
@@ -28,7 +52,21 @@ export const setSelectedCountry = item => ({
   payload: item,
 });
 
-export const requestLogin = (username: string, password: string) => {
+export const setUsername = item => ({
+  type: USER_ID,
+  payload: item,
+});
+export const setMobileNumber = item => ({
+  type: MOBILE_NUMBER,
+  payload: item,
+});
+
+export const requestLogin = (
+  username: string,
+  password: string,
+  onSuccess?: any,
+  onError?: any,
+) => {
   return dispatch => {
     dispatch({
       type: HANDLE_LOGIN,
@@ -36,17 +74,19 @@ export const requestLogin = (username: string, password: string) => {
 
     return Auth.signIn(username, password)
       .then(json => {
-        return dispatch({
+        const success = dispatch({
           type: HANDLE_LOGIN_SUCCESS,
           payload: json,
         });
+        onSuccess && onSuccess(success);
       })
       .catch(err => {
         console.log('error:', err);
-        return dispatch({
+        const error = dispatch({
           type: HANDLE_LOGIN_ERROR,
           payload: err,
         });
+        onError && onError(error);
       });
   };
 };
@@ -103,6 +143,8 @@ export const registerUser = (
   birthdate: string,
   email: string,
   password: string,
+  onSuccess?: any,
+  onError?: any,
 ) => {
   return dispatch => {
     dispatch({
@@ -115,23 +157,30 @@ export const registerUser = (
       attributes: { given_name, family_name, phone_number, birthdate, email },
     })
       .then(json => {
-        console.log('success Yusuf:', json);
-        return dispatch({
+        dispatch(setUsername(username));
+        dispatch(setMobileNumber(phone_number));
+        const success = dispatch({
           type: REGISTER_USER_SUCCESS,
           payload: json,
         });
+        onSuccess && onSuccess(success);
       })
       .catch(err => {
-        console.log('error Yusuf:', err);
-        return dispatch({
+        console.log('error:', err);
+        const error = dispatch({
           type: REGISTER_USER_ERROR,
           payload: err,
         });
+        onError && onError(error);
       });
   };
 };
 
-export const requestForgotPassword = (username: string) => {
+export const requestForgotPassword = (
+  username: string,
+  onSuccess?: any,
+  onError?: any,
+) => {
   return dispatch => {
     dispatch({
       type: FORGOT_PASSWORD,
@@ -139,22 +188,21 @@ export const requestForgotPassword = (username: string) => {
 
     return Auth.forgotPassword(username)
       .then(json => {
-        console.log('success Yusuf:', json);
-        dispatch({
-          type: USER_ID,
-          payload: username,
-        });
-        return dispatch({
+        dispatch(setUsername(username));
+        dispatch(setMobileNumber(username));
+        const success = dispatch({
           type: FORGOT_PASSWORD_SUCCESS,
           payload: json,
         });
+        onSuccess && onSuccess(success);
       })
       .catch(err => {
-        console.log('error Yusuf:', err);
-        return dispatch({
+        console.log('error:', err);
+        const error = dispatch({
           type: FORGOT_PASSWORD_ERROR,
           payload: err,
         });
+        onError && onError(error);
       });
   };
 };
@@ -163,6 +211,8 @@ export const forgotPasswordSubmit = (
   username: string,
   code: string,
   password: string,
+  onSuccess?: any,
+  onError?: any,
 ) => {
   return dispatch => {
     dispatch({
@@ -171,18 +221,82 @@ export const forgotPasswordSubmit = (
 
     return Auth.forgotPasswordSubmit(username, code, password)
       .then(json => {
-        console.log('success', json);
-        return dispatch({
+        const success = dispatch({
           type: FORGOT_PASSWORD_SUBMIT_SUCCESS,
           payload: json,
         });
+        onSuccess && onSuccess(success);
       })
       .catch(err => {
-        console.log('error Yusuf:', err);
-        return dispatch({
+        console.log('error:', err);
+        const error = dispatch({
           type: FORGOT_PASSWORD_SUBMIT_ERROR,
           payload: err,
         });
+        onError && onError(error);
+      });
+  };
+};
+
+interface ConfirmRegistrationProps {
+  username: string;
+  authenticationCode: string;
+}
+
+export const confirmRegistration = (
+  { username, authenticationCode }: ConfirmRegistrationProps,
+  onSuccess?: any,
+  onError?: any,
+) => {
+  return dispatch => {
+    dispatch({
+      type: VERIFICATION_CODE_SUBMIT,
+    });
+
+    return Auth.confirmSignUp(username, authenticationCode)
+      .then(json => {
+        const success = dispatch({
+          type: VERIFICATION_CODE_SUBMIT_SUCCESS,
+          payload: json,
+        });
+        onSuccess && onSuccess(success);
+      })
+      .catch(err => {
+        console.log('error:', err);
+        const error = dispatch({
+          type: VERIFICATION_CODE_SUBMIT_ERROR,
+          payload: err,
+        });
+        onError && onError(error);
+      });
+  };
+};
+
+export const resendRegistrationCode = (
+  username: string,
+  onSuccess?: any,
+  onError?: any,
+) => {
+  return dispatch => {
+    dispatch({
+      type: RESEND_CODE,
+    });
+
+    return Auth.resendSignUp(username)
+      .then(json => {
+        const success = dispatch({
+          type: RESEND_CODE_SUCCESS,
+          payload: json,
+        });
+        onSuccess && onSuccess(success);
+      })
+      .catch(err => {
+        console.log('error:', err);
+        const error = dispatch({
+          type: RESEND_CODE_ERROR,
+          payload: err,
+        });
+        onError && onError(error);
       });
   };
 };

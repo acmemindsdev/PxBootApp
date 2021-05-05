@@ -1,30 +1,42 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, TouchableOpacity } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
   OTPInputsContainer,
   OtpInputsStyled,
+  InputTitleText,
+  CombineTextView,
+  ErrorText,
   styles,
 } from './CodeVerification.syled';
 import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
-import { requestForgotPassword } from 'src/state/auth/authActions';
-import { getDialCode } from 'src/state/auth/authReducer';
+import {
+  confirmRegistration,
+  resendRegistrationCode,
+} from 'src/state/auth/authActions';
+import { getUserName } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
 import { Controller, useForm } from 'react-hook-form';
 import { OtpInputsRef } from 'react-native-otp-inputs';
+import { FontWeights, Text1 } from 'src/components/Typography';
+import theme from 'src/theme';
+import { rgba } from 'polished';
 
 interface IProps {
   navigation: any;
-  requestForgotPassword: any;
+  username: string;
+  confirmRegistration: any;
+  resendRegistrationCode: any;
 }
 
-const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
+const CodeVerification = (props: IProps) => {
   const [code, setCode] = useState('');
   const [submitEnable, setSubmitEnable] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
 
   const otpRef = useRef<OtpInputsRef>();
@@ -45,39 +57,26 @@ const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
     mobileNumber: string;
   };
 
-  const {
-    handleSubmit,
-    control,
-    getValues,
-    formState: { errors },
-  } = useForm<FormData>();
-
-  const onSubmit = (data: FormData) => {
-    // const userName = `+${dialCode}${data.mobileNumber}`;
-    // requestForgotPassword(userName).then(response => {
-    //   if (get(response, 'type') === 'FORGOT_PASSWORD_SUCCESS') {
-    //     console.log('tedst data', response);
-    //     navigation?.push(NavigationScreen.resetPassword, {});
-    //   } else {
-    //     console.log('tessssst data', response);
-    //     if (get(response, 'payload.code', '') === 'UserNotFoundException') {
-    //       setFetchErrorMessage(
-    //         'This account does not exist. Register to create account.',
-    //       );
-    //     } else {
-    //       setFetchErrorMessage('Something went wrong, Please try again later.');
-    //     }
-    //   }
-    // });
+  const onSubmit = () => {
+    setFetchError(false);
+    props.confirmRegistration(
+      {
+        username: props.username,
+        authenticationCode: code,
+      },
+      () => {
+        props.navigation?.push(NavigationScreen.verificationSuccess, {});
+      },
+      (error: any) => {
+        props.navigation?.push(NavigationScreen.verificationSuccess, {});
+        setFetchError(true);
+        console.log('error', error);
+      },
+    );
   };
 
-  const checkSubmitDisabled = () => {
-    const value = getValues();
-    if (value.mobileNumber !== '') {
-      setSubmitEnable(true);
-    } else {
-      setSubmitEnable(false);
-    }
+  const resendCode = () => {
+    props.resendRegistrationCode(props.username);
   };
 
   return (
@@ -85,6 +84,9 @@ const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
       <StatusBar barStyle="light-content" />
       <MainView>
         <OTPInputsContainer>
+          <InputTitleText>
+            {'Please enter code to confirm registration'}
+          </InputTitleText>
           <OtpInputsStyled
             ref={otpRef}
             autofillFromClipboard={true}
@@ -97,17 +99,28 @@ const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
             ]}
             handleChange={code => {
               setCode(code);
-              console.log(code);
+              setFetchError(false);
             }}
             numberOfInputs={4}
           />
+          {fetchError && <ErrorText>{'Code Invalid/Expired'}</ErrorText>}
         </OTPInputsContainer>
+        <CombineTextView>
+          <Text1 color={rgba(theme.colors.black90, 0.6)}>
+            {'Did not receive Code? '}
+          </Text1>
+          <TouchableOpacity onPress={resendCode}>
+            <Text1 fontWeight={FontWeights.bold} color={theme.colors.primary}>
+              {'Resend SMS'}
+            </Text1>
+          </TouchableOpacity>
+        </CombineTextView>
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
-            disabled={false}
-            onPress={handleSubmit(onSubmit)}>
-            {'Send Code'}
+            disabled={code.length !== 4}
+            onPress={onSubmit}>
+            {'Verify'}
           </ContainedButton>
         </ActionButtonContainer>
       </MainView>
@@ -117,9 +130,10 @@ const CodeVerification = ({ navigation, requestForgotPassword }: IProps) => {
 
 export default connect(
   state => ({
-    dialCode: getDialCode(state),
+    username: getUserName(state),
   }),
   {
-    requestForgotPassword,
+    confirmRegistration,
+    resendRegistrationCode,
   },
 )(CodeVerification);

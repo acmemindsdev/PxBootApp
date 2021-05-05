@@ -39,21 +39,21 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
 
   const onSubmit = (data: FormData) => {
     const userName = `+${dialCode}${data.mobileNumber}`;
-    requestForgotPassword(userName).then(response => {
-      if (get(response, 'type') === 'FORGOT_PASSWORD_SUCCESS') {
-        console.log('tedst data', response);
+    requestForgotPassword(
+      userName,
+      () => {
         navigation?.push(NavigationScreen.resetPassword, {});
-      } else {
-        console.log('tessssst data', response);
-        if (get(response, 'payload.code', '') === 'UserNotFoundException') {
+      },
+      (error: any) => {
+        if (get(error, 'payload.code', '') === 'UserNotFoundException') {
           setFetchErrorMessage(
             'This account does not exist. Register to create account.',
           );
         } else {
           setFetchErrorMessage('Something went wrong, Please try again later.');
         }
-      }
-    });
+      },
+    );
   };
 
   const checkSubmitDisabled = () => {

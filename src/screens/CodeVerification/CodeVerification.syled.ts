@@ -3,37 +3,53 @@ import OtpInputs from 'react-native-otp-inputs';
 import { StyleSheet } from 'react-native';
 import theme from 'src/theme';
 import { rgba } from 'polished';
-import { FontWeights } from 'src/components/Typography';
+import { FontWeights, Text1 } from 'src/components/Typography';
 
-export const MainView = styled.View``;
+export const MainView = styled.View`
+  flex: 1;
+`;
 
 export const ActionButtonContainer = styled.View`
-  margin: 20px 0px;
+  margin: 30px 0px;
 `;
 
 export const OTPInputsContainer = styled.View`
-  height: 180px;
   background-color: ${rgba(theme.colors.otpGreen, 0.1)};
   border-radius: 4px;
   padding: 42px 32px;
 `;
 
 export const OtpInputsStyled = styled(OtpInputs)`
-  flex: 1;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
+`;
+
+export const InputTitleText = styled(Text1)`
+  width: 100%;
+  text-align: center;
+  margin-bottom: 18px;
+`;
+
+export const ErrorText = styled(Text1)`
+  color: ${theme.colors.errorRed};
+  margin-top: 8px;
+`;
+
+export const CombineTextView = styled.View`
+  flex-direction: row;
+  align-items: flex-end;
+  margin-top: 22px;
 `;
 
 export const styles = StyleSheet.create({
   inputContainerStyles: {
-    width: '20%',
+    width: '22%',
     height: 60,
-    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },
   inputStyles: {
-    // color: theme.colors.white,
+    color: theme.colors.black90,
     backgroundColor: theme.colors.white,
     flex: 1,
     width: '100%',

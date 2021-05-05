@@ -8,6 +8,7 @@ import {
   SOCIAL_LOGIN,
   SOCIAL_LOGIN_SUCCESS,
   SOCIAL_LOGIN_ERROR,
+  MOBILE_NUMBER,
 } from './authActions';
 import get from 'lodash/get';
 
@@ -28,6 +29,7 @@ const initialState = {
   errorMessage: '',
   loginData: {},
   userName: '',
+  mobileNumber: '',
   socialLogin: {
     responseData: {},
     error: false,
@@ -104,6 +106,11 @@ const authReducer = (state = initialState, action) => {
         ...state,
         userName: action.payload,
       };
+    case MOBILE_NUMBER:
+      return {
+        ...state,
+        mobileNumber: action.payload,
+      };
     default:
       return state;
   }
@@ -127,6 +134,9 @@ export const fetchErrorMessage = state => state.auth.errorMessage;
 
 // Get Temporary User Name
 export const getUserName = state => state.auth.userName;
+
+// Get Temporary Mobile Number
+export const getMobileNumber = state => state.auth.mobileNumber;
 
 // Get is Social Login Response is in progress
 export const isSocialLoginResponseLoading = state =>

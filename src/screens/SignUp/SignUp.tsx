@@ -22,6 +22,7 @@ import get from 'lodash/get';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
+import { NavigationScreen } from 'src/navigation/Navigator';
 
 interface IProps {
   navigation: any;
@@ -84,7 +85,7 @@ const SignUp = (props: IProps) => {
       .then(payload => {
         if (get(payload, 'type') === REGISTER_USER_SUCCESS) {
           console.log('tedst data', payload);
-          props.navigation?.push('Reset Password Success', {});
+          props.navigation?.push(NavigationScreen.codeVerification, {});
         } else {
           console.log('tessssst data', payload);
         }
