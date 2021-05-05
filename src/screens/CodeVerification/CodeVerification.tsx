@@ -10,7 +10,7 @@ import {
   ErrorText,
   SnackbarStyled,
   styles,
-} from './CodeVerification.syled';
+} from './CodeVerification.styled';
 import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import {
