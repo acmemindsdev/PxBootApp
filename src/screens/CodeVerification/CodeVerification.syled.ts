@@ -4,6 +4,7 @@ import { StyleSheet } from 'react-native';
 import theme from 'src/theme';
 import { rgba } from 'polished';
 import { FontWeights, Text1 } from 'src/components/Typography';
+import { Snackbar } from 'react-native-paper';
 
 export const MainView = styled.View`
   flex: 1;
@@ -39,6 +40,10 @@ export const CombineTextView = styled.View`
   flex-direction: row;
   align-items: flex-end;
   margin-top: 22px;
+`;
+
+export const SnackbarStyled = styled(Snackbar)`
+  background-color: ${theme.colors.gray50};
 `;
 
 export const styles = StyleSheet.create({

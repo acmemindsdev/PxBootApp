@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, TouchableOpacity, View } from 'react-native';
+import { StatusBar, TouchableOpacity, Keyboard } from 'react-native';
 import { MainView, ActionButtonContainer, IconStyled } from './SignUp.styled';
 import {
   PasswordHint,
@@ -54,6 +54,7 @@ const SignUp = (props: IProps) => {
     setValue,
     handleSubmit,
     control,
+    setError,
     formState: { errors },
   } = useForm<FormData>({
     resolver,
@@ -70,6 +71,7 @@ const SignUp = (props: IProps) => {
 
   const onSubmit = (data: FormData) => {
     console.log(data, 'data');
+    Keyboard.dismiss();
     // Phone number and also username
     const phoneNumber = `+${dialCode}${data.mobileNumber}`;
     props
@@ -81,6 +83,17 @@ const SignUp = (props: IProps) => {
         data.dateOfBirth,
         data.email,
         data.confirmPassword,
+        () => {
+          props.navigation?.push(NavigationScreen.codeVerification, {});
+        },
+        (error: any) => {
+          if (get(error, 'payload.code', '') === 'UsernameExistsException') {
+            setError('mobileNumber', {
+              type: 'manual',
+              message: 'The account already exists. Login to continue',
+            });
+          }
+        },
       )
       .then(payload => {
         if (get(payload, 'type') === REGISTER_USER_SUCCESS) {
@@ -176,7 +189,8 @@ const SignUp = (props: IProps) => {
                 navigation={props.navigation}
                 onChangeDialCode={code => setDialCode(code)}
                 onChangeMobileNumber={number => onChange(number)}
-                error={false}
+                error={!!errors.mobileNumber}
+                errorText={errors.mobileNumber?.message}
               />
             )}
           />
@@ -252,6 +266,7 @@ const SignUp = (props: IProps) => {
                     onChange(text);
                   }}
                   value={value}
+                  autoCorrect={false}
                   textContentType={'oneTimeCode'}
                   onFocus={() => setActiveNewPasswordInput(true)}
                   onBlur={() => setActiveNewPasswordInput(false)}
@@ -280,6 +295,7 @@ const SignUp = (props: IProps) => {
               <TextInput
                 label="Confirm Password"
                 secureTextEntry={true}
+                autoCorrect={false}
                 onChangeText={text => {
                   onChange(text);
                   checkSubmitDisabled();

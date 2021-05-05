@@ -8,6 +8,7 @@ import {
   InputTitleText,
   CombineTextView,
   ErrorText,
+  SnackbarStyled,
   styles,
 } from './CodeVerification.syled';
 import { ContainedButton } from 'src/components/Button';
@@ -35,9 +36,10 @@ interface IProps {
 
 const CodeVerification = (props: IProps) => {
   const [code, setCode] = useState('');
-  const [submitEnable, setSubmitEnable] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const otpRef = useRef<OtpInputsRef>();
 
@@ -76,7 +78,17 @@ const CodeVerification = (props: IProps) => {
   };
 
   const resendCode = () => {
-    props.resendRegistrationCode(props.username);
+    props.resendRegistrationCode(
+      props.username,
+      () => {
+        setShowSnackbar(true);
+        setSnackbarMessage('Code Sent Successfully');
+      },
+      () => {
+        setShowSnackbar(true);
+        setSnackbarMessage('Something went wrong, Please Try again later');
+      },
+    );
   };
 
   return (
@@ -123,6 +135,12 @@ const CodeVerification = (props: IProps) => {
             {'Verify'}
           </ContainedButton>
         </ActionButtonContainer>
+        <SnackbarStyled
+          visible={showSnackbar}
+          duration={2000}
+          onDismiss={() => setShowSnackbar(false)}>
+          {snackbarMessage}
+        </SnackbarStyled>
       </MainView>
     </>
   );

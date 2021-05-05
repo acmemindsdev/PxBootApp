@@ -18,5 +18,4 @@ export const CombineTextView = styled.View`
 
 export const SnackbarStyled = styled(Snackbar)`
   background-color: ${theme.colors.gray50};
-  font-size: 50px;
 `;
