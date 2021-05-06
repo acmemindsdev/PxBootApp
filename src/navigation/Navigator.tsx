@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Image, Text } from 'react-native';
 import theme from 'src/theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import SplashScreen from 'react-native-splash-screen';
 
 // Screens
 import SignIn from 'src/screens/SignIn';
@@ -34,6 +35,10 @@ export const NavigationScreen = {
 };
 
 const Navigation = () => {
+  //Hide Splash screen on app load.
+  useEffect(() => {
+    SplashScreen.hide();
+  });
   const HeaderLogo = () => {
     return <Image source={require('src/assets/images/logo-header.png')} />;
   };
