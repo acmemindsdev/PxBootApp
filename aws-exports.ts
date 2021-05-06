@@ -3,19 +3,17 @@
 
 const awsmobile = {
   aws_project_region: 'us-east-1',
-  aws_cognito_identity_pool_id:
-    'us-east-1:8ff288ea-b821-456b-b6c5-d1e4530574a0',
   aws_cognito_region: 'us-east-1',
-  aws_user_pools_id: 'us-east-1_ppzp9mXz6',
-  aws_user_pools_web_client_id: '1lln175c1fjcsj8dk7k0t0kood',
+  aws_user_pools_id: 'us-east-1_C182XewAL',
+  aws_user_pools_web_client_id: '5boj5biiel0coo8nheg18efj9c',
   oauth: {
-    domain: 'pxboost-pxboost.auth.us-east-1.amazoncognito.com',
+    domain: 'test1-test.auth.us-east-1.amazoncognito.com',
     scope: [
-      'phone',
+      'aws.cognito.signin.user.admin',
       'email',
       'openid',
+      'phone',
       'profile',
-      'aws.cognito.signin.user.admin',
     ],
     redirectSignIn: 'pxboost://pxboost',
     redirectSignOut: 'pxboost://pxboost',

@@ -1,7 +1,8 @@
 {
   "auth": {
-    "pxboost9fe9e5d6": {
+    "pxboost2d83cfc9": {
       "service": "Cognito",
+      "serviceType": "imported",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false

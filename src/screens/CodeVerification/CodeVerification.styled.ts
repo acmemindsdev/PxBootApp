@@ -17,7 +17,7 @@ export const ActionButtonContainer = styled.View`
 export const OTPInputsContainer = styled.View`
   background-color: ${rgba(theme.colors.otpGreen, 0.1)};
   border-radius: 4px;
-  padding: 42px 32px;
+  padding: 42px 22px;
 `;
 
 export const OtpInputsStyled = styled(OtpInputs)`
@@ -48,8 +48,8 @@ export const SnackbarStyled = styled(Snackbar)`
 
 export const styles = StyleSheet.create({
   inputContainerStyles: {
-    width: '22%',
-    height: 60,
+    width: '15%',
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },

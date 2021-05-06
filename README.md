@@ -100,3 +100,36 @@ To deploy the service, run the push command:
 - `pod install`
 
 // Add Deep linking for iOS and Android
+
+## Import User Pool or Update auth
+
+// first remove existing auth
+- `amplify remove auth`
+
+// After successful remove, import existing auth (which is already created)
+
+- `amplify import auth`
+
+// Select settings
+
+What type of auth resource do you want to import?
+
+- Cognito User Pool only
+
+Select the User Pool you want to import:
+
+- Select user pool which you want to add
+
+Select a Native client to import:
+
+- Select Native Client
+
+// After successful imported
+
+- `amplify push`
+
+- `amplify pull`
+
+// User Pool is updated, check status
+
+- `amplify status`

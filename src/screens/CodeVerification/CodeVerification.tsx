@@ -107,13 +107,13 @@ const CodeVerification = (props: IProps) => {
             inputContainerStyles={styles.inputContainerStyles}
             inputStyles={[
               styles.inputStyles,
-              code.length === 4 && styles.filled,
+              code.length === 6 && styles.filled,
             ]}
             handleChange={code => {
               setCode(code);
               setFetchError(false);
             }}
-            numberOfInputs={4}
+            numberOfInputs={6}
           />
           {fetchError && <ErrorText>{'Code Invalid/Expired'}</ErrorText>}
         </OTPInputsContainer>
@@ -130,7 +130,7 @@ const CodeVerification = (props: IProps) => {
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
-            disabled={code.length !== 4}
+            disabled={code.length !== 6}
             onPress={onSubmit}>
             {'Verify'}
           </ContainedButton>

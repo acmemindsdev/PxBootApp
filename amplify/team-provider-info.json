@@ -16,5 +16,28 @@
         "pxboost9fe9e5d6": {}
       }
     }
+  },
+  "stagging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-pxboost-stagging-155844-authRole",
+      "UnauthRoleArn": "arn:aws:iam::234041866374:role/amplify-pxboost-stagging-155844-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::234041866374:role/amplify-pxboost-stagging-155844-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-pxboost-stagging-155844-deployment",
+      "UnauthRoleName": "amplify-pxboost-stagging-155844-unauthRole",
+      "StackName": "amplify-pxboost-stagging-155844",
+      "StackId": "arn:aws:cloudformation:us-east-1:234041866374:stack/amplify-pxboost-stagging-155844/d7ee6470-ae55-11eb-95e2-0a77a63e55d9",
+      "AmplifyAppId": "d31ov0xpwtoxj2"
+    },
+    "categories": {
+      "auth": {
+        "pxboost2d83cfc9": {
+          "userPoolId": "us-east-1_C182XewAL",
+          "userPoolName": "Test1-PhoneNumber",
+          "webClientId": "5boj5biiel0coo8nheg18efj9c",
+          "nativeClientId": "5boj5biiel0coo8nheg18efj9c"
+        }
+      }
+    }
   }
 }
