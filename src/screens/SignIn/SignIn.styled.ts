@@ -20,6 +20,6 @@ export const BottomView = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
+  /* bottom: 20px; */
   flex: 1;
-  bottom: 20px;
 `;

@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  Button,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Amplify, { Auth, Hub } from 'aws-amplify';
@@ -118,25 +111,6 @@ const SignInLayout = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  input: {
-    fontSize: 18,
-    fontWeight: '500',
-    height: 55,
-    backgroundColor: '#42A5F5',
-    margin: 10,
-    color: 'white',
-    padding: 8,
-    borderRadius: 14,
-  },
-  container: {
-    flex: 1,
-    color: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default connect(
   state => ({

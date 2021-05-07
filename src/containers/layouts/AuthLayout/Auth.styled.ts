@@ -1,5 +1,8 @@
 import styled from 'styled-components/native';
 import theme from 'src/theme';
+import { Dimensions } from 'react-native';
+
+const { height } = Dimensions.get('screen');
 
 export const WrapperStyled = styled.View`
   flex: 1;
@@ -8,7 +11,7 @@ export const WrapperStyled = styled.View`
 `;
 
 export const LogoContainer = styled.View`
-  height: 200px;
+  height: ${height > 820 ? 200 : 150}px;
   justify-content: center;
   align-items: center;
 `;
