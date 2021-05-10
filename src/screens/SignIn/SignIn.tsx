@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, StyleSheet } from 'react-native';
+import { StatusBar, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Amplify, { Auth, Hub } from 'aws-amplify';
-import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
+import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
 import awsconfig from '../../../aws-exports';
 import { MobileNumberInput, SocialLogin } from 'src/components';
 import {
@@ -31,6 +32,7 @@ import {
   fetchErrorMessage,
 } from 'src/state/auth/authReducer';
 import { NavigationScreen } from 'src/navigation/Navigator';
+import { Controller, useForm } from 'react-hook-form';
 // import { requestLogin } from 'src/services/cognitoMethods';
 
 Amplify.configure(awsconfig);
@@ -41,6 +43,7 @@ interface IProps {
   responseData?: any;
   fetchError?: boolean;
   errorMessage?: string;
+  loading?: boolean;
 }
 
 const SignInLayout = ({
@@ -48,16 +51,59 @@ const SignInLayout = ({
   requestLogin,
   responseData,
   fetchError,
-  errorMessage,
+  loading,
 }: IProps) => {
-  const [number, setNumber] = useState('');
   const [dialCode, setDialCode] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(true);
+  const [loginEnable, setLoginEnable] = useState(false);
 
-  const handleLogin = () => {
-    const userName = `+${dialCode}${number}`;
-    requestLogin(userName, password);
+  type FormData = {
+    mobileNumber: string;
+    password: string;
+  };
+
+  const {
+    handleSubmit,
+    control,
+    getValues,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const handleLogin = (data: FormData) => {
+    Keyboard.dismiss();
+    const userName = `+${dialCode}${data.mobileNumber}`;
+    requestLogin(
+      userName,
+      data.password,
+      () => {},
+      (error: any) => {
+        if (
+          get(error, 'payload.code', '') === 'UserNotFoundException' ||
+          get(error, 'payload.code', '') === 'NotAuthorizedException'
+        ) {
+          setError('mobileNumber', {
+            type: 'manual',
+            message: 'Incorrect Mobile Number/Password. Try again',
+          });
+        } else {
+          setError('mobileNumber', {
+            type: 'manual',
+            message: 'Something went wrong, Please try again later.',
+          });
+        }
+      },
+    );
+  };
+
+  const checkLoginDisabled = () => {
+    const value = getValues();
+    if (value.mobileNumber !== '' && value.password !== '') {
+      setLoginEnable(true);
+    } else {
+      setLoginEnable(false);
+    }
   };
 
   useEffect(() => {
@@ -68,20 +114,44 @@ const SignInLayout = ({
     <>
       <StatusBar barStyle="dark-content" />
       <MainView>
-        <MobileNumberInput
-          navigation={navigation}
-          onChangeDialCode={code => setDialCode(code)}
-          onChangeMobileNumber={number => setNumber(number)}
-          error={fetchError}
+        <Controller
+          name="mobileNumber"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <MobileNumberInput
+              navigation={navigation}
+              onChangeDialCode={code => {
+                clearErrors('mobileNumber');
+                setDialCode(code);
+              }}
+              onChangeMobileNumber={number => {
+                onChange(number);
+                checkLoginDisabled();
+              }}
+              error={!!errors.mobileNumber}
+            />
+          )}
         />
-        <PasswordInput
-          label="Password"
-          secureTextEntry={showPassword}
-          rightIcon={<PasswordIcon size={25} name="eye-off-outline" />}
-          onIconPress={() => setShowPassword(!showPassword)}
-          onChangeText={text => setPassword(text)}
-          error={fetchError}
-          errorText={errorMessage}
+        <Controller
+          name="password"
+          control={control}
+          defaultValue=""
+          render={({ field: { onChange, value } }) => (
+            <PasswordInput
+              label="Password"
+              secureTextEntry={showPassword}
+              rightIcon={<PasswordIcon size={25} name="eye-off-outline" />}
+              onIconPress={() => setShowPassword(!showPassword)}
+              onChangeText={text => {
+                clearErrors('mobileNumber');
+                onChange(text);
+                checkLoginDisabled();
+              }}
+              error={!!errors.mobileNumber}
+              errorText={errors.mobileNumber?.message}
+            />
+          )}
         />
         <TextButton
           align="right"
@@ -90,8 +160,9 @@ const SignInLayout = ({
         </TextButton>
         <ContainedButton
           fullWidth
-          onPress={handleLogin}
-          disabled={!(dialCode && number && password)}>
+          loading={loading}
+          onPress={handleSubmit(handleLogin)}
+          disabled={!loginEnable}>
           {'Log In'}
         </ContainedButton>
         <SocialLogin navigation={navigation} />

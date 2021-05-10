@@ -40,6 +40,7 @@ const CodeVerification = (props: IProps) => {
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   const otpRef = useRef<OtpInputsRef>();
 
@@ -61,15 +62,18 @@ const CodeVerification = (props: IProps) => {
 
   const onSubmit = () => {
     setFetchError(false);
+    setShowButtonLoader(true);
     props.confirmRegistration(
       {
         username: props.username,
         authenticationCode: code,
       },
       () => {
+        setShowButtonLoader(false);
         props.navigation?.push(NavigationScreen.verificationSuccess, {});
       },
       (error: any) => {
+        setShowButtonLoader(false);
         props.navigation?.push(NavigationScreen.verificationSuccess, {});
         setFetchError(true);
         console.log('error', error);
@@ -129,6 +133,7 @@ const CodeVerification = (props: IProps) => {
         </CombineTextView>
         <ActionButtonContainer>
           <ContainedButton
+            loading={showButtonLoader}
             fullWidth
             disabled={code.length !== 6}
             onPress={onSubmit}>

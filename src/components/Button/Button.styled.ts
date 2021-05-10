@@ -3,6 +3,7 @@ import { Button } from 'react-native-paper';
 import theme from 'src/theme';
 import { CustomButtonPaper } from './Button';
 import { StyledProps } from 'styled-components';
+import { rgba } from 'polished';
 
 const btnStyles = (props: CustomButtonPaper) => {
   const { colors, sizes } = theme;
@@ -23,8 +24,7 @@ const btnStyles = (props: CustomButtonPaper) => {
   };
 
   if (props.disabled) {
-    styles.background = colors.black90;
-    styles.opacity = 0.08;
+    styles.background = rgba(colors.black90, 0.08);
   }
 
   if (props.mode === 'outlined') {
@@ -65,6 +65,7 @@ export const ButtonStyled = styled(Button).attrs((props: CustomButtonPaper) => {
   const contentStyle: StyledProps<any> = {
     width: btnSizeName ? sizes.buttons[btnSizeName].width : 'auto',
     height: btnSizeName ? sizes.buttons[btnSizeName].height : 'auto',
+    flexDirection: 'row-reverse',
   };
 
   return {

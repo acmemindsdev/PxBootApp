@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MainView,
   GridView,
@@ -6,11 +6,9 @@ import {
   ActivityIndicatorView,
 } from './SocialLogin.styled';
 import { Divider } from 'src/components';
-import { Button, Text } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, ActivityIndicator } from 'react-native';
 import SocialLoginButton from './SocialLoginButton';
-import { connect, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
   getSocialLoginData,
   isSocialLoginResponseLoading,
@@ -28,11 +26,12 @@ type IProp = {
 };
 
 const SocialLogin = (prop: IProp) => {
+  const [shouldNavigate, setShouldNavigate] = useState(false);
   const isLoading = useSelector(state => isSocialLoginResponseLoading(state));
   const responseData = useSelector(state => getSocialLoginData(state));
 
   useEffect(() => {
-    if (!isEmpty(get(responseData, 'username', ''))) {
+    if (!isEmpty(get(responseData, 'username', '')) && shouldNavigate) {
       prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
     }
   }, [responseData]);
@@ -47,9 +46,18 @@ const SocialLogin = (prop: IProp) => {
         <Divider style={{ flex: 1 }} />
       </GridView>
       <GridView style={{ opacity: isLoading ? 0.2 : 1 }}>
-        <SocialLoginButton type="fb" />
-        <SocialLoginButton type="google" />
-        <SocialLoginButton type="apple" />
+        <SocialLoginButton
+          type="fb"
+          shouldNavigate={value => setShouldNavigate(value)}
+        />
+        <SocialLoginButton
+          type="google"
+          shouldNavigate={value => setShouldNavigate(value)}
+        />
+        <SocialLoginButton
+          type="apple"
+          shouldNavigate={value => setShouldNavigate(value)}
+        />
       </GridView>
       <Divider />
       {isLoading && (

@@ -20,6 +20,7 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
   const [dialCode, setDialCode] = useState('');
   const [submitEnable, setSubmitEnable] = useState(false);
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
+  const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
     mobileNumber: string;
@@ -33,7 +34,9 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    setShowButtonLoader(true);
     navigation?.push(NavigationScreen.codeVerification, {});
+    setShowButtonLoader(false);
     return;
     const userName = `+${dialCode}${data.mobileNumber}`;
     requestForgotPassword(userName).then(response => {
@@ -97,6 +100,7 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
+            loading={showButtonLoader}
             disabled={!(dialCode && submitEnable)}
             onPress={handleSubmit(onSubmit)}>
             {'Send Code'}

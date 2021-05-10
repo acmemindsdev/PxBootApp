@@ -16,5 +16,4 @@ export const BottomView = styled.View`
   justify-content: center;
   align-items: flex-end;
   flex: 1;
-  background-color: red;
 `;

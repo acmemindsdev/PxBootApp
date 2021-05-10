@@ -25,6 +25,7 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
   const [submitEnable, setSubmitEnable] = useState(false);
   const [dialCode, setDialCode] = useState('');
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
+  const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
     mobileNumber: string;
@@ -39,12 +40,16 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
 
   const onSubmit = (data: FormData) => {
     const userName = `+${dialCode}${data.mobileNumber}`;
+    setShowButtonLoader(true);
     requestForgotPassword(
       userName,
-      () => {
+      payload => {
+        console.log('Payload', payload);
         navigation?.push(NavigationScreen.resetPassword, {});
+        setShowButtonLoader(false);
       },
       (error: any) => {
+        setShowButtonLoader(false);
         if (get(error, 'payload.code', '') === 'UserNotFoundException') {
           setFetchErrorMessage(
             'This account does not exist. Register to create account.',
@@ -101,6 +106,7 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
           <ActionButtonContainer>
             <ContainedButton
               fullWidth
+              loading={showButtonLoader}
               disabled={!(dialCode && submitEnable)}
               onPress={handleSubmit(onSubmit)}>
               {'Send Reset Code'}

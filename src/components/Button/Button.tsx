@@ -18,8 +18,12 @@ type CustomProps = {
 export type CustomButtonPaper = CustomProps & RNPButtonProps;
 
 export const ContainedButton = (props: CustomButtonPaper) => {
+  const { onPress, ...restProps } = props;
   return (
-    <ButtonStyled {...props} mode={'contained'}>
+    <ButtonStyled
+      onPress={!props.loading ? props.onPress : null}
+      {...restProps}
+      mode={'contained'}>
       {props.children}
     </ButtonStyled>
   );

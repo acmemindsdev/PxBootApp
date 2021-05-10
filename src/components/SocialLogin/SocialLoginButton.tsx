@@ -11,6 +11,7 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 type IProp = {
   type: 'fb' | 'google' | 'apple';
+  shouldNavigate?: any;
 };
 
 const SocialLoginButton = (prop: IProp) => {
@@ -23,9 +24,10 @@ const SocialLoginButton = (prop: IProp) => {
             icon={{ source: 'facebook', direction: 'ltr' }}
             color={theme.colors.primary}
             size={40}
-            onPress={() =>
-              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Facebook))
-            }
+            onPress={() => {
+              prop.shouldNavigate(true);
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Facebook));
+            }}
           />
           <Caption style={{ marginTop: -8 }}>Facebook</Caption>
         </>
@@ -40,9 +42,10 @@ const SocialLoginButton = (prop: IProp) => {
               />
             )}
             size={40}
-            onPress={() =>
-              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Google))
-            }
+            onPress={() => {
+              prop.shouldNavigate(true);
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Google));
+            }}
           />
           <Caption style={{ marginTop: -8 }}>Google</Caption>
         </>
@@ -53,9 +56,10 @@ const SocialLoginButton = (prop: IProp) => {
             icon={{ source: 'apple', direction: 'ltr' }}
             color={theme.colors.black}
             size={40}
-            onPress={() =>
-              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Apple))
-            }
+            onPress={() => {
+              prop.shouldNavigate(true);
+              dispatch(socialLogin(CognitoHostedUIIdentityProvider.Apple));
+            }}
           />
           <Caption style={{ marginTop: -8 }}>Apple</Caption>
         </>

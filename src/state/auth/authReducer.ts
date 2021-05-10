@@ -12,16 +12,6 @@ import {
 } from './authActions';
 import get from 'lodash/get';
 
-const errorMessage = errorCode => {
-  switch (errorCode) {
-    case 'UserNotFoundException':
-      return 'Incorrect Mobile Number/Password. Try again';
-    default:
-      return 'Error';
-      break;
-  }
-};
-
 const initialState = {
   dialCode: '1',
   loading: false,
@@ -62,7 +52,6 @@ const authReducer = (state = initialState, action) => {
     case HANDLE_LOGIN_ERROR:
       return {
         ...state,
-        errorMessage: errorMessage(get(action.payload, 'code')),
         loading: false,
         fetchError: true,
       };
@@ -99,7 +88,6 @@ const authReducer = (state = initialState, action) => {
     case FORGOT_PASSWORD:
       return {
         ...state,
-        loading: true,
       };
     case USER_ID:
       return {

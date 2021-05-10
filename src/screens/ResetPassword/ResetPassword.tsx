@@ -35,6 +35,7 @@ const ResetPassword = (props: IProps) => {
   const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
   const [showSnackbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
     code: string;
@@ -60,15 +61,21 @@ const ResetPassword = (props: IProps) => {
 
   const onSubmit = (data: FormData) => {
     console.log(data, 'data');
+    setShowButtonLoader(true);
     props.forgotPasswordSubmit(
       props.userName,
       data.code,
       data.confirm_password,
       () => {
         props.navigation?.push(NavigationScreen.resetPasswordSuccess, {});
+        setShowButtonLoader(false);
       },
       (error: any) => {
-        if (get(error, 'payload.code', '') === 'ExpiredCodeException') {
+        setShowButtonLoader(false);
+        if (
+          get(error, 'payload.code', '') === 'ExpiredCodeException' ||
+          get(error, 'payload.code', '') === 'CodeMismatchException'
+        ) {
           setError('code', {
             type: 'manual',
             message: 'Incorrect code',
@@ -200,6 +207,7 @@ const ResetPassword = (props: IProps) => {
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
+            loading={showButtonLoader}
             disabled={!(submitEnable && isValidPassword)}
             onPress={handleSubmit(onSubmit)}>
             {'Reset'}

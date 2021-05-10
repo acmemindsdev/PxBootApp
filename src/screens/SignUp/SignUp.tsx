@@ -37,6 +37,7 @@ const SignUp = (props: IProps) => {
   const [activeNewPasswordInput, setActiveNewPasswordInput] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [dialCode, setDialCode] = useState('');
+  const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
     firstName: string;
@@ -74,35 +75,29 @@ const SignUp = (props: IProps) => {
     Keyboard.dismiss();
     // Phone number and also username
     const phoneNumber = `+${dialCode}${data.mobileNumber}`;
-    props
-      .registerUser(
-        phoneNumber,
-        data.firstName,
-        data.lastName,
-        phoneNumber,
-        data.dateOfBirth,
-        data.email,
-        data.confirmPassword,
-        () => {
-          props.navigation?.push(NavigationScreen.codeVerification, {});
-        },
-        (error: any) => {
-          if (get(error, 'payload.code', '') === 'UsernameExistsException') {
-            setError('mobileNumber', {
-              type: 'manual',
-              message: 'The account already exists. Login to continue',
-            });
-          }
-        },
-      )
-      .then(payload => {
-        if (get(payload, 'type') === REGISTER_USER_SUCCESS) {
-          console.log('tedst data', payload);
-          props.navigation?.push(NavigationScreen.codeVerification, {});
-        } else {
-          console.log('tessssst data', payload);
+    setShowButtonLoader(true);
+    props.registerUser(
+      phoneNumber,
+      data.firstName,
+      data.lastName,
+      phoneNumber,
+      data.dateOfBirth,
+      data.email,
+      data.confirmPassword,
+      () => {
+        props.navigation?.push(NavigationScreen.codeVerification, {});
+        setShowButtonLoader(false);
+      },
+      (error: any) => {
+        setShowButtonLoader(false);
+        if (get(error, 'payload.code', '') === 'UsernameExistsException') {
+          setError('mobileNumber', {
+            type: 'manual',
+            message: 'The account already exists. Login to continue',
+          });
         }
-      });
+      },
+    );
   };
 
   const checkSubmitDisabled = () => {
@@ -311,6 +306,7 @@ const SignUp = (props: IProps) => {
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
+            loading={showButtonLoader}
             disabled={!(submitEnable && isValidPassword)}
             onPress={handleSubmit(onSubmit)}>
             {'Register'}
