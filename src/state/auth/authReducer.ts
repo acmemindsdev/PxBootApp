@@ -14,6 +14,7 @@ import get from 'lodash/get';
 
 const initialState = {
   dialCode: '1',
+  countryCode: 'US',
   loading: false,
   fetchError: false,
   errorMessage: '',
@@ -33,6 +34,7 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         dialCode: get(action.payload, 'callingCode'),
+        countryCode: get(action.payload, 'code'),
       };
     case HANDLE_LOGIN:
       return {
@@ -107,6 +109,9 @@ const authReducer = (state = initialState, action) => {
 // Selectors
 // Get Selected Dial Code
 export const getDialCode = state => state.auth.dialCode;
+
+// Get Selected Country Code
+export const getCountryCode = state => state.auth.countryCode;
 
 // Get Login Response Data
 export const getLoginData = state => state.auth.loginData;

@@ -30,6 +30,7 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
     handleSubmit,
     control,
     getValues,
+    setError,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -37,23 +38,6 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
     setShowButtonLoader(true);
     navigation?.push(NavigationScreen.codeVerification, {});
     setShowButtonLoader(false);
-    return;
-    const userName = `+${dialCode}${data.mobileNumber}`;
-    requestForgotPassword(userName).then(response => {
-      if (get(response, 'type') === 'FORGOT_PASSWORD_SUCCESS') {
-        console.log('tedst data', response);
-        navigation?.push(NavigationScreen.resetPassword, {});
-      } else {
-        console.log('tessssst data', response);
-        if (get(response, 'payload.code', '') === 'UserNotFoundException') {
-          setFetchErrorMessage(
-            'This account does not exist. Register to create account.',
-          );
-        } else {
-          setFetchErrorMessage('Something went wrong, Please try again later.');
-        }
-      }
-    });
   };
 
   const checkSubmitDisabled = () => {
@@ -87,11 +71,11 @@ const ConfirmMobileNumber = ({ navigation, requestForgotPassword }: IProps) => {
                   onChange(number);
                   checkSubmitDisabled();
                 }}
-                error={!!errors.mobileNumber || !isEmpty(fetchErrorMessage)}
+                error={!!errors.mobileNumber}
                 errorText={
                   errors.mobileNumber?.type === 'valid'
                     ? 'Phone number invalid'
-                    : fetchErrorMessage
+                    : errors.mobileNumber?.message
                 }
               />
             )}

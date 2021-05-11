@@ -24,7 +24,6 @@ interface IProps {
 const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
   const [submitEnable, setSubmitEnable] = useState(false);
   const [dialCode, setDialCode] = useState('');
-  const [fetchErrorMessage, setFetchErrorMessage] = useState('');
   const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
@@ -35,6 +34,7 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
     handleSubmit,
     control,
     getValues,
+    setError,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -51,11 +51,15 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
       (error: any) => {
         setShowButtonLoader(false);
         if (get(error, 'payload.code', '') === 'UserNotFoundException') {
-          setFetchErrorMessage(
-            'This account does not exist. Register to create account.',
-          );
+          setError('mobileNumber', {
+            type: 'manual',
+            message: 'This account does not exist. Register to create account.',
+          });
         } else {
-          setFetchErrorMessage('Something went wrong, Please try again later.');
+          setError('mobileNumber', {
+            type: 'manual',
+            message: 'Something went wrong, Please try again later.',
+          });
         }
       },
     );
@@ -93,11 +97,11 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
                     onChange(number);
                     checkSubmitDisabled();
                   }}
-                  error={!!errors.mobileNumber || !isEmpty(fetchErrorMessage)}
+                  error={!!errors.mobileNumber}
                   errorText={
                     errors.mobileNumber?.type === 'valid'
                       ? 'Phone number invalid'
-                      : fetchErrorMessage
+                      : errors.mobileNumber?.message
                   }
                 />
               )}
