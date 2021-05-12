@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { StyleSheet, View, Image } from 'react-native';
 import theme from 'src/theme';
 import { useDispatch } from 'react-redux';
-import { socialLogin } from 'src/state/auth/authActions';
+import { socialLogin } from 'src/services/CognitoMethods';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 type IProp = {

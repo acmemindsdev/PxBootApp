@@ -16,8 +16,13 @@ import { connect } from 'react-redux';
 import {
   confirmRegistration,
   resendRegistrationCode,
-} from 'src/state/auth/authActions';
-import { getUserName } from 'src/state/auth/authReducer';
+} from 'src/services/CognitoMethods';
+import { fetchMobileOTP, verifyMobileOTP } from 'src/state/auth/authActions';
+import {
+  getUserName,
+  getMobileNumber,
+  getAuthorizeToken,
+} from 'src/state/auth/authReducer';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
@@ -30,8 +35,12 @@ import { rgba } from 'polished';
 interface IProps {
   navigation: any;
   username: string;
+  mobileNumber: string;
   confirmRegistration: any;
   resendRegistrationCode: any;
+  fetchMobileOTP: any;
+  verifyMobileOTP: any;
+  token: string;
 }
 
 const CodeVerification = (props: IProps) => {
@@ -63,36 +72,97 @@ const CodeVerification = (props: IProps) => {
   const onSubmit = () => {
     setFetchError(false);
     setShowButtonLoader(true);
-    props.confirmRegistration(
-      {
-        username: props.username,
-        authenticationCode: code,
-      },
-      () => {
-        setShowButtonLoader(false);
-        props.navigation?.push(NavigationScreen.verificationSuccess, {});
-      },
-      (error: any) => {
-        setShowButtonLoader(false);
-        props.navigation?.push(NavigationScreen.verificationSuccess, {});
-        setFetchError(true);
-        console.log('error', error);
-      },
+    // check Code Verification for add number on social sign up
+    const addMobileToSocialAccount = get(
+      props,
+      'route.params.fromSocial',
+      false,
     );
+
+    if (addMobileToSocialAccount) {
+      // Verify OTP and Add number on social account
+      props.verifyMobileOTP(
+        code,
+        props.mobileNumber,
+        props.token,
+        response => {
+          setShowButtonLoader(false);
+          if (get(response, 'payload.data.verified', false) === true) {
+            props.navigation?.push(NavigationScreen.verificationSuccess, {});
+          } else {
+            setFetchError(true);
+          }
+        },
+        (error: any) => {
+          setShowButtonLoader(false);
+          props.navigation?.push(NavigationScreen.verificationSuccess, {});
+          setFetchError(true);
+          console.log('error', error);
+        },
+      );
+    } else {
+      // Confirm manual sign up
+      props.confirmRegistration(
+        {
+          username: props.username,
+          authenticationCode: code,
+        },
+        () => {
+          setShowButtonLoader(false);
+          props.navigation?.push(NavigationScreen.verificationSuccess, {});
+        },
+        (error: any) => {
+          setShowButtonLoader(false);
+          props.navigation?.push(NavigationScreen.verificationSuccess, {});
+          setFetchError(true);
+          console.log('error', error);
+        },
+      );
+    }
   };
 
   const resendCode = () => {
-    props.resendRegistrationCode(
-      props.username,
-      () => {
-        setShowSnackbar(true);
-        setSnackbarMessage('Code Sent Successfully');
-      },
-      () => {
-        setShowSnackbar(true);
-        setSnackbarMessage('Something went wrong, Please Try again later');
-      },
+    // check Code Verification for add number on social sign up
+    const addMobileToSocialAccount = get(
+      props,
+      'route.params.fromSocial',
+      false,
     );
+
+    if (addMobileToSocialAccount) {
+      // Resend OTP on Mobile Number
+      props.fetchMobileOTP(
+        props.mobileNumber,
+        props.token,
+        response => {
+          console.log('Payload', response);
+          if (get(response, 'payload.data.otp', '') !== '') {
+            setShowSnackbar(true);
+            setSnackbarMessage('Code Sent Successfully');
+          } else {
+            setShowSnackbar(true);
+            setSnackbarMessage('Something went wrong, Please Try again later');
+          }
+        },
+        (error: any) => {
+          setShowSnackbar(true);
+          setSnackbarMessage('Something went wrong, Please Try again later');
+        },
+      );
+    } else {
+      // Resend Authentication Code for Confirm Sign up
+      props.resendRegistrationCode(
+        props.username,
+        () => {
+          setShowSnackbar(true);
+          setSnackbarMessage('Code Sent Successfully');
+        },
+        () => {
+          setShowSnackbar(true);
+          setSnackbarMessage('Something went wrong, Please Try again later');
+        },
+      );
+    }
   };
 
   return (
@@ -154,9 +224,13 @@ const CodeVerification = (props: IProps) => {
 export default connect(
   state => ({
     username: getUserName(state),
+    mobileNumber: getMobileNumber(state),
+    token: getAuthorizeToken(state),
   }),
   {
     confirmRegistration,
     resendRegistrationCode,
+    verifyMobileOTP,
+    fetchMobileOTP,
   },
 )(CodeVerification);

@@ -21,6 +21,7 @@ const initialState = {
   loginData: {},
   userName: '',
   mobileNumber: '',
+  jwtToken: '',
   socialLogin: {
     responseData: {},
     error: false,
@@ -76,6 +77,10 @@ const authReducer = (state = initialState, action) => {
           loading: false,
           error: false,
         },
+        jwtToken: get(
+          JSON.parse(action.payload),
+          'signInUserSession.idToken.jwtToken',
+        ),
         userName: get(action.payload, 'username', ''),
       };
     case SOCIAL_LOGIN_ERROR:
@@ -142,5 +147,8 @@ export const getSocialLoginData = state =>
 // Get Social Login Error
 export const fetchSocialLoginError = state =>
   get(state, 'auth.socialLogin.error');
+
+// Get Authorize Token
+export const getAuthorizeToken = state => get(state, 'auth.jwtToken');
 
 export default authReducer;

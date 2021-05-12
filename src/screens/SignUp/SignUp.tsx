@@ -12,8 +12,7 @@ import { connect } from 'react-redux';
 import {
   registerUser,
   forgotPasswordSubmit,
-  REGISTER_USER_SUCCESS,
-} from 'src/state/auth/authActions';
+} from 'src/services/CognitoMethods';
 import { getUserName } from 'src/state/auth/authReducer';
 import { Controller, useForm } from 'react-hook-form';
 import useYupValidationResolver from 'src/validation/resolver';

@@ -10,7 +10,7 @@ import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import { requestForgotPassword } from 'src/state/auth/authActions';
+import { requestForgotPassword } from 'src/services/CognitoMethods';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';

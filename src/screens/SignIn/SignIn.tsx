@@ -19,11 +19,8 @@ import { ContainedButton, TextButton } from 'src/components/Button';
 import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
-import {
-  setSelectedCountry,
-  requestLogin,
-  socialLogin,
-} from 'src/state/auth/authActions';
+import { requestLogin } from 'src/services/CognitoMethods';
+import { setSelectedCountry } from 'src/state/auth/authActions';
 import {
   getDialCode,
   isLoading,
@@ -33,7 +30,6 @@ import {
 } from 'src/state/auth/authReducer';
 import { NavigationScreen } from 'src/navigation/Navigator';
 import { Controller, useForm } from 'react-hook-form';
-// import { requestLogin } from 'src/services/cognitoMethods';
 
 Amplify.configure(awsconfig);
 

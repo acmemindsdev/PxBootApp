@@ -32,7 +32,18 @@ const SocialLogin = (prop: IProp) => {
 
   useEffect(() => {
     if (!isEmpty(get(responseData, 'username', '')) && shouldNavigate) {
-      prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
+      const phoneVerified = get(
+        responseData,
+        'signInUserSession.idToken.payload.phone_number_verified',
+        false,
+      );
+      // Check if phone number verified then navigate to onboarding screen
+      if (phoneVerified) {
+        prop.navigation?.push(NavigationScreen.verificationSuccess, {});
+      } else {
+        // Navigate to confirm mobile number screen
+        prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
+      }
     }
   }, [responseData]);
 
