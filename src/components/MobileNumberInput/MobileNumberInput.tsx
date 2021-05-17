@@ -59,6 +59,7 @@ const MobileNumberInput = (prop: IProp) => {
           />
         </TouchableOpacity>
         <NumberInput
+          testID="UserNameInputID"
           error={prop.error}
           mode={'outlined'}
           label="Mobile Number"

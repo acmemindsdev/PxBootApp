@@ -133,3 +133,20 @@ Select a Native client to import:
 // User Pool is updated, check status
 
 - `amplify status`
+
+## Run Test Cases - Detox
+
+Build Your App and Then run test
+
+for ios
+
+- `detox build --configuration ios`
+
+- `detox test --configuration ios`
+
+for android
+
+- `detox build --configuration android`
+
+- `detox test --configuration android`
+

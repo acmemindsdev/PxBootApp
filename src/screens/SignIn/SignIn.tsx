@@ -135,6 +135,7 @@ const SignInLayout = ({
           defaultValue=""
           render={({ field: { onChange, value } }) => (
             <PasswordInput
+              testID="PasswordInputID"
               label="Password"
               secureTextEntry={showPassword}
               rightIcon={<PasswordIcon size={25} name="eye-off-outline" />}
