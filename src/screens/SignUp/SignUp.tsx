@@ -125,7 +125,7 @@ const SignUp = (props: IProps) => {
 
   const handleDateConfirm = date => {
     console.log('A date has been picked: ', date);
-    const dateValue = moment(date).format('DD/MM/YYYY');
+    const dateValue = moment(date).format('MM/DD/YYYY');
     setValue('dateOfBirth', dateValue);
     hideDatePicker();
   };
@@ -219,7 +219,7 @@ const SignUp = (props: IProps) => {
             isVisible={isDatePickerVisible}
             date={
               !isEmpty(getValues('dateOfBirth'))
-                ? moment(getValues('dateOfBirth'), 'DD/MM/YYYY').toDate()
+                ? moment(getValues('dateOfBirth'), 'MM/DD/YYYY').toDate()
                 : new Date()
             }
             mode="date"

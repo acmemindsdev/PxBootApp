@@ -1,5 +1,5 @@
 import Amplify, { Auth, Hub } from 'aws-amplify';
-import awsconfig from '../../aws-exports';
+import awsconfig from 'src/aws-exports';
 import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import {
   HANDLE_LOGIN,

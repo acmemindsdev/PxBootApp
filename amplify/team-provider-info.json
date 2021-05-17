@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-pxboost-dev-181805-authRole",
+      "UnauthRoleArn": "arn:aws:iam::135723112304:role/amplify-pxboost-dev-181805-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::135723112304:role/amplify-pxboost-dev-181805-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-pxboost-dev-181805-deployment",
+      "UnauthRoleName": "amplify-pxboost-dev-181805-unauthRole",
+      "StackName": "amplify-pxboost-dev-181805",
+      "StackId": "arn:aws:cloudformation:us-east-1:135723112304:stack/amplify-pxboost-dev-181805/231b50f0-b70e-11eb-99f4-1284f69bc59d",
+      "AmplifyAppId": "d1gb4g8l7oc7n"
+    },
+    "categories": {
+      "auth": {
+        "pxboost2cea43fe": {
+          "userPoolId": "us-east-1_BS8yxyV98",
+          "userPoolName": "dev-pxboost-user-pool",
+          "webClientId": "7en5m9qfogkmm684rno2mpcbpk",
+          "nativeClientId": "1jpgcmuleuacc7c0limj6e400"
+        }
+      }
+    }
+  }
+}

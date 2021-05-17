@@ -5,7 +5,6 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import awsconfig from '../../../aws-exports';
 import { MobileNumberInput, SocialLogin } from 'src/components';
 import {
   MainView,
@@ -30,8 +29,6 @@ import {
 } from 'src/state/auth/authReducer';
 import { NavigationScreen } from 'src/navigation/Navigator';
 import { Controller, useForm } from 'react-hook-form';
-
-Amplify.configure(awsconfig);
 
 interface IProps {
   navigation?: any;
