@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Keyboard } from 'react-native';
 import { MainView, ActionButtonContainer } from './ConfirmMobileNumber.styled';
 import { MobileNumberInput, FormItem } from 'src/components';
 import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
-import { requestForgotPassword } from 'src/services/CognitoMethods';
-import { getAuthorizeToken, getUserName } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
 import { Controller, useForm } from 'react-hook-form';
 import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
@@ -16,20 +13,15 @@ interface IProps {
   navigation: any;
   fetchMobileOTP: any;
   setMobileNumber: any;
-  userName: string;
-  token: string;
 }
 
 const ConfirmMobileNumber = ({
   navigation,
   fetchMobileOTP,
   setMobileNumber,
-  userName,
-  token,
 }: IProps) => {
   const [dialCode, setDialCode] = useState('');
   const [submitEnable, setSubmitEnable] = useState(false);
-  const [fetchErrorMessage, setFetchErrorMessage] = useState('');
   const [showButtonLoader, setShowButtonLoader] = useState(false);
 
   type FormData = {
@@ -45,12 +37,12 @@ const ConfirmMobileNumber = ({
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    Keyboard.dismiss();
     const mobileNumber = `+${dialCode}${data.mobileNumber}`;
     setShowButtonLoader(true);
 
     fetchMobileOTP(
       mobileNumber,
-      token,
       response => {
         setShowButtonLoader(false);
         console.log('Payload', response);
@@ -143,13 +135,7 @@ const ConfirmMobileNumber = ({
   );
 };
 
-export default connect(
-  state => ({
-    userName: getUserName(state),
-    token: getAuthorizeToken(state),
-  }),
-  {
-    fetchMobileOTP,
-    setMobileNumber,
-  },
-)(ConfirmMobileNumber);
+export default connect(() => ({}), {
+  fetchMobileOTP,
+  setMobileNumber,
+})(ConfirmMobileNumber);

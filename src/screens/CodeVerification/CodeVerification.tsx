@@ -18,15 +18,9 @@ import {
   resendRegistrationCode,
 } from 'src/services/CognitoMethods';
 import { fetchMobileOTP, verifyMobileOTP } from 'src/state/auth/authActions';
-import {
-  getUserName,
-  getMobileNumber,
-  getAuthorizeToken,
-} from 'src/state/auth/authReducer';
+import { getUserName, getMobileNumber } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
-import { Controller, useForm } from 'react-hook-form';
 import { OtpInputsRef } from 'react-native-otp-inputs';
 import { FontWeights, Text1 } from 'src/components/Typography';
 import theme from 'src/theme';
@@ -40,7 +34,6 @@ interface IProps {
   resendRegistrationCode: any;
   fetchMobileOTP: any;
   verifyMobileOTP: any;
-  token: string;
 }
 
 const CodeVerification = (props: IProps) => {
@@ -83,7 +76,6 @@ const CodeVerification = (props: IProps) => {
       props.verifyMobileOTP(
         code,
         props.mobileNumber,
-        props.token,
         response => {
           setShowButtonLoader(false);
           if (get(response, 'payload.data.verified', false) === true) {
@@ -132,7 +124,6 @@ const CodeVerification = (props: IProps) => {
       // Resend OTP on Mobile Number
       props.fetchMobileOTP(
         props.mobileNumber,
-        props.token,
         response => {
           console.log('Payload', response);
           if (get(response, 'payload.data.otp', '') !== '') {
@@ -224,7 +215,6 @@ export default connect(
   state => ({
     username: getUserName(state),
     mobileNumber: getMobileNumber(state),
-    token: getAuthorizeToken(state),
   }),
   {
     confirmRegistration,

@@ -25,6 +25,9 @@ import {
   setUsername,
   setMobileNumber,
 } from 'src/state/auth/authActions';
+import { fillLoginData } from 'src/storage/UserData';
+import get from 'lodash/get';
+import TokenBridge from 'src/storage/Token.bridge';
 
 Amplify.configure(awsconfig);
 const busListeners = {};
@@ -75,6 +78,8 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
       }
       if (payload.event === 'signIn') {
         console.log('a user has signed in!');
+        // Store Login Data on app storage
+        fillLoginData(payload.data);
         dispatch({
           type: SOCIAL_LOGIN_SUCCESS,
           payload: JSON.stringify(payload.data),
@@ -267,4 +272,34 @@ export const resendRegistrationCode = (
         onError && onError(error);
       });
   };
+};
+
+export const checkTokenValidity = async () => {
+  return new Promise((resolve, reject) => {
+    Auth.currentSession()
+      .then(session => {
+        var idTokenExpire = session.getIdToken().getExpiration();
+        var refreshToken = session.getRefreshToken();
+        var currentTimeSeconds = Math.round(+new Date() / 1000);
+        if (idTokenExpire < currentTimeSeconds) {
+          Auth.currentAuthenticatedUser().then(res => {
+            res.refreshSession(refreshToken, (err, data) => {
+              if (err) {
+                Auth.signOut();
+              } else {
+                const token = data.getIdToken().getJwtToken();
+                resolve(token);
+              }
+            });
+          });
+        } else {
+          const token = session.getIdToken().getJwtToken();
+          resolve(token);
+        }
+      })
+      .catch(() => {
+        // No logged-in user: don't set auth header
+        reject();
+      });
+  });
 };

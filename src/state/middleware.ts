@@ -5,18 +5,16 @@ interface IProps {
   types: any;
   apiPath: string;
   params: object;
-  token: string;
   onSuccess: any;
   onError: any;
 }
 
-// Client API Calll
+// Client API Call
 export const clientCall = ({
   dispatch,
   types,
   apiPath,
   params,
-  token,
   onSuccess,
   onError,
 }: IProps) => {
@@ -29,7 +27,6 @@ export const clientCall = ({
   return fetchData({
     path: apiPath,
     body: params,
-    headers: { Authorization: token },
   })
     .then(json => {
       console.log('success:', json);

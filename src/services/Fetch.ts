@@ -5,8 +5,10 @@ import {
   responseInterceptorOnError,
   responseInterceptorOnSuccess,
 } from './ResponseInterceptor';
-import { getAuthorizeToken } from 'src/state/auth/authReducer';
+import get from 'lodash/get';
 import { useSelector } from 'react-redux';
+import TokenBridge from 'src/storage/Token.bridge';
+import { checkTokenValidity } from './CognitoMethods';
 
 interface IFetchOptions {
   path: string;
@@ -50,9 +52,17 @@ export const fetchData = async <T = any>({
     cancelToken: cToken,
   };
 
-  //   if (noAuth === false) {
-  //     headers.Authorization = token;
-  //   }
+  if (noAuth === false) {
+    try {
+      await checkTokenValidity().then(token => {
+        headers.Authorization = token;
+      });
+    } catch (e) {
+      console.log('Unable to refresh Token', e);
+    }
+    // const tokens = await TokenBridge.getTokens();
+    // headers.Authorization = get(tokens, 'id_token', '');
+  }
 
   config.headers = {
     Accept: 'application/json',

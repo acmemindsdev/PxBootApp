@@ -65,9 +65,8 @@ export const setMobileNumber = item => ({
 // Get OTP on Mobile Number api action
 export const fetchMobileOTP = (
   mobileNumber: string,
-  token: string,
-  onSuccess,
-  onError,
+  onSuccess: any,
+  onError: any,
 ) => {
   return dispatch =>
     clientCall({
@@ -81,7 +80,6 @@ export const fetchMobileOTP = (
       params: {
         phone: mobileNumber,
       },
-      token: token,
       onSuccess: onSuccess,
       onError: onError,
     });
@@ -91,11 +89,10 @@ export const fetchMobileOTP = (
 export const verifyMobileOTP = (
   code: string,
   mobileNumber: string,
-  token: string,
-  onSuccess,
-  onError,
+  onSuccess: any,
+  onError: any,
 ) => {
-  return dispatch =>
+  return (dispatch: any) =>
     clientCall({
       dispatch: dispatch,
       types: {
@@ -108,7 +105,6 @@ export const verifyMobileOTP = (
         otp: code,
         phone: mobileNumber,
       },
-      token: token,
       onSuccess: onSuccess,
       onError: onError,
     });
