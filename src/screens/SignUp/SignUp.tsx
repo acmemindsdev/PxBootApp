@@ -116,6 +116,7 @@ const SignUp = (props: IProps) => {
   };
 
   const showDatePicker = () => {
+    Keyboard.dismiss();
     setDatePickerVisibility(true);
   };
 

@@ -54,7 +54,7 @@ const ConfirmMobileNumber = ({
       response => {
         setShowButtonLoader(false);
         console.log('Payload', response);
-        if (get(response, 'payload.data.otp', '') !== '') {
+        if (get(response, 'payload.data.data.otp', '') !== '') {
           setMobileNumber(mobileNumber);
 
           navigation?.push(NavigationScreen.codeVerification, {

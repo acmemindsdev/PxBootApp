@@ -100,7 +100,7 @@ const SignInLayout = ({
   };
 
   useEffect(() => {
-    console.log('data is', responseData);
+    console.log('data is', JSON.stringify(responseData));
   }, [responseData]);
 
   return (

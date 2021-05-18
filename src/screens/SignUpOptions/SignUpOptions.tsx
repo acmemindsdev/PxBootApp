@@ -37,7 +37,11 @@ const SignUpOptions = (props: IProps) => {
           <Text1
             color={theme.colors.primary}
             fontWeight={FontWeights.bold}
-            onPress={() => {}}
+            onPress={() => {
+              props.navigation?.navigate(NavigationScreen.contentWebView, {
+                screenMode: 'TERMS_CONDITIONS',
+              });
+            }}
             style={{ marginTop: 12 }}>
             {'Terms & Conditions'}
           </Text1>
@@ -49,7 +53,12 @@ const SignUpOptions = (props: IProps) => {
           <Text1
             color={theme.colors.primary}
             fontWeight={FontWeights.bold}
-            style={{ marginTop: 12 }}>
+            style={{ marginTop: 12 }}
+            onPress={() => {
+              props.navigation?.navigate(NavigationScreen.contentWebView, {
+                screenMode: 'PRIVACY_POLICY',
+              });
+            }}>
             {'Privacy Policy'}
           </Text1>
         </TextContainerView>

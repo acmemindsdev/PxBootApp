@@ -17,6 +17,7 @@ import VerificationSuccess from 'src/screens/VerificationSuccess';
 import SignUpOptions from 'src/screens/SignUpOptions';
 import ConfirmMobileNumber from 'src/screens/ConfirmMobileNumber';
 import CodeVerification from 'src/screens/CodeVerification';
+import ContentWebView from 'src/screens/ContentWebView';
 
 const RootStack = createStackNavigator();
 
@@ -32,6 +33,7 @@ export const NavigationScreen = {
   confirmMobileNumber: 'Confirm Mobile Number',
   codeVerification: 'Code Verification',
   verificationSuccess: 'Verification Success',
+  contentWebView: 'Terms and Condition',
 };
 
 const Navigation = () => {
@@ -130,6 +132,14 @@ const Navigation = () => {
             headerStyle: customHeaderStyle,
           }}
           component={CodeVerification}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.contentWebView}
+          options={{
+            headerStyle: customHeaderStyle,
+            headerTintColor: 'white',
+          }}
+          component={ContentWebView}
         />
       </RootStack.Navigator>
     </NavigationContainer>
