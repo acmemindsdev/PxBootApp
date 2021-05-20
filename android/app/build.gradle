@@ -152,6 +152,15 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('your_key_name.keystore')
+            storePassword 'Acmeminds123'
+            keyAlias 'your_key_alias'
+            keyPassword 'Acmeminds123'
+            // storePassword System.console().readLine("\nKeystore password: ")
+            // keyAlias System.console().readLine("\nAlias: ")
+            // keyPassword System.console().readLine("\nAlias password: ")
+        }
     }
     buildTypes {
         debug {
