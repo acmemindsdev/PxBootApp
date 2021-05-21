@@ -42,7 +42,13 @@ const Navigation = () => {
     SplashScreen.hide();
   });
   const HeaderLogo = () => {
-    return <Image source={require('src/assets/images/logo-header.png')} />;
+    return (
+      <Image
+        style={{ width: 60, height: 20 }}
+        //resizeMode="center"
+        source={require('src/assets/images/logo-header.png')}
+      />
+    );
   };
 
   const customHeaderStyle = {

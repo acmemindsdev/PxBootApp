@@ -13,7 +13,7 @@ export const CountryCodeInput = styled(TextInput).attrs({
     roundness: 6,
   },
 })`
-  width: 90px;
+  width: 100px;
   justify-content: center;
   background-color: ${theme.colors.gray10};
 `;

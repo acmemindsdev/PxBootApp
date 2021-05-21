@@ -3,9 +3,8 @@ import { CountrySelection } from 'react-native-country-list';
 import { View, StatusBar } from 'react-native';
 import { connect } from 'react-redux';
 import { setSelectedCountry } from 'src/state/auth/authActions';
-import { getDialCode } from 'src/state/auth/authReducer';
 
-const CountryList = ({ navigation, setSelectedCountry, dialCode }) => {
+const CountryList = ({ navigation, setSelectedCountry }) => {
   const onCountrySelection = (item: any) => {
     setSelectedCountry(item);
     navigation?.goBack();
@@ -24,11 +23,6 @@ const CountryList = ({ navigation, setSelectedCountry, dialCode }) => {
   );
 };
 
-export default connect(
-  state => ({
-    dialCode: getDialCode(state),
-  }),
-  {
-    setSelectedCountry,
-  },
-)(CountryList);
+export default connect(state => ({}), {
+  setSelectedCountry,
+})(CountryList);

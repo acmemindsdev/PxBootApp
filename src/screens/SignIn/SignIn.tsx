@@ -21,7 +21,6 @@ import { connect } from 'react-redux';
 import { requestLogin } from 'src/services/CognitoMethods';
 import { setSelectedCountry } from 'src/state/auth/authActions';
 import {
-  getDialCode,
   isLoading,
   fetchError,
   getLoginData,
@@ -70,7 +69,9 @@ const SignInLayout = ({
     requestLogin(
       userName,
       data.password,
-      () => {},
+      () => {
+        alert('Login Successful');
+      },
       (error: any) => {
         if (
           get(error, 'payload.code', '') === 'UserNotFoundException' ||
@@ -179,7 +180,6 @@ const SignInLayout = ({
 
 export default connect(
   state => ({
-    dialCode: getDialCode(state),
     responseData: getLoginData(state),
     loading: isLoading(state),
     fetchError: fetchError(state),

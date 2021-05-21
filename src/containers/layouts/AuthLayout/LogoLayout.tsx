@@ -12,7 +12,10 @@ export function withLogoLayout<P extends IProps>(
     return (
       <WrapperStyled>
         <LogoContainer>
-          <LogoImageStyled source={require('src/assets/images/logo.png')} />
+          <LogoImageStyled
+            source={require('src/assets/images/logo.png')}
+            resizeMode="contain"
+          />
         </LogoContainer>
         <WrappedComponent {...props} />
       </WrapperStyled>

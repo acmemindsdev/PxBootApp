@@ -38,7 +38,8 @@ const SocialLoginButton = (prop: IProp) => {
             icon={({ size, color }) => (
               <Image
                 source={require('src/assets/images/logo-google.png')}
-                style={{ width: 34, height: 34 }}
+                resizeMode="center"
+                style={{ width: 32, height: 32 }}
               />
             )}
             size={40}

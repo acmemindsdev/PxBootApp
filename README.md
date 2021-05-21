@@ -150,3 +150,14 @@ for android
 
 - `detox test --configuration android`
 
+## Release APK Build command
+
+- `react-native bundle --platform android --dev false --entry-file index.ts --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res`
+
+- `cd android`
+
+for Apk Release
+- `./gradlew assembleRelease -x bundleReleaseJsAndAssets`
+
+for Abb Release
+- `./gradlew bundleRelease -x bundleReleaseJsAndAssets`

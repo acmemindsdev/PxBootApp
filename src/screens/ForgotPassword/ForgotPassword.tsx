@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, Keyboard } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
@@ -39,13 +39,17 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
   } = useForm<FormData>();
 
   const onSubmit = (data: FormData) => {
+    Keyboard.dismiss();
     const userName = `+${dialCode}${data.mobileNumber}`;
     setShowButtonLoader(true);
     requestForgotPassword(
       userName,
       payload => {
         console.log('Payload', payload);
-        navigation?.push(NavigationScreen.resetPassword, {});
+        alert(
+          'Authentication Code successfully sent on your number to reset password',
+        );
+        // navigation?.push(NavigationScreen.resetPassword, {});
         setShowButtonLoader(false);
       },
       (error: any) => {
@@ -53,7 +57,8 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
         if (get(error, 'payload.code', '') === 'UserNotFoundException') {
           setError('mobileNumber', {
             type: 'manual',
-            message: 'This account does not exist. Register to create account.',
+            message:
+              'This account does not exist. Register to create an account.',
           });
         } else {
           setError('mobileNumber', {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
   ContainerView,
@@ -12,8 +12,14 @@ import {
 import isEmpty from 'lodash/isEmpty';
 import { StackActions } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { getDialCode, getCountryCode } from 'src/state/auth/authReducer';
+import {
+  getDialCode,
+  getCountryCode,
+  getCountryObj,
+} from 'src/state/auth/authReducer';
 import { NavigationScreen } from 'src/navigation/Navigator';
+import get from 'lodash/get';
+import { countries } from 'react-native-country-list/src/CountryList/Constants';
 
 type IProp = {
   navigation: any;
@@ -31,6 +37,11 @@ const MobileNumberInput = (prop: IProp) => {
   const pushAction = StackActions.push(NavigationScreen.selectCountry);
   const dialCode = useSelector(state => getDialCode(state));
   const countryCode = useSelector(state => getCountryCode(state));
+  const countryObj = useSelector(state => getCountryObj(state));
+
+  const indexOfCountry = countries.findIndex((obj: any) => obj.code === 'US');
+  var flagURL = get(countries, `[${indexOfCountry}].flag`, '');
+  const countryFlag = get(countryObj, 'flag', flagURL);
 
   const rawNumber =
     number.length === 10
@@ -49,6 +60,13 @@ const MobileNumberInput = (prop: IProp) => {
             mode={'outlined'}
             render={() => (
               <CountryCodeView>
+                <Image
+                  style={{
+                    width: 20,
+                    height: 15,
+                  }}
+                  source={{ uri: countryFlag }}
+                />
                 <CountryCodeText>
                   {'+'}
                   {dialCode}

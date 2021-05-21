@@ -13,6 +13,7 @@ import {
 import get from 'lodash/get';
 
 const initialState = {
+  countryObj: {},
   dialCode: '1',
   countryCode: 'US',
   loading: false,
@@ -34,6 +35,7 @@ const authReducer = (state = initialState, action) => {
     case SELECTED_COUNTRY:
       return {
         ...state,
+        countryObj: action.payload,
         dialCode: get(action.payload, 'callingCode'),
         countryCode: get(action.payload, 'code'),
       };
@@ -112,6 +114,10 @@ const authReducer = (state = initialState, action) => {
 };
 
 // Selectors
+
+// Get Selected Country Object
+export const getCountryObj = state => state.auth.countryObj;
+
 // Get Selected Dial Code
 export const getDialCode = state => state.auth.dialCode;
 

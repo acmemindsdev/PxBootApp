@@ -32,7 +32,7 @@ const SignUpOptions = (props: IProps) => {
           <Text1
             style={{ marginTop: 12, opacity: 0.6 }}
             color={theme.colors.black90}>
-            {'By Continuing, you agree to the '}
+            By continuing, you agree to PXB's{' '}
           </Text1>
           <Text1
             color={theme.colors.primary}

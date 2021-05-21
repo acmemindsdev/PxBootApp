@@ -84,7 +84,8 @@ const SignUp = (props: IProps) => {
       data.email,
       data.confirmPassword,
       () => {
-        props.navigation?.push(NavigationScreen.codeVerification, {});
+        alert('Authentication Code successfully sent on your number');
+        // props.navigation?.push(NavigationScreen.codeVerification, {});
         setShowButtonLoader(false);
       },
       (error: any) => {
@@ -238,10 +239,10 @@ const SignUp = (props: IProps) => {
               <TextInput
                 label="Email Address"
                 onChangeText={text => {
-                  onChange(text);
+                  onChange(text.trim());
                   checkSubmitDisabled();
                 }}
-                value={value}
+                value={value.trim()}
                 error={!!errors.email}
                 errorText={errors.email?.message}
               />
