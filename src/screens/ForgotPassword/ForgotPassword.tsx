@@ -46,10 +46,7 @@ const ForgotPassword = ({ navigation, requestForgotPassword }: IProps) => {
       userName,
       payload => {
         console.log('Payload', payload);
-        alert(
-          'Authentication Code successfully sent on your number to reset password',
-        );
-        // navigation?.push(NavigationScreen.resetPassword, {});
+        navigation?.push(NavigationScreen.resetPassword, {});
         setShowButtonLoader(false);
       },
       (error: any) => {

@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+} from '@react-navigation/stack';
 import { Image, Text } from 'react-native';
 import theme from 'src/theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -61,6 +64,7 @@ const Navigation = () => {
     <NavigationContainer>
       <RootStack.Navigator
         screenOptions={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           headerBackTitleVisible: false,
           headerBackImage: () => (
             <Icon

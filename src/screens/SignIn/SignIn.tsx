@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar, Keyboard } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Amplify, { Auth, Hub } from 'aws-amplify';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import { MobileNumberInput, SocialLogin } from 'src/components';
 import {
   MainView,

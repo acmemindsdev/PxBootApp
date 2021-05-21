@@ -8,6 +8,7 @@ import { Provider as StateProvider } from 'react-redux';
 import store from 'src/state/store';
 
 const App = () => {
+  // console.disableYellowBox = true;
   return (
     <StateProvider store={store}>
       <PaperProvider theme={theme.AppTheme}>

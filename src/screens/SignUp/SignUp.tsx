@@ -84,8 +84,7 @@ const SignUp = (props: IProps) => {
       data.email,
       data.confirmPassword,
       () => {
-        alert('Authentication Code successfully sent on your number');
-        // props.navigation?.push(NavigationScreen.codeVerification, {});
+        props.navigation?.push(NavigationScreen.codeVerification, {});
         setShowButtonLoader(false);
       },
       (error: any) => {

@@ -28,9 +28,32 @@ import {
 import { fillLoginData } from 'src/storage/UserData';
 import get from 'lodash/get';
 import TokenBridge from 'src/storage/Token.bridge';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
+import { Linking } from 'react-native';
 
-Amplify.configure(awsconfig);
 const busListeners = {};
+
+Amplify.configure({
+  ...awsconfig,
+  oauth: {
+    ...awsconfig.oauth,
+    urlOpener,
+  },
+});
+
+async function urlOpener(url, redirectUrl) {
+  await InAppBrowser.isAvailable();
+  const result = await InAppBrowser.openAuth(url, redirectUrl, {
+    showTitle: true,
+    enableUrlBarHiding: true,
+    enableDefaultShare: false,
+    ephemeralWebSession: false,
+  });
+
+  if (result.type === 'success') {
+    Linking.openURL(result.url);
+  }
+}
 
 export const requestLogin = (
   username: string,
@@ -302,4 +325,13 @@ export const checkTokenValidity = async () => {
         reject();
       });
   });
+};
+
+export const signOut = async () => {
+  try {
+    await Auth.signOut().then(data => console.log(data));
+    console.log('user successfully signed out!');
+  } catch (error) {
+    console.log('error signing out: ', error);
+  }
 };
