@@ -4,9 +4,9 @@ import {
   MainView,
   ActionButtonContainer,
   IconStyled,
-} from './AddBirthDate.styled';
+} from './ProfilePicture.styled';
 import { FormItem, TextInput } from 'src/components';
-import { ContainedButton } from 'src/components/Button';
+import { ContainedButton, OutlineButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -16,6 +16,7 @@ import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { DATE_FORMAT } from 'src/constant';
+import { Avatar } from 'react-native-paper';
 
 interface IProps {
   navigation: any;
@@ -23,7 +24,7 @@ interface IProps {
   setMobileNumber: any;
 }
 
-const AddBirthDate = ({
+const ProfilePicture = ({
   navigation,
   fetchMobileOTP,
   setMobileNumber,
@@ -121,48 +122,18 @@ const AddBirthDate = ({
             name="dateOfBirth"
             control={control}
             render={({ field: { onChange, value } }) => (
-              <TouchableOpacity onPress={showDatePicker}>
-                <TextInput
-                  label="Date of Birth"
-                  onChangeText={text => {
-                    onChange(text);
-                    checkSubmitDisabled();
-                  }}
-                  value={value}
-                  rightIcon={
-                    <IconStyled size={25} name="calendar-range-outline" />
-                  }
-                  onIconPress={showDatePicker}
-                  error={!!errors.dateOfBirth}
-                  errorText={errors.dateOfBirth?.message}
-                  pointerEvents="none"
-                  focusable={false}
-                  editable={false}
-                />
-              </TouchableOpacity>
+              <Avatar.Text size={160} label="XD" />
             )}
-          />
-          <DateTimePickerModal
-            isVisible={isDatePickerVisible}
-            date={
-              !isEmpty(getValues('dateOfBirth'))
-                ? moment(getValues('dateOfBirth'), DATE_FORMAT).toDate()
-                : new Date()
-            }
-            mode="date"
-            maximumDate={moment().subtract(2, 'years').toDate()}
-            headerTextIOS="Select Birth Date"
-            onConfirm={handleDateConfirm}
-            onCancel={hideDatePicker}
           />
         </FormItem>
         <ActionButtonContainer>
+          <OutlineButton fullWidth>{'Add Picture'}</OutlineButton>
           <ContainedButton
             fullWidth
             loading={showButtonLoader}
             disabled={!submitEnable}
             onPress={handleSubmit(onSubmit)}>
-            {'Next'}
+            {'Save'}
           </ContainedButton>
         </ActionButtonContainer>
       </MainView>
@@ -173,4 +144,4 @@ const AddBirthDate = ({
 export default connect(() => ({}), {
   fetchMobileOTP,
   setMobileNumber,
-})(AddBirthDate);
+})(ProfilePicture);

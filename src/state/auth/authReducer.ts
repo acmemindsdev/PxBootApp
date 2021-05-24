@@ -9,6 +9,8 @@ import {
   SOCIAL_LOGIN_SUCCESS,
   SOCIAL_LOGIN_ERROR,
   MOBILE_NUMBER,
+  LOGGED_IN_SUCCESS,
+  ONBOARDING_SHOW,
 } from './authActions';
 import get from 'lodash/get';
 
@@ -23,6 +25,8 @@ const initialState = {
   userName: '',
   mobileNumber: '',
   jwtToken: '',
+  loggedIn: false,
+  showOnboarding: false,
   socialLogin: {
     responseData: {},
     error: false,
@@ -108,6 +112,16 @@ const authReducer = (state = initialState, action) => {
         ...state,
         mobileNumber: action.payload,
       };
+    case LOGGED_IN_SUCCESS:
+      return {
+        ...state,
+        loggedIn: action.payload,
+      };
+    case ONBOARDING_SHOW:
+      return {
+        ...state,
+        showOnboarding: action.payload,
+      };
     default:
       return state;
   }
@@ -156,5 +170,8 @@ export const fetchSocialLoginError = state =>
 
 // Get Authorize Token
 export const getAuthorizeToken = state => get(state, 'auth.jwtToken');
+
+// Get flag : isUser Successful Logged in
+export const getOnboarding = state => get(state, 'auth.showOnboarding');
 
 export default authReducer;

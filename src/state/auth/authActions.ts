@@ -46,19 +46,37 @@ export const GET_OTP_ERROR = 'GET_OTP_ERROR';
 
 // Temporary UserName
 export const USER_ID = 'USER_ID';
+
+// Temporary Mobile Number
 export const MOBILE_NUMBER = 'MOBILE_NUMBER';
 
+// User LoggedIn Successful
+export const LOGGED_IN_SUCCESS = 'LOGGED_IN_SUCCESS';
+
+// Show Onboarding
+export const ONBOARDING_SHOW = 'ONBOARDING_SHOW';
+
+// Redux Action to Set Selected Country object
 export const setSelectedCountry = item => ({
   type: SELECTED_COUNTRY,
   payload: item,
 });
 
+// Redux Action to Set UserName on redux store
 export const setUsername = item => ({
   type: USER_ID,
   payload: item,
 });
+
+// Redux Action to Set Mobile Number on redux store
 export const setMobileNumber = item => ({
   type: MOBILE_NUMBER,
+  payload: item,
+});
+
+// Redux Action to show onboarding when user successful logged in
+export const showOnboarding = item => ({
+  type: ONBOARDING_SHOW,
   payload: item,
 });
 

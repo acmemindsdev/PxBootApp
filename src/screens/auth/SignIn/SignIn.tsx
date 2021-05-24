@@ -15,7 +15,7 @@ import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
 import { requestLogin } from 'src/services/CognitoMethods';
-import { setSelectedCountry } from 'src/state/auth/authActions';
+import { showOnboarding } from 'src/state/auth/authActions';
 import {
   isLoading,
   fetchError,
@@ -32,13 +32,14 @@ interface IProps {
   fetchError?: boolean;
   errorMessage?: string;
   loading?: boolean;
+  showOnboarding?: any;
 }
 
 const SignInLayout = ({
   navigation,
   requestLogin,
   responseData,
-  fetchError,
+  showOnboarding,
   loading,
 }: IProps) => {
   const [dialCode, setDialCode] = useState('');
@@ -66,7 +67,7 @@ const SignInLayout = ({
       userName,
       data.password,
       () => {
-        alert('Login Successful');
+        showOnboarding(true);
       },
       (error: any) => {
         if (
@@ -182,7 +183,7 @@ export default connect(
     errorMessage: fetchErrorMessage(state),
   }),
   {
-    setSelectedCountry,
+    showOnboarding,
     requestLogin,
   },
 )(SignInLayout);
