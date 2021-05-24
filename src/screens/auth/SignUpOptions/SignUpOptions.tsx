@@ -30,7 +30,7 @@ const SignUpOptions = (props: IProps) => {
         <SocialLogin navigation={props.navigation} isRegister />
         <TextContainerView>
           <Text1
-            style={{ marginTop: 12, opacity: 0.6 }}
+            style={{ marginTop: 6, opacity: 0.6 }}
             color={theme.colors.black90}>
             By continuing, you agree to PXB's{' '}
           </Text1>
@@ -42,18 +42,18 @@ const SignUpOptions = (props: IProps) => {
                 screenMode: 'TERMS_CONDITIONS',
               });
             }}
-            style={{ marginTop: 12 }}>
+            style={{ marginTop: 6 }}>
             {'Terms & Conditions'}
           </Text1>
           <Text1
-            style={{ marginTop: 12, opacity: 0.6 }}
+            style={{ marginTop: 6, opacity: 0.6 }}
             color={theme.colors.black90}>
             {' and '}
           </Text1>
           <Text1
             color={theme.colors.primary}
             fontWeight={FontWeights.bold}
-            style={{ marginTop: 12 }}
+            style={{ marginTop: 6 }}
             onPress={() => {
               props.navigation?.navigate(NavigationScreen.contentWebView, {
                 screenMode: 'PRIVACY_POLICY',

@@ -21,6 +21,7 @@ import SignUpOptions from 'src/screens/auth/SignUpOptions';
 import ConfirmMobileNumber from 'src/screens/auth/ConfirmMobileNumber';
 import CodeVerification from 'src/screens/auth/CodeVerification';
 import ContentWebView from 'src/screens/auth/ContentWebView';
+import AddBirthDate from 'src/screens/auth/AddBirthDate';
 
 const RootStack = createStackNavigator();
 
@@ -37,6 +38,7 @@ export const NavigationScreen = {
   codeVerification: 'Code Verification',
   verificationSuccess: 'Verification Success',
   contentWebView: 'Terms and Condition',
+  addBirthDate: 'Add Birth Date',
 };
 
 const Navigation = () => {
@@ -150,6 +152,14 @@ const Navigation = () => {
             headerTintColor: 'white',
           }}
           component={ContentWebView}
+        />
+        <RootStack.Screen
+          name={NavigationScreen.addBirthDate}
+          options={{
+            headerTitle: () => <HeaderLogo />,
+            headerStyle: customHeaderStyle,
+          }}
+          component={AddBirthDate}
         />
       </RootStack.Navigator>
     </NavigationContainer>

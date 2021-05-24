@@ -17,7 +17,7 @@ import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import { StackActions } from '@react-navigation/native';
 
 //import { Button } from 'react-native-paper';
-import { withLogoLayout } from 'src/containers/layouts/AuthLayout';
+import { withLogoLayout } from 'src/layouts/AuthLayout';
 import SignInLayout from './SignIn';
 // Amplify.configure(awsconfig);
 

@@ -22,6 +22,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
+import { BIRTH_DATE_FORMAT } from 'src/constant';
 
 interface IProps {
   navigation: any;
@@ -126,7 +127,7 @@ const SignUp = (props: IProps) => {
 
   const handleDateConfirm = date => {
     console.log('A date has been picked: ', date);
-    const dateValue = moment(date).format('MM/DD/YYYY');
+    const dateValue = moment(date).format(BIRTH_DATE_FORMAT);
     setValue('dateOfBirth', dateValue);
     hideDatePicker();
   };
@@ -220,7 +221,7 @@ const SignUp = (props: IProps) => {
             isVisible={isDatePickerVisible}
             date={
               !isEmpty(getValues('dateOfBirth'))
-                ? moment(getValues('dateOfBirth'), 'MM/DD/YYYY').toDate()
+                ? moment(getValues('dateOfBirth'), BIRTH_DATE_FORMAT).toDate()
                 : new Date()
             }
             mode="date"

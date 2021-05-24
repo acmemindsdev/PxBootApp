@@ -44,6 +44,7 @@ export const ButtonStyled = styled(Button).attrs((props: CustomButtonPaper) => {
     color:
       props.mode === 'outlined' ? theme.colors.primary : theme.colors.white,
     textAlign: 'center',
+    letterSpacing: 0,
   };
 
   if (props.labelStyle) {
@@ -81,6 +82,7 @@ export const TextButtonStyled = styled(ButtonStyled).attrs({
     textAlign: 'center',
     fontWeight: '700',
     color: theme.colors.primary,
+    letterSpacing: 0,
   },
 })`
   background-color: transparent;

@@ -37,8 +37,11 @@ const SocialLogin = (prop: IProp) => {
         'signInUserSession.idToken.payload.phone_number_verified',
         false,
       );
-      // Check if phone number verified then navigate to onboarding screen
+
       if (phoneVerified) {
+        prop.navigation?.push(NavigationScreen.addBirthDate, {});
+      } else if (!phoneVerified) {
+        // Check if phone number not verified then navigate to onboarding screen
         prop.navigation?.push(NavigationScreen.verificationSuccess, {});
       } else {
         // Navigate to confirm mobile number screen

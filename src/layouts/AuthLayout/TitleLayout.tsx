@@ -26,8 +26,6 @@ export function withTitleLayout<P extends IProps>(
 ): React.FunctionComponent<P> {
   return props => {
     const mobileNumber = useSelector(state => getMobileNumber(state));
-    let title = '';
-
     const Title_Description = () => {
       switch (get(props.route, 'name', '')) {
         case NavigationScreen.forgotPassword:
@@ -81,6 +79,8 @@ export function withTitleLayout<P extends IProps>(
               </Paragraph>
             </>
           );
+        case NavigationScreen.addBirthDate:
+          return <Title>{'Enter Date of Birth'}</Title>;
         default:
           return null;
       }

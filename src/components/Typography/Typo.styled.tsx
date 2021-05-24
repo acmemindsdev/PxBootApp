@@ -50,6 +50,7 @@ export const Text1Styled = styled(Text)<CustomTextProp>`
   opacity: ${(props: CustomTextProp) => (props.color ? 1 : 0.8)};
   font-size: 14px;
   line-height: 17px;
+  letter-spacing: 0px;
 `;
 
 export const Text2Styled = styled(Text)<CustomTextProp>`
