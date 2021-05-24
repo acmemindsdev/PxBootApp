@@ -10,17 +10,17 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import SplashScreen from 'react-native-splash-screen';
 
 // Screens
-import SignIn from 'src/screens/SignIn';
-import SignUp from 'src/screens/SignUp';
-import ForgotPassword from 'src/screens/ForgotPassword';
-import CountryList from 'src/screens/CountryList';
-import ResetPassword from 'src/screens/ResetPassword';
-import ResetPasswordSuccess from 'src/screens/ResetPasswordSuccess';
-import VerificationSuccess from 'src/screens/VerificationSuccess';
-import SignUpOptions from 'src/screens/SignUpOptions';
-import ConfirmMobileNumber from 'src/screens/ConfirmMobileNumber';
-import CodeVerification from 'src/screens/CodeVerification';
-import ContentWebView from 'src/screens/ContentWebView';
+import SignIn from 'src/screens/auth/SignIn';
+import SignUp from 'src/screens/auth/SignUp';
+import ForgotPassword from 'src/screens/auth/ForgotPassword';
+import CountryList from 'src/screens/auth/CountryList';
+import ResetPassword from 'src/screens/auth/ResetPassword';
+import ResetPasswordSuccess from 'src/screens/auth/ResetPasswordSuccess';
+import VerificationSuccess from 'src/screens/auth/VerificationSuccess';
+import SignUpOptions from 'src/screens/auth/SignUpOptions';
+import ConfirmMobileNumber from 'src/screens/auth/ConfirmMobileNumber';
+import CodeVerification from 'src/screens/auth/CodeVerification';
+import ContentWebView from 'src/screens/auth/ContentWebView';
 
 const RootStack = createStackNavigator();
 
