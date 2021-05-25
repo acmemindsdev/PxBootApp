@@ -4,6 +4,7 @@ import MobileNumberInput from './MobileNumberInput';
 import SocialLogin from './SocialLogin';
 import PasswordHint from './PasswordHint';
 import FormItem from './FormItem';
+import ProfileAvatar from './ProfileAvatar';
 
 export {
   /**
@@ -18,4 +19,5 @@ export {
   SocialLogin,
   PasswordHint,
   FormItem,
+  ProfileAvatar,
 };

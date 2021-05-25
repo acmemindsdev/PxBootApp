@@ -1,22 +1,17 @@
 import React, { useState } from 'react';
-import { StatusBar, Keyboard, TouchableOpacity } from 'react-native';
-import {
-  MainView,
-  ActionButtonContainer,
-  IconStyled,
-} from './ProfilePicture.styled';
-import { FormItem, TextInput } from 'src/components';
+import { StatusBar, Keyboard } from 'react-native';
+import { MainView, ActionButtonContainer } from './ProfilePicture.styled';
+import { ProfileAvatar } from 'src/components';
 import { ContainedButton, OutlineButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
-import { Controller, useForm } from 'react-hook-form';
 import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
-import moment from 'moment';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { DATE_FORMAT } from 'src/constant';
-import { Avatar } from 'react-native-paper';
+import {
+  launchImageLibrary,
+  ImageLibraryOptions,
+} from 'react-native-image-picker';
 
 interface IProps {
   navigation: any;
@@ -24,34 +19,16 @@ interface IProps {
   setMobileNumber: any;
 }
 
-const ProfilePicture = ({
-  navigation,
-  fetchMobileOTP,
-  setMobileNumber,
-}: IProps) => {
-  const [submitEnable, setSubmitEnable] = useState(false);
+const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [imageSrc, setImageSrc] = useState({});
 
-  type FormData = {
-    dateOfBirth: string;
-  };
-
-  const {
-    handleSubmit,
-    control,
-    getValues,
-    setError,
-    setValue,
-    formState: { errors },
-  } = useForm<FormData>();
-
-  const onSubmit = (data: FormData) => {
+  const onSubmit = () => {
     Keyboard.dismiss();
     setShowButtonLoader(true);
 
     fetchMobileOTP(
-      data.dateOfBirth,
+      'data.dateOfBirth',
       response => {
         setShowButtonLoader(false);
         console.log('Payload', response);
@@ -60,79 +37,55 @@ const ProfilePicture = ({
             fromSocial: true,
           });
         } else {
-          setError('dateOfBirth', {
-            type: 'manual',
-            message: get(
-              response,
-              'payload.data.message',
-              'Something went wrong, Please try again later.',
-            ),
-          });
         }
       },
       (error: any) => {
         setShowButtonLoader(false);
         if (get(error, 'payload.code', '') === 'UserNotFoundException') {
-          setError('dateOfBirth', {
-            type: 'manual',
-            message: 'This account does not exist. Register to create account.',
-          });
         } else {
-          setError('dateOfBirth', {
-            type: 'manual',
-            message: 'Something went wrong, Please try again later.',
-          });
         }
       },
     );
   };
 
-  const checkSubmitDisabled = () => {
-    const value = getValues();
-    if (value.dateOfBirth !== '') {
-      setSubmitEnable(true);
-    } else {
-      setSubmitEnable(false);
-    }
-  };
-
-  const showDatePicker = () => {
-    Keyboard.dismiss();
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleDateConfirm = date => {
-    console.log('A date has been picked: ', date);
-    const dateValue = moment(date).format(DATE_FORMAT);
-    setValue('dateOfBirth', dateValue);
-    checkSubmitDisabled();
-    hideDatePicker();
+  // Method for launch Native Image Gallery
+  const launchImagePicker = () => {
+    let options: ImageLibraryOptions = {
+      quality: 0.7,
+      mediaType: 'mixed',
+      maxWidth: 500,
+      maxHeight: 500,
+    };
+    launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else {
+        console.log('Response = ', response.uri);
+        setImageSrc(response);
+      }
+    });
   };
 
   return (
     <>
       <StatusBar barStyle="light-content" />
       <MainView>
-        <FormItem>
-          <Controller
-            name="dateOfBirth"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <Avatar.Text size={160} label="XD" />
-            )}
-          />
-        </FormItem>
+        <ProfileAvatar
+          type="image"
+          size={160}
+          source={{ uri: get(imageSrc, 'uri', '') }}
+        />
         <ActionButtonContainer>
-          <OutlineButton fullWidth>{'Add Picture'}</OutlineButton>
+          <OutlineButton fullWidth onPress={() => launchImagePicker()}>
+            {isEmpty(imageSrc) ? 'Add Picture' : 'Change Picture'}
+          </OutlineButton>
           <ContainedButton
             fullWidth
             loading={showButtonLoader}
-            disabled={!submitEnable}
-            onPress={handleSubmit(onSubmit)}>
+            disabled={isEmpty(imageSrc)}
+            onPress={onSubmit}>
             {'Save'}
           </ContainedButton>
         </ActionButtonContainer>
