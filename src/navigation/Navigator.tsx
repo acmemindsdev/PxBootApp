@@ -56,6 +56,17 @@ export const OnboardingNavigationScreen = {
 const Navigation = () => {
   const showOnboarding = useSelector(state => getOnboarding(state));
 
+  // Uncomment to check is user logged in or not
+  // try {
+  //   await AsyncStore.getItem('loginData', {}).then(data => {
+  //     dispatch(setLoginResponse(data));
+  //     console.log(data);
+  //   });
+  //   console.log('user data saved successful');
+  // } catch (error) {
+  //   console.log('error user data save: ', error);
+  // }
+
   //Hide Splash screen on app load.
   useEffect(() => {
     SplashScreen.hide();

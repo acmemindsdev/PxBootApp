@@ -56,6 +56,9 @@ export const LOGGED_IN_SUCCESS = 'LOGGED_IN_SUCCESS';
 // Show Onboarding
 export const ONBOARDING_SHOW = 'ONBOARDING_SHOW';
 
+// Login Response
+export const LOGIN_RESPONSE_DATA = 'LOGIN_RESPONSE_DATA';
+
 // Redux Action to Set Selected Country object
 export const setSelectedCountry = item => ({
   type: SELECTED_COUNTRY,
@@ -77,6 +80,12 @@ export const setMobileNumber = item => ({
 // Redux Action to show onboarding when user successful logged in
 export const showOnboarding = item => ({
   type: ONBOARDING_SHOW,
+  payload: item,
+});
+
+// Redux Action to store User Logged in response Data
+export const setLoginResponse = item => ({
+  type: LOGIN_RESPONSE_DATA,
   payload: item,
 });
 
@@ -122,6 +131,36 @@ export const verifyMobileOTP = (
       params: {
         otp: code,
         phone: mobileNumber,
+      },
+      onSuccess: onSuccess,
+      onError: onError,
+    });
+};
+
+/**
+ * @public Add/Update Birth Date on User Info
+ * @param userId LoggedIn user's Id
+ * @param date_of_birth Birth Date string
+ * @param onSuccess Call Back Method for Success response
+ * @param onError Call Back Method for Error response
+ */
+export const updateDateOfBirth = (
+  userId: string,
+  date_of_birth: string,
+  onSuccess: any,
+  onError: any,
+) => {
+  return (dispatch: any) =>
+    clientCall({
+      dispatch: dispatch,
+      types: {
+        ACTION: VERIFICATION_CODE_SUBMIT,
+        SUCCESS: VERIFICATION_CODE_SUBMIT_SUCCESS,
+        ERROR: VERIFICATION_CODE_SUBMIT_ERROR,
+      },
+      apiPath: API.updateUser + `/${userId}`,
+      params: {
+        date_of_birth: date_of_birth,
       },
       onSuccess: onSuccess,
       onError: onError,

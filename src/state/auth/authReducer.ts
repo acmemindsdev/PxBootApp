@@ -11,6 +11,7 @@ import {
   MOBILE_NUMBER,
   LOGGED_IN_SUCCESS,
   ONBOARDING_SHOW,
+  LOGIN_RESPONSE_DATA,
 } from './authActions';
 import get from 'lodash/get';
 
@@ -83,6 +84,7 @@ const authReducer = (state = initialState, action) => {
           loading: false,
           error: false,
         },
+        loginData: JSON.parse(action.payload),
         jwtToken: get(
           JSON.parse(action.payload),
           'signInUserSession.idToken.jwtToken',
@@ -121,6 +123,11 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         showOnboarding: action.payload,
+      };
+    case LOGIN_RESPONSE_DATA:
+      return {
+        ...state,
+        loginData: action.payload,
       };
     default:
       return state;

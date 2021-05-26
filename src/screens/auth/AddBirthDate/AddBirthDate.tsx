@@ -10,27 +10,31 @@ import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { NavigationScreen } from 'src/navigation/Navigator';
+import { getSocialLoginData } from 'src/state/auth/authReducer';
 import { Controller, useForm } from 'react-hook-form';
-import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
+import { updateDateOfBirth, showOnboarding } from 'src/state/auth/authActions';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { DATE_FORMAT } from 'src/constant';
+import { DATE_FORMAT, DATE_FORMAT_SERVER } from 'src/constant';
+import { UserInfo } from 'src/storage/UserData';
+import { useSelector } from 'react-redux';
+import { NavigationScreen } from 'src/navigation/Navigator';
 
 interface IProps {
   navigation: any;
-  fetchMobileOTP: any;
-  setMobileNumber: any;
+  updateDateOfBirth: any;
+  showOnboarding: any;
 }
 
-const AddBirthDate = ({
-  navigation,
-  fetchMobileOTP,
-  setMobileNumber,
-}: IProps) => {
+const AddBirthDate = (prop: IProps) => {
   const [submitEnable, setSubmitEnable] = useState(false);
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const socialResponseData = useSelector(state => getSocialLoginData(state));
+
+  // User Id
+  const userId = UserInfo.userID();
 
   type FormData = {
     dateOfBirth: string;
@@ -42,6 +46,7 @@ const AddBirthDate = ({
     getValues,
     setError,
     setValue,
+    clearErrors,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -49,24 +54,22 @@ const AddBirthDate = ({
     Keyboard.dismiss();
     setShowButtonLoader(true);
 
-    fetchMobileOTP(
-      data.dateOfBirth,
-      response => {
+    prop.updateDateOfBirth(
+      userId,
+      moment(data.dateOfBirth, DATE_FORMAT).format(DATE_FORMAT_SERVER),
+      () => {
         setShowButtonLoader(false);
-        console.log('Payload', response);
-        if (get(response, 'payload.data.data.otp', '') !== '') {
-          navigation?.push(NavigationScreen.codeVerification, {
-            fromSocial: true,
-          });
+        const phoneVerified = get(
+          socialResponseData,
+          'signInUserSession.idToken.payload.phone_number_verified',
+          false,
+        );
+        if (!phoneVerified) {
+          // Check if phone number not verified then navigate to confirm mobile number screen
+          prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
         } else {
-          setError('dateOfBirth', {
-            type: 'manual',
-            message: get(
-              response,
-              'payload.data.message',
-              'Something went wrong, Please try again later.',
-            ),
-          });
+          // Navigate to onboarding screen
+          prop.showOnboarding(true);
         }
       },
       (error: any) => {
@@ -110,6 +113,7 @@ const AddBirthDate = ({
     setValue('dateOfBirth', dateValue);
     checkSubmitDisabled();
     hideDatePicker();
+    clearErrors('dateOfBirth');
   };
 
   return (
@@ -171,6 +175,6 @@ const AddBirthDate = ({
 };
 
 export default connect(() => ({}), {
-  fetchMobileOTP,
-  setMobileNumber,
+  updateDateOfBirth,
+  showOnboarding,
 })(AddBirthDate);

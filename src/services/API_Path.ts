@@ -10,3 +10,6 @@ export const getMobileOTP = baseApi + '/notification/sendMobileOTP';
 // Verify OTP
 export const verifyMobileOTP =
   baseApi + '/notification/validateOTPAndUpdateUser';
+
+// Update User Data
+export const updateUser = baseApi + '/user';

@@ -100,7 +100,6 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
         });
       }
       if (payload.event === 'signIn') {
-        console.log('a user has signed in!');
         // Store Login Data on app storage
         fillLoginData(payload.data);
         dispatch({
