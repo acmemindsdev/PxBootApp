@@ -44,6 +44,11 @@ export const GET_OTP = 'GET_OTP';
 export const GET_OTP_SUCCESS = 'GET_OTP_SUCCESS';
 export const GET_OTP_ERROR = 'GET_OTP_ERROR';
 
+// Add Birth Date
+export const ADD_BIRTH_DATE = 'ADD_BIRTH_DATE';
+export const ADD_BIRTH_DATE_SUCCESS = 'ADD_BIRTH_DATE_SUCCESS';
+export const ADD_BIRTH_DATE_ERROR = 'ADD_BIRTH_DATE_ERROR';
+
 // Temporary UserName
 export const USER_ID = 'USER_ID';
 
@@ -154,9 +159,9 @@ export const updateDateOfBirth = (
     clientCall({
       dispatch: dispatch,
       types: {
-        ACTION: VERIFICATION_CODE_SUBMIT,
-        SUCCESS: VERIFICATION_CODE_SUBMIT_SUCCESS,
-        ERROR: VERIFICATION_CODE_SUBMIT_ERROR,
+        ACTION: ADD_BIRTH_DATE,
+        SUCCESS: ADD_BIRTH_DATE_SUCCESS,
+        ERROR: ADD_BIRTH_DATE_ERROR,
       },
       apiPath: API.updateUser + `/${userId}`,
       params: {

@@ -13,3 +13,6 @@ export const verifyMobileOTP =
 
 // Update User Data
 export const updateUser = baseApi + '/user';
+
+// Create Content Id to upload media
+export const getContent = baseApi + '/content';

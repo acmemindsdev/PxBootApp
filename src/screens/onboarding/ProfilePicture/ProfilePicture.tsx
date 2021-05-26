@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
-import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
+import { MediaContentProp, uploadMedia } from 'src/state/media/mediaAction';
 import {
   launchImageLibrary,
   ImageLibraryOptions,
@@ -15,11 +15,10 @@ import {
 
 interface IProps {
   navigation: any;
-  fetchMobileOTP: any;
-  setMobileNumber: any;
+  uploadMedia: any;
 }
 
-const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
+const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [imageSrc, setImageSrc] = useState({});
 
@@ -27,8 +26,17 @@ const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
     Keyboard.dismiss();
     setShowButtonLoader(true);
 
-    fetchMobileOTP(
-      'data.dateOfBirth',
+    // Create Parameters of Uploading Image
+    const mediaParam: MediaContentProp = {
+      file_Info: imageSrc,
+      entity_type: 'PATIENT',
+      entity_id: 1,
+      content_type: 'Image',
+      content_tag: 'profile_picture',
+    };
+
+    uploadMedia(
+      mediaParam,
       response => {
         setShowButtonLoader(false);
         console.log('Payload', response);
@@ -41,6 +49,7 @@ const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
       },
       (error: any) => {
         setShowButtonLoader(false);
+        console.log('error is', JSON.stringify(error));
         if (get(error, 'payload.code', '') === 'UserNotFoundException') {
         } else {
         }
@@ -62,7 +71,7 @@ const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
       } else if (response.errorCode) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else {
-        console.log('Response = ', response.uri);
+        console.log('Response = ', response);
         setImageSrc(response);
       }
     });
@@ -95,6 +104,5 @@ const ProfilePicture = ({ navigation, fetchMobileOTP }: IProps) => {
 };
 
 export default connect(() => ({}), {
-  fetchMobileOTP,
-  setMobileNumber,
+  uploadMedia,
 })(ProfilePicture);
