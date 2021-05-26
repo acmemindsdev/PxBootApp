@@ -26,6 +26,8 @@ export function withTitleLayout<P extends IProps>(
           return (
             <Title style={{ textAlign: 'center' }}>{'Profile Picture'}</Title>
           );
+        case OnboardingNavigationScreen.exceptionalCare:
+          return <Title>{'Select what exceptional care looks to you'}</Title>;
 
         default:
           return null;
@@ -41,16 +43,8 @@ export function withTitleLayout<P extends IProps>(
           }}
           behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={100}>
-          <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            keyboardShouldPersistTaps={'handled'}>
-            <View style={{ marginBottom: 20 }}>{Title_Description()}</View>
-            <WrappedComponent {...props} />
-          </ScrollView>
+          <View style={{ marginBottom: 20 }}>{Title_Description()}</View>
+          <WrappedComponent {...props} />
         </KeyboardAvoidingView>
       </WrapperStyled>
     );

@@ -50,6 +50,7 @@ export const NavigationScreen = {
 // Set Onboarding Navigation Enum
 export const OnboardingNavigationScreen = {
   profilePicture: 'Add Profile Picture',
+  exceptionalCare: 'Exceptional Care',
 };
 
 const Navigation = () => {

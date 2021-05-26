@@ -5,6 +5,7 @@ import SocialLogin from './SocialLogin';
 import PasswordHint from './PasswordHint';
 import FormItem from './FormItem';
 import ProfileAvatar from './ProfileAvatar';
+import ExceptionalCareList from './ExceptionalCareList';
 
 export {
   /**
@@ -20,4 +21,5 @@ export {
   PasswordHint,
   FormItem,
   ProfileAvatar,
+  ExceptionalCareList,
 };

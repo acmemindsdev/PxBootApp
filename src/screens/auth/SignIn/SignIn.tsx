@@ -161,9 +161,10 @@ const SignInLayout = ({
         <BottomView>
           <TextButton
             style={{ bottom: 0, alignSelf: 'flex-end' }}
-            onPress={() =>
-              navigation?.push(NavigationScreen.signUpOptions, {})
-            }>
+            onPress={() => {
+              showOnboarding(true);
+              // navigation?.push(NavigationScreen.signUpOptions, {})
+            }}>
             <Text1>{'New to PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>
               {'Register'}

@@ -4,16 +4,6 @@ import theme from 'src/theme';
 import { CustomTextProp } from './Typo';
 import { StyledProps } from 'styled-components';
 
-const TypoStyles = (props: CustomTextProp) => {
-  const { colors } = theme;
-  const styles: StyledProps<any> = {
-    color: props.color ? props.color : theme.colors.black90,
-    opacity: props.color ? 1 : 0.8,
-  };
-
-  return styles;
-};
-
 export const TitleStyled = styled(Title)<CustomTextProp>`
   font-weight: ${(props: CustomTextProp) =>
     props.fontWeight ? props.fontWeight : 700};
@@ -21,6 +11,7 @@ export const TitleStyled = styled(Title)<CustomTextProp>`
     props.color ? props.color : theme.colors.black90};
   font-size: 24px;
   line-height: 29px;
+  letter-spacing: 0px;
 `;
 
 export const SubheadingStyled = styled(Subheading)<CustomTextProp>`
@@ -30,6 +21,7 @@ export const SubheadingStyled = styled(Subheading)<CustomTextProp>`
     props.color ? props.color : theme.colors.black90};
   font-size: 18px;
   line-height: 22px;
+  letter-spacing: 0px;
 `;
 
 export const ParagraphStyled = styled(Paragraph)<CustomTextProp>`
@@ -40,6 +32,7 @@ export const ParagraphStyled = styled(Paragraph)<CustomTextProp>`
   opacity: ${(props: CustomTextProp) => (props.color ? 1 : 0.8)};
   font-size: 16px;
   line-height: 22px;
+  letter-spacing: 0px;
 `;
 
 export const Text1Styled = styled(Text)<CustomTextProp>`
@@ -61,4 +54,5 @@ export const Text2Styled = styled(Text)<CustomTextProp>`
   opacity: ${(props: CustomTextProp) => (props.color ? 1 : 0.8)};
   font-size: 16px;
   line-height: 17px;
+  letter-spacing: 0px;
 `;

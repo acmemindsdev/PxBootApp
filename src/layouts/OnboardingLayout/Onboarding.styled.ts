@@ -3,6 +3,6 @@ import theme from 'src/theme';
 
 export const WrapperStyled = styled.View`
   flex: 1;
-  padding: 32px;
+  padding: 32px 20px;
   background-color: ${theme.colors.white};
 `;
