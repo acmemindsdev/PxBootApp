@@ -43,7 +43,6 @@ export const uploadMedia = (
   onSuccess: any,
   onError: any,
 ) => {
-  console.log('media data is');
   return (dispatch: any) =>
     clientCall({
       dispatch: dispatch,
@@ -52,19 +51,12 @@ export const uploadMedia = (
         SUCCESS: UPLOAD_MEDIA_SUCCESS,
         ERROR: UPLOAD_MEDIA_ERROR,
       },
-      apiPath: API.getContent,
-      params: {
-        entity_type: params.entity_type,
-        entity_id: params.entity_id,
-        content_type: params.content_type,
-        content_title: params.content_title,
+      path: API.getContent,
+      body: {
+        ...params,
         storage_usage_bytes: get(params.file_Info, 'fileSize', 0),
         mime_type: get(params.file_Info, 'type', 'image/jpeg'),
         filename: get(params.file_Info, 'fileName', ''),
-        caption: params.caption,
-        inline_data: params.inline_data,
-        content_order: params.content_order,
-        content_tag: params.content_tag,
       },
       onSuccess: (response: any) => {
         const apiUrl = get(response, 'payload.data.data.signedURL', '');

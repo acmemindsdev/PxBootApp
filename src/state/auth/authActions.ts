@@ -108,8 +108,8 @@ export const fetchMobileOTP = (
         SUCCESS: GET_OTP_SUCCESS,
         ERROR: GET_OTP_ERROR,
       },
-      apiPath: API.getMobileOTP,
-      params: {
+      path: API.getMobileOTP,
+      body: {
         phone: mobileNumber,
       },
       onSuccess: onSuccess,
@@ -132,8 +132,8 @@ export const verifyMobileOTP = (
         SUCCESS: VERIFICATION_CODE_SUBMIT_SUCCESS,
         ERROR: VERIFICATION_CODE_SUBMIT_ERROR,
       },
-      apiPath: API.verifyMobileOTP,
-      params: {
+      path: API.verifyMobileOTP,
+      body: {
         otp: code,
         phone: mobileNumber,
       },
@@ -163,8 +163,8 @@ export const updateDateOfBirth = (
         SUCCESS: ADD_BIRTH_DATE_SUCCESS,
         ERROR: ADD_BIRTH_DATE_ERROR,
       },
-      apiPath: API.updateUser + `/${userId}`,
-      params: {
+      path: API.updateUser + `/${userId}`,
+      body: {
         date_of_birth: date_of_birth,
       },
       onSuccess: onSuccess,

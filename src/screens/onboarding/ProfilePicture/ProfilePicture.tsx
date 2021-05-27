@@ -10,9 +10,7 @@ import { ContainedButton, OutlineButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import {
-  OnboardingNavigationScreen,
-} from 'src/navigation/Navigator';
+import { OnboardingNavigationScreen } from 'src/navigation/Navigator';
 import { MediaContentProp, uploadMedia } from 'src/state/media/mediaAction';
 import {
   launchImageLibrary,

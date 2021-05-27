@@ -10,13 +10,13 @@ import { useSelector } from 'react-redux';
 import TokenBridge from 'src/storage/Token.bridge';
 import { checkTokenValidity } from './CognitoMethods';
 
-interface IFetchOptions {
+export type IFetchOptions = {
   path: string;
   method?: Method;
   body?: any;
   headers?: any;
   noAuth?: boolean;
-}
+};
 
 // Add a request interceptor
 axios.interceptors.request.use(requestInterceptor);

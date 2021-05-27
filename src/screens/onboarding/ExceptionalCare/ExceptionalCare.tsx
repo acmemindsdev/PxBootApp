@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, Keyboard } from 'react-native';
 import {
   MainView,
@@ -11,24 +11,26 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
-import { fetchMobileOTP, setMobileNumber } from 'src/state/auth/authActions';
+import { loadExceptionalCareList } from 'src/state/patient/patientAction';
+import { UserInfo } from 'src/storage/UserData';
 
 interface IProps {
   navigation: any;
-  fetchMobileOTP: any;
+  loadExceptionalCareList: any;
   setMobileNumber: any;
 }
 
-const ExceptionalCare = ({ navigation, fetchMobileOTP }: IProps) => {
+const ExceptionalCare = ({ navigation, loadExceptionalCareList }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [imageSrc, setImageSrc] = useState({});
 
-  const onSubmit = () => {
-    Keyboard.dismiss();
-    setShowButtonLoader(true);
+  // Get User Id
+  const userID = UserInfo.userID();
 
-    fetchMobileOTP(
-      'data.dateOfBirth',
+  useEffect(() => {
+    setShowButtonLoader(true);
+    loadExceptionalCareList(
+      userID,
       response => {
         setShowButtonLoader(false);
         console.log('Payload', response);
@@ -39,11 +41,30 @@ const ExceptionalCare = ({ navigation, fetchMobileOTP }: IProps) => {
         } else {
         }
       },
-      (error: any) => {
+      () => {
         setShowButtonLoader(false);
-        if (get(error, 'payload.code', '') === 'UserNotFoundException') {
+      },
+    );
+  }, []);
+
+  const onSubmit = () => {
+    Keyboard.dismiss();
+    setShowButtonLoader(true);
+
+    loadExceptionalCareList(
+      userID,
+      response => {
+        setShowButtonLoader(false);
+        console.log('Payload', response);
+        if (get(response, 'payload.data.data.otp', '') !== '') {
+          navigation?.push(NavigationScreen.codeVerification, {
+            fromSocial: true,
+          });
         } else {
         }
+      },
+      () => {
+        setShowButtonLoader(false);
       },
     );
   };
@@ -74,6 +95,5 @@ const ExceptionalCare = ({ navigation, fetchMobileOTP }: IProps) => {
 };
 
 export default connect(() => ({}), {
-  fetchMobileOTP,
-  setMobileNumber,
+  loadExceptionalCareList,
 })(ExceptionalCare);
