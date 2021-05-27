@@ -60,15 +60,20 @@ export const fetchData = async <T = any>({
     } catch (e) {
       console.log('Unable to refresh Token', e);
     }
+    config.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      ...headers,
+    };
+
     // const tokens = await TokenBridge.getTokens();
     // headers.Authorization = get(tokens, 'id_token', '');
+  } else {
+    config.headers = {
+      Accept: '*/*',
+      ...headers,
+    };
   }
-
-  config.headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-    ...headers,
-  };
 
   if (method === 'GET') {
     config.params = body;

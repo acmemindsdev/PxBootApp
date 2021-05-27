@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
 import { StatusBar, Keyboard } from 'react-native';
-import { MainView, ActionButtonContainer } from './ProfilePicture.styled';
+import {
+  MainView,
+  ActionButtonContainer,
+  SnackbarStyled,
+} from './ProfilePicture.styled';
 import { ProfileAvatar } from 'src/components';
 import { ContainedButton, OutlineButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { NavigationScreen } from 'src/navigation/Navigator';
+import {
+  OnboardingNavigationScreen,
+} from 'src/navigation/Navigator';
 import { MediaContentProp, uploadMedia } from 'src/state/media/mediaAction';
 import {
   launchImageLibrary,
@@ -21,6 +27,8 @@ interface IProps {
 const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [imageSrc, setImageSrc] = useState({});
+  const [showSnackbar, setShowSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   const onSubmit = () => {
     Keyboard.dismiss();
@@ -39,20 +47,14 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
       mediaParam,
       response => {
         setShowButtonLoader(false);
-        console.log('Payload', response);
-        if (get(response, 'payload.data.data.otp', '') !== '') {
-          navigation?.push(NavigationScreen.codeVerification, {
-            fromSocial: true,
-          });
-        } else {
-        }
+        console.log('Payload', JSON.stringify(response));
+        navigation?.push(OnboardingNavigationScreen.exceptionalCare, {});
       },
       (error: any) => {
         setShowButtonLoader(false);
         console.log('error is', JSON.stringify(error));
-        if (get(error, 'payload.code', '') === 'UserNotFoundException') {
-        } else {
-        }
+        setSnackbarMessage('Something went wrong. Please try again later');
+        setShowSnackbar(true);
       },
     );
   };
@@ -98,6 +100,12 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
             {'Save'}
           </ContainedButton>
         </ActionButtonContainer>
+        <SnackbarStyled
+          visible={showSnackbar}
+          duration={2000}
+          onDismiss={() => setShowSnackbar(false)}>
+          {snackbarMessage}
+        </SnackbarStyled>
       </MainView>
     </>
   );
