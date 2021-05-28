@@ -162,8 +162,7 @@ const SignInLayout = ({
           <TextButton
             style={{ bottom: 0, alignSelf: 'flex-end' }}
             onPress={() => {
-              showOnboarding(true);
-              // navigation?.push(NavigationScreen.signUpOptions, {})
+              navigation?.push(NavigationScreen.signUpOptions, {});
             }}>
             <Text1>{'New to PX Boost? '}</Text1>
             <Text1 color={theme.colors.primary} fontWeight={FontWeights.bold}>

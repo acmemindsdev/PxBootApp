@@ -57,10 +57,6 @@ const CodeVerification = (props: IProps) => {
     console.log('ref is', JSON.stringify(otpRef));
   }, [otpRef]);
 
-  type FormData = {
-    mobileNumber: string;
-  };
-
   const onSubmit = () => {
     setFetchError(false);
     setShowButtonLoader(true);
@@ -86,7 +82,6 @@ const CodeVerification = (props: IProps) => {
         },
         (error: any) => {
           setShowButtonLoader(false);
-          props.navigation?.push(NavigationScreen.verificationSuccess, {});
           setFetchError(true);
           console.log('error', error);
         },
@@ -173,7 +168,7 @@ const CodeVerification = (props: IProps) => {
               styles.inputStyles,
               code.length === 6 && styles.filled,
             ]}
-            handleChange={code => {
+            handleChange={(code: string) => {
               setCode(code);
               setFetchError(false);
             }}

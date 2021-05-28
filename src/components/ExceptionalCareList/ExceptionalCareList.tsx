@@ -3,6 +3,7 @@ import { FlatList } from 'react-native';
 import ListItem from './List_Item';
 import includes from 'lodash/includes';
 import filter from 'lodash/filter';
+import get from 'lodash/get';
 
 type IProp = {
   data: any[];
@@ -31,9 +32,21 @@ const ExceptionalCareList = (prop: IProp) => {
     prop.selectedData(selectedRowItem);
   }, [selectedRowItem]);
 
+  useEffect(() => {
+    // Add Mapped exceptional cared data into selected item
+    const mappedData = filter(prop.data, value =>
+      get(value, 'ispatientmapped', false),
+    );
+    // merge array
+    const mergeArray = selectedRowItem.concat(mappedData);
+    setSelectedRowItem(mergeArray);
+  }, [prop.data]);
+
   return (
     <FlatList
       data={Object(prop.data)}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       renderItem={({ item, index }) => (
         <ListItem
           dataItem={item}

@@ -23,7 +23,7 @@ const ProfileAvatar = (prop: ProfileAvatarProp) => {
               borderRadius: prop.size,
             }}
             resizeMode="cover"
-            source={prop.source}
+            source={!isEmpty(prop.source.uri) ? prop.source : null}
           />
           {isEmpty(prop.source.uri) && (
             <IconStyled size={prop.size / 2.5} name="md-person-outline" />

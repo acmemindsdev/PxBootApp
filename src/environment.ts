@@ -5,13 +5,13 @@ const CURRENT_ENVIRONMENT = 'develop';
 
 const defaultEnv = {
   isDevelopment: true,
-  API_PATH: 'https://dx12h04woe.execute-api.us-east-1.amazonaws.com/dev',
+  API_PATH: 'https://1roq8vo9yf.execute-api.us-east-1.amazonaws.com/dev',
 };
 
 const ENV = {
   dev: {
     ...defaultEnv,
-    API_PATH: 'https://dx12h04woe.execute-api.us-east-1.amazonaws.com/dev',
+    API_PATH: 'https://1roq8vo9yf.execute-api.us-east-1.amazonaws.com/dev',
   },
   staging: {
     ...defaultEnv,

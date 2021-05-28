@@ -4,6 +4,7 @@ import {
   MainView,
   ActionButtonContainer,
   SubTitle,
+  DividerStyled,
 } from './ExceptionalCare.styled';
 import { ExceptionalCareList } from 'src/components';
 import { ContainedButton } from 'src/components/Button';
@@ -11,21 +12,38 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavigationScreen } from 'src/navigation/Navigator';
-import { loadExceptionalCareList } from 'src/state/patient/patientAction';
+import {
+  loadExceptionalCareList,
+  setExceptionalCare_to_user,
+  ExceptionalCareProp,
+} from 'src/state/patient/patientAction';
+import { getExceptionalCare } from 'src/state/patient/patientReducer';
 import { UserInfo } from 'src/storage/UserData';
+import { includes } from 'lodash';
 
 interface IProps {
   navigation: any;
   loadExceptionalCareList: any;
-  setMobileNumber: any;
+  setExceptionalCare_to_user: any;
+  exceptionalCare: any;
 }
 
-const ExceptionalCare = ({ navigation, loadExceptionalCareList }: IProps) => {
+const ExceptionalCare = ({
+  navigation,
+  loadExceptionalCareList,
+  setExceptionalCare_to_user,
+  exceptionalCare,
+}: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
-  const [imageSrc, setImageSrc] = useState({});
+  const [selectedExceptionCareData, setSelectedExceptionCareData] = useState(
+    [],
+  );
 
   // Get User Id
   const userID = UserInfo.userID();
+
+  const isLoading = get(exceptionalCare, 'loading', false);
+  const exceptionalCareList = get(exceptionalCare, 'list', []);
 
   useEffect(() => {
     setShowButtonLoader(true);
@@ -47,21 +65,51 @@ const ExceptionalCare = ({ navigation, loadExceptionalCareList }: IProps) => {
     );
   }, []);
 
+  /**
+   * Create Array of object to map/un-map exceptional care to user
+   * @param allExceptionalCare All Exceptional Care list
+   * @param selectedExceptionalCare Selected Exceptional Care list
+   * @param onSuccess Call Back Method for Success response
+   * @param onError Call Back Method for Error response
+   */
+  const exceptionalCareData = (
+    allExceptionalCare: [],
+    selectedExceptionalCare: any[],
+  ) => {
+    let returnData: [ExceptionalCareProp] | any[] = [];
+    allExceptionalCare.map(data => {
+      const isExist = includes(selectedExceptionalCare, data);
+      const isAlreadyMapped = get(data, 'ispatientmapped', false);
+      const needToRemove = isAlreadyMapped && !isExist;
+      if (isExist) {
+        const dataObj: ExceptionalCareProp = {
+          exceptionalCareId: get(data, 'id', 0),
+          setActiveStatus: 'ACTIVE',
+        };
+        returnData.push(dataObj);
+      } else if (needToRemove) {
+        const dataObj: ExceptionalCareProp = {
+          exceptionalCareId: get(data, 'id', 0),
+          setActiveStatus: 'DELETED',
+        };
+        returnData.push(dataObj);
+      }
+    });
+    return returnData;
+  };
+
   const onSubmit = () => {
     Keyboard.dismiss();
     setShowButtonLoader(true);
-
-    loadExceptionalCareList(
+    console.log(
+      'selected data is',
+      exceptionalCareData(exceptionalCareList, selectedExceptionCareData),
+    );
+    setExceptionalCare_to_user(
       userID,
-      response => {
+      exceptionalCareData(exceptionalCareList, selectedExceptionCareData),
+      () => {
         setShowButtonLoader(false);
-        console.log('Payload', response);
-        if (get(response, 'payload.data.data.otp', '') !== '') {
-          navigation?.push(NavigationScreen.codeVerification, {
-            fromSocial: true,
-          });
-        } else {
-        }
       },
       () => {
         setShowButtonLoader(false);
@@ -69,22 +117,27 @@ const ExceptionalCare = ({ navigation, loadExceptionalCareList }: IProps) => {
     );
   };
 
+  const isSubmitButtonDisable = isEmpty(
+    exceptionalCareData(exceptionalCareList, selectedExceptionCareData),
+  );
+
   return (
     <>
       <StatusBar barStyle="light-content" />
       <MainView>
         <SubTitle>Select one or multiple options</SubTitle>
         <ExceptionalCareList
-          data={['1', '2', '3']}
+          data={exceptionalCareList}
           selectedData={(dataList: []) => {
-            console.log('array is', dataList);
+            setSelectedExceptionCareData(dataList);
           }}
         />
+        <DividerStyled />
         <ActionButtonContainer>
           <ContainedButton
             fullWidth
             loading={showButtonLoader}
-            disabled={isEmpty(imageSrc)}
+            disabled={isSubmitButtonDisable}
             onPress={onSubmit}>
             {'Done'}
           </ContainedButton>
@@ -94,6 +147,10 @@ const ExceptionalCare = ({ navigation, loadExceptionalCareList }: IProps) => {
   );
 };
 
-export default connect(() => ({}), {
-  loadExceptionalCareList,
-})(ExceptionalCare);
+export default connect(
+  state => ({ exceptionalCare: getExceptionalCare(state) }),
+  {
+    loadExceptionalCareList,
+    setExceptionalCare_to_user,
+  },
+)(ExceptionalCare);
