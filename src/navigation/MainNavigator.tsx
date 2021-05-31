@@ -6,13 +6,12 @@ import {
 import theme from 'src/theme';
 import { TouchableOpacity } from 'react-native';
 import {
-  OnboardingNavigationScreen,
+  MainNavigationScreen,
   HeaderLogo,
   customHeaderStyle,
 } from './Navigator';
 // Main Screens
-import ProfilePicture from 'src/screens/onboarding/ProfilePicture';
-import ExceptionalCare from 'src/screens/onboarding/ExceptionalCare';
+import SelectHospital from 'src/screens/main/SelectHospital';
 
 const RootStack = createStackNavigator();
 
@@ -25,20 +24,9 @@ const MainNavigator = () => {
         headerBackTitleVisible: false,
       }}>
       <RootStack.Screen
-        name={OnboardingNavigationScreen.profilePicture}
-        options={({ navigation }) => ({
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        })}
-        component={ProfilePicture}
-      />
-      <RootStack.Screen
-        name={OnboardingNavigationScreen.exceptionalCare}
-        options={({ navigation }) => ({
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        })}
-        component={ExceptionalCare}
+        name={MainNavigationScreen.selectHospital}
+        options={{ headerShown: false }}
+        component={SelectHospital}
       />
     </RootStack.Navigator>
   );

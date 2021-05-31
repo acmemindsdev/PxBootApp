@@ -22,3 +22,6 @@ export const submitContent = baseApi + '/content/submitcontent';
 
 // Patient Related api
 export const patient = baseApi + '/patient';
+
+// Fetch Hospital List api
+export const hospitalList = baseApi + '/hospital/list';

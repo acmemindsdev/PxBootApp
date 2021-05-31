@@ -62,6 +62,12 @@ export const OnboardingNavigationScreen = {
   exceptionalCare: 'Exceptional Care',
 };
 
+// Set Main Navigation Enum
+export const MainNavigationScreen = {
+  selectHospital: 'Select Hospital',
+  exceptionalCare: 'Exceptional Care',
+};
+
 const Navigation = () => {
   const loginData = useSelector(state => getLoginData(state));
   const showOnboarding = useSelector(state => getOnboarding(state));

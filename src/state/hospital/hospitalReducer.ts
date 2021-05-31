@@ -1,46 +1,46 @@
 import {
-  GET_EXCEPTIONAL_CARE,
-  GET_EXCEPTIONAL_CARE_SUCCESS,
-  GET_EXCEPTIONAL_CARE_ERROR,
-} from './patientAction';
+  GET_HOSPITAL_LIST,
+  GET_HOSPITAL_LIST_SUCCESS,
+  GET_HOSPITAL_LIST_ERROR,
+} from './hospitalAction';
 import get from 'lodash/get';
 
 // Default State
 const initialState = {
-  exceptionalCare: {
+  fetchHospitals: {
     loading: false,
     fetchError: false,
     list: [],
   },
 };
 
-const patientReducer = (state = initialState, action) => {
+const hospitalReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_EXCEPTIONAL_CARE:
+    case GET_HOSPITAL_LIST:
       return {
         ...state,
-        exceptionalCare: {
-          ...state.exceptionalCare,
+        fetchHospitals: {
+          ...state.fetchHospitals,
           loading: true,
           fetchError: false,
           list: [],
         },
       };
-    case GET_EXCEPTIONAL_CARE_SUCCESS:
+    case GET_HOSPITAL_LIST_SUCCESS:
       return {
         ...state,
-        exceptionalCare: {
-          ...state.exceptionalCare,
+        fetchHospitals: {
+          ...state.fetchHospitals,
           loading: false,
           fetchError: false,
           list: get(action.payload, 'data.data', []),
         },
       };
-    case GET_EXCEPTIONAL_CARE_ERROR:
+    case GET_HOSPITAL_LIST_ERROR:
       return {
         ...state,
-        exceptionalCare: {
-          ...state.exceptionalCare,
+        fetchHospitals: {
+          ...state.fetchHospitals,
           loading: false,
           fetchError: true,
         },
@@ -52,7 +52,7 @@ const patientReducer = (state = initialState, action) => {
 
 // Selectors
 
-// Get Exceptional Care Data
-export const getExceptionalCare = state => state.patient.exceptionalCare;
+// Get Hospital List
+export const getHospital = state => state.hospital.fetchHospitals;
 
-export default patientReducer;
+export default hospitalReducer;
