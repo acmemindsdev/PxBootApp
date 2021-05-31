@@ -23,6 +23,7 @@ import { Title, Subheading } from 'src/components/Typography';
 import { IconButton, Card } from 'react-native-paper';
 import { rgba } from 'polished';
 import theme from 'src/theme';
+import Geolocation from 'react-native-geolocation-service';
 
 interface IProps {
   navigation: any;
@@ -36,20 +37,45 @@ const SelectHospital = ({
   fetchHospital,
 }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
+  const [locationPermission, setLocationPermission] = useState(false);
 
   const isLoading = get(fetchHospital, 'loading', false);
   const nearestHospital = get(fetchHospital, 'list.[0]', {});
   const hospitalName = get(nearestHospital, 'name', '');
   const hospitalAddress = get(nearestHospital, 'formatted_address', '');
 
+  const getLocationPermission = async () => {
+    const hasLocationPermission = await Geolocation.requestAuthorization(
+      'always',
+    );
+    console.log('Permission is ', hasLocationPermission);
+    if (hasLocationPermission === 'granted') {
+      Geolocation.getCurrentPosition(
+        position => {
+          console.log('Location data is ', position);
+          // Get nearest hospital by lat long
+          const params: SearchHospitalProp = {
+            coordinate: {
+              lat: position.coords.latitude,
+              long: position.coords.longitude,
+            },
+          };
+          // Load Hospital List
+          loadHospitalList(params);
+        },
+        error => {
+          // See error code charts below.
+          console.log(error.code, error.message);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      );
+    }
+  };
+
   useEffect(() => {
+    getLocationPermission();
+
     //30.31351593174034, 78.04782280120017
-    // Get nearest hospital by lat long
-    const params: SearchHospitalProp = {
-      coordinate: { lat: 30.765, long: 76.775 },
-    };
-    // Load Hospital List
-    loadHospitalList(params);
   }, []);
 
   const onSubmit = () => {
