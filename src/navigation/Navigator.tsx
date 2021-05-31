@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -10,8 +10,17 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import SplashScreen from 'react-native-splash-screen';
 import AuthNavigator from './AuthNavigator';
 import OnboardingNavigator from './OnboardingNavigator';
-import { getOnboarding } from 'src/state/auth/authReducer';
-import { useSelector } from 'react-redux';
+import {
+  getOnboarding,
+  getLoginData,
+  getDialCode,
+} from 'src/state/auth/authReducer';
+import { setLoginResponse } from 'src/state/auth/authActions';
+import { useSelector, useDispatch } from 'react-redux';
+import AsyncStore from 'src/storage/AsyncStore';
+import { get, isEmpty } from 'lodash';
+import MainNavigator from './MainNavigator';
+import { UserInfo } from 'src/storage/UserData';
 
 // Navigation Header Image
 export const HeaderLogo = () => {
@@ -54,27 +63,58 @@ export const OnboardingNavigationScreen = {
 };
 
 const Navigation = () => {
+  const loginData = useSelector(state => getLoginData(state));
   const showOnboarding = useSelector(state => getOnboarding(state));
+  const dial = useSelector(state => getDialCode(state));
 
-  // Uncomment to check is user logged in or not
-  // try {
-  //   await AsyncStore.getItem('loginData', {}).then(data => {
-  //     dispatch(setLoginResponse(data));
-  //     console.log(data);
-  //   });
-  //   console.log('user data saved successful');
-  // } catch (error) {
-  //   console.log('error user data save: ', error);
-  // }
+  // Check is phone verified
+  const phoneVerified = get(
+    loginData,
+    'signInUserSession.idToken.payload.phone_number_verified',
+    false,
+  );
+  // check is birth date entered
+  const isBirthDateAdded = !isEmpty(
+    get(loginData, 'signInUserSession.idToken.payload.birthdate', ''),
+  );
 
-  //Hide Splash screen on app load.
+  // check is user have all info and its logged in
+  const isUserLoggedIn = isBirthDateAdded && phoneVerified;
+
+  const dispatch = useDispatch();
+
+  const getInfoFromStorage = async () => {
+    try {
+      await AsyncStore.getItem('loginData', {}).then(data => {
+        if (get(data, 'username', false)) {
+          dispatch(setLoginResponse(data));
+        }
+        SplashScreen.hide();
+      });
+    } catch (error) {
+      console.log('error fetching login data', error);
+      SplashScreen.hide();
+    }
+  };
+
+  useMemo(() => getInfoFromStorage(), []);
+
+  // //Hide Splash screen on app load.
   useEffect(() => {
-    SplashScreen.hide();
-  });
+    console.log(' showOnboarding dfdf', showOnboarding, dial);
+  }, [showOnboarding, dial]);
 
   return (
     <NavigationContainer>
-      {!showOnboarding ? <AuthNavigator /> : <OnboardingNavigator />}
+      {isUserLoggedIn ? (
+        showOnboarding ? (
+          <OnboardingNavigator />
+        ) : (
+          <MainNavigator />
+        )
+      ) : (
+        <AuthNavigator />
+      )}
     </NavigationContainer>
   );
 };

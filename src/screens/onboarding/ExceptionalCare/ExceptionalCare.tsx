@@ -11,7 +11,7 @@ import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { NavigationScreen } from 'src/navigation/Navigator';
+import { showOnboarding } from 'src/state/auth/authActions';
 import {
   loadExceptionalCareList,
   setExceptionalCare_to_user,
@@ -26,6 +26,7 @@ interface IProps {
   loadExceptionalCareList: any;
   setExceptionalCare_to_user: any;
   exceptionalCare: any;
+  showOnboarding: any;
 }
 
 const ExceptionalCare = ({
@@ -33,6 +34,7 @@ const ExceptionalCare = ({
   loadExceptionalCareList,
   setExceptionalCare_to_user,
   exceptionalCare,
+  showOnboarding,
 }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [selectedExceptionCareData, setSelectedExceptionCareData] = useState(
@@ -46,23 +48,8 @@ const ExceptionalCare = ({
   const exceptionalCareList = get(exceptionalCare, 'list', []);
 
   useEffect(() => {
-    setShowButtonLoader(true);
-    loadExceptionalCareList(
-      userID,
-      response => {
-        setShowButtonLoader(false);
-        console.log('Payload', response);
-        if (get(response, 'payload.data.data.otp', '') !== '') {
-          navigation?.push(NavigationScreen.codeVerification, {
-            fromSocial: true,
-          });
-        } else {
-        }
-      },
-      () => {
-        setShowButtonLoader(false);
-      },
-    );
+    // Load Exceptional Care data
+    loadExceptionalCareList(userID);
   }, []);
 
   /**
@@ -91,6 +78,7 @@ const ExceptionalCare = ({
         const dataObj: ExceptionalCareProp = {
           exceptionalCareId: get(data, 'id', 0),
           setActiveStatus: 'DELETED',
+          existingId: get(data, 'existingpatientexceptioncareid', 0),
         };
         returnData.push(dataObj);
       }
@@ -110,6 +98,7 @@ const ExceptionalCare = ({
       exceptionalCareData(exceptionalCareList, selectedExceptionCareData),
       () => {
         setShowButtonLoader(false);
+        showOnboarding(false);
       },
       () => {
         setShowButtonLoader(false);
@@ -152,5 +141,6 @@ export default connect(
   {
     loadExceptionalCareList,
     setExceptionalCare_to_user,
+    showOnboarding,
   },
 )(ExceptionalCare);

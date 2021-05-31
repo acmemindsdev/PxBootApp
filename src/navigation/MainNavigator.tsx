@@ -10,51 +10,25 @@ import {
   HeaderLogo,
   customHeaderStyle,
 } from './Navigator';
-import { FontWeights, Text1 } from 'src/components/Typography';
-import { useDispatch } from 'react-redux';
-import { showOnboarding } from 'src/state/auth/authActions';
-
-// Onboarding Screens
+// Main Screens
 import ProfilePicture from 'src/screens/onboarding/ProfilePicture';
 import ExceptionalCare from 'src/screens/onboarding/ExceptionalCare';
 
 const RootStack = createStackNavigator();
 
-// Navigation Stack for Onboarding Screen
-const OnboardingNavigator = () => {
-  const dispatch = useDispatch();
-  // Header Skip Button
-  const SkipButton = ({ onPress }) => {
-    return (
-      <TouchableOpacity
-        style={{ marginRight: 22, padding: 8 }}
-        onPress={onPress}>
-        <Text1 fontWeight={FontWeights.bold} color={theme.colors.white}>
-          SKIP
-        </Text1>
-      </TouchableOpacity>
-    );
-  };
-
+// Navigation Stack for Main Screens
+const MainNavigator = () => {
   return (
     <RootStack.Navigator
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         headerBackTitleVisible: false,
-        headerLeft: () => null,
       }}>
       <RootStack.Screen
         name={OnboardingNavigationScreen.profilePicture}
         options={({ navigation }) => ({
           headerTitle: () => <HeaderLogo />,
           headerStyle: customHeaderStyle,
-          headerRight: () => (
-            <SkipButton
-              onPress={() =>
-                navigation.navigate(OnboardingNavigationScreen.exceptionalCare)
-              }
-            />
-          ),
         })}
         component={ProfilePicture}
       />
@@ -63,9 +37,6 @@ const OnboardingNavigator = () => {
         options={({ navigation }) => ({
           headerTitle: () => <HeaderLogo />,
           headerStyle: customHeaderStyle,
-          headerRight: () => (
-            <SkipButton onPress={() => dispatch(showOnboarding(false))} />
-          ),
         })}
         component={ExceptionalCare}
       />
@@ -73,4 +44,4 @@ const OnboardingNavigator = () => {
   );
 };
 
-export default OnboardingNavigator;
+export default MainNavigator;

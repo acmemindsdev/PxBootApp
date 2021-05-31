@@ -41,6 +41,7 @@ export const loadExceptionalCareList = (
 export type ExceptionalCareProp = {
   exceptionalCareId: number;
   setActiveStatus: 'ACTIVE' | 'DELETED';
+  existingId?: number;
 };
 
 /**

@@ -35,7 +35,7 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
     // Create Parameters of Uploading Image
     const mediaParam: MediaContentProp = {
       file_Info: imageSrc,
-      entity_type: 'PATIENT',
+      entity_type: 'USER',
       entity_id: 1,
       content_type: 'Image',
       content_tag: 'profile_picture',

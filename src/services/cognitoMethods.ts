@@ -24,12 +24,14 @@ import {
   RESEND_CODE_ERROR,
   setUsername,
   setMobileNumber,
+  showOnboarding,
 } from 'src/state/auth/authActions';
 import { fillLoginData } from 'src/storage/UserData';
 import get from 'lodash/get';
 import TokenBridge from 'src/storage/Token.bridge';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import { Linking } from 'react-native';
+import isEmpty from 'lodash/isEmpty';
 
 const busListeners = {};
 
@@ -92,7 +94,7 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
     });
     return registerListener('auth', 'social', data => {
       const { payload } = data;
-      console.log('auth response', JSON.stringify(payload));
+      // console.log('auth response', JSON.stringify(payload));
       if (payload.event === 'codeFlow') {
         console.log('auth initialize');
         dispatch({
@@ -100,12 +102,26 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
         });
       }
       if (payload.event === 'signIn') {
-        // Store Login Data on app storage
-        fillLoginData(payload.data);
+        // Check is phone verified
+        const phoneVerified = get(
+          payload.data,
+          'signInUserSession.idToken.payload.phone_number_verified',
+          false,
+        );
+        // check is birth date entered
+        const isBirthDateAdded = !isEmpty(
+          get(payload.data, 'signInUserSession.idToken.payload.birthdate', ''),
+        );
+        // store on redux for temporary
         dispatch({
           type: SOCIAL_LOGIN_SUCCESS,
           payload: JSON.stringify(payload.data),
         });
+        if (phoneVerified && isBirthDateAdded) {
+          // Store Login Data on app storage
+          fillLoginData(payload.data);
+          dispatch(showOnboarding(true));
+        }
       }
       if (payload.event === 'signOut') {
         console.log('a user has signed out!');

@@ -44,6 +44,7 @@ export const fetchData = async <T = any>({
 }: IFetchOptions): Promise<FetchResponse<T> | never> => {
   const curToken = axios.CancelToken.source();
   const cToken = curToken.token;
+  console.log('request data: \n api: ', path, '\n Params: ', body);
   // const token = useSelector(state => getAuthorizeToken(state));
 
   let config: AxiosRequestConfig = {

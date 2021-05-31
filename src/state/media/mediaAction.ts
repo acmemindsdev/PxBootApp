@@ -60,7 +60,7 @@ export const uploadMedia = (
       },
       onSuccess: (response: any) => {
         const apiUrl = get(response, 'payload.data.data.signedURL', '');
-        const token = get(response, 'payload.data.data.id', '');
+        const token = get(response, 'payload.data.data.token', '');
         // Upload Binary data on s3 bucket
         uploadBinaryDataS3Bucket(
           apiUrl,
@@ -131,8 +131,8 @@ const mapMedia_to_user = (
   onError: any,
 ) => {
   fetchData({
-    path: API.getContent + `/${token}`,
-    body: {},
+    path: API.submitContent,
+    body: { token: token },
     method: 'PUT',
   })
     .then(json => {

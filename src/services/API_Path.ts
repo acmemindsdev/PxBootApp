@@ -15,7 +15,10 @@ export const verifyMobileOTP =
 export const updateUser = baseApi + '/user';
 
 // Create Content Id to upload media
-export const getContent = baseApi + '/content';
+export const getContent = baseApi + '/content/getSignedURL';
+
+// submitContent Content token for upload media
+export const submitContent = baseApi + '/content/submitcontent';
 
 // Patient Related api
 export const patient = baseApi + '/patient';
