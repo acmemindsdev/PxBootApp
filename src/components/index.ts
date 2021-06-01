@@ -6,6 +6,7 @@ import PasswordHint from './PasswordHint';
 import FormItem from './FormItem';
 import ProfileAvatar from './ProfileAvatar';
 import ExceptionalCareList from './ExceptionalCareList';
+import SkeletonLoader from './SkeletonLoader';
 
 export {
   /**
@@ -13,6 +14,7 @@ export {
    */
   Divider,
   TextInput,
+  SkeletonLoader,
   /**
    * Custom components
    */

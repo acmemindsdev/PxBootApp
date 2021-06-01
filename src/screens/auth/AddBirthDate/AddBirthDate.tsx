@@ -33,9 +33,6 @@ const AddBirthDate = (prop: IProps) => {
 
   const socialResponseData = useSelector(state => getSocialLoginData(state));
 
-  // User Id
-  const userId = UserInfo.userID();
-
   type FormData = {
     dateOfBirth: string;
   };
@@ -55,7 +52,7 @@ const AddBirthDate = (prop: IProps) => {
     setShowButtonLoader(true);
 
     prop.updateDateOfBirth(
-      userId,
+      get(socialResponseData, 'username', ''),
       moment(data.dateOfBirth, DATE_FORMAT).format(DATE_FORMAT_SERVER),
       () => {
         setShowButtonLoader(false);

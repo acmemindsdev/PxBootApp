@@ -6,7 +6,7 @@ import {
   SubTitle,
   DividerStyled,
 } from './ExceptionalCare.styled';
-import { ExceptionalCareList } from 'src/components';
+import { ExceptionalCareList, SkeletonLoader } from 'src/components';
 import { ContainedButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
@@ -114,12 +114,17 @@ const ExceptionalCare = ({
     <>
       <StatusBar barStyle="light-content" />
       <MainView>
-        <SubTitle>Select one or multiple options</SubTitle>
+        {isLoading ? (
+          <SkeletonLoader height={30} width={200} />
+        ) : (
+          <SubTitle>Select one or multiple options</SubTitle>
+        )}
         <ExceptionalCareList
           data={exceptionalCareList}
           selectedData={(dataList: []) => {
             setSelectedExceptionCareData(dataList);
           }}
+          loading={isLoading}
         />
         <DividerStyled />
         <ActionButtonContainer>

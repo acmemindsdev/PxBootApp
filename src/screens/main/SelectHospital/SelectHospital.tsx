@@ -24,25 +24,34 @@ import { IconButton, Card } from 'react-native-paper';
 import { rgba } from 'polished';
 import theme from 'src/theme';
 import Geolocation from 'react-native-geolocation-service';
+import { setLoginResponse } from 'src/state/auth/authActions';
+import { SkeletonLoader } from 'src/components';
+import AsyncStore from 'src/storage/AsyncStore';
 
 interface IProps {
   navigation: any;
   loadHospitalList: any;
   fetchHospital: any;
+  setLoginResponse: any;
 }
 
 const SelectHospital = ({
   navigation,
   loadHospitalList,
   fetchHospital,
+  setLoginResponse,
 }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
-  const [locationPermission, setLocationPermission] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const isLoading = get(fetchHospital, 'loading', false);
+  const hospitalLoading = get(fetchHospital, 'loading', false);
   const nearestHospital = get(fetchHospital, 'list.[0]', {});
   const hospitalName = get(nearestHospital, 'name', '');
   const hospitalAddress = get(nearestHospital, 'formatted_address', '');
+
+  useEffect(() => {
+    setIsLoading(hospitalLoading);
+  }, [hospitalLoading]);
 
   const getLocationPermission = async () => {
     const hasLocationPermission = await Geolocation.requestAuthorization(
@@ -51,6 +60,9 @@ const SelectHospital = ({
     console.log('Permission is ', hasLocationPermission);
     if (hasLocationPermission === 'granted') {
       getLocation();
+    } else {
+      // Load Hospital List without lat long
+      loadHospitalList();
     }
   };
 
@@ -70,6 +82,7 @@ const SelectHospital = ({
         loadHospitalList(params);
       },
       error => {
+        setIsLoading(false);
         // See error code charts below.
         console.log(error.code, error.message);
       },
@@ -78,6 +91,7 @@ const SelectHospital = ({
   };
 
   useEffect(() => {
+    setIsLoading(true);
     if (Platform.OS === 'ios') {
       getLocationPermission();
     } else {
@@ -96,33 +110,84 @@ const SelectHospital = ({
     <>
       <StatusBar barStyle="dark-content" />
       <MainView>
-        <TopContainerView>
-          <Title>Hospital</Title>
-          <IconButton icon="close" onPress={() => {}} />
-        </TopContainerView>
+        {isLoading ? (
+          <SkeletonLoader width="60%" height={30} />
+        ) : (
+          <TopContainerView>
+            <Title>Hospital</Title>
+            <IconButton
+              icon="close"
+              onPress={() => {
+                AsyncStore.removeItem('loginData').then(() => {
+                  setLoginResponse({});
+                });
+              }}
+            />
+          </TopContainerView>
+        )}
         <Card style={{ elevation: 4 }}>
-          <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+          {isLoading ? (
+            <SkeletonLoader height={200} />
+          ) : (
+            <Card.Cover
+              source={{
+                uri: !isLoading ? 'https://picsum.photos/700' : undefined,
+              }}
+            />
+          )}
           <CardContent>
-            <HospitalName>{hospitalName}</HospitalName>
-            <Address>{hospitalAddress}</Address>
-            <ContainedButton fullWidth onPress={onSubmit}>
-              {'This is my Hospital'}
-            </ContainedButton>
+            {isLoading ? (
+              <>
+                <SkeletonLoader height={34} />
+                <SkeletonLoader height={16} marginTop={12} />
+                <SkeletonLoader width={120} height={16} alignSelf="center" />
+                <SkeletonLoader height={46} marginTop={12} />
+              </>
+            ) : (
+              <>
+                <HospitalName>{hospitalName}</HospitalName>
+                <Address>{hospitalAddress}</Address>
+                <ContainedButton fullWidth onPress={onSubmit}>
+                  {'This is my Hospital'}
+                </ContainedButton>
+              </>
+            )}
           </CardContent>
         </Card>
-        <BottomContainerView>
-          <Subheading color={rgba(theme.colors.black90, 0.8)}>
-            {'Not your Hospital?'}
-          </Subheading>
-          <ActionButtonContainer>
-            <OutlineButton
-              fullWidth
-              loading={showButtonLoader}
-              onPress={() => {}}>
-              {'Search'}
-            </OutlineButton>
-          </ActionButtonContainer>
-        </BottomContainerView>
+        {isLoading ? (
+          <>
+            <SkeletonLoader
+              height={30}
+              width={'50%'}
+              marginTop={50}
+              alignSelf="center"
+            />
+            <SkeletonLoader height={46} width={'80%'} alignSelf="center" />
+          </>
+        ) : (
+          <BottomContainerView>
+            <SkeletonLoader height={16} />
+            {isLoading ? (
+              <>
+                <SkeletonLoader height={16} marginTop={12} />
+              </>
+            ) : (
+              <>
+                <Subheading color={rgba(theme.colors.black90, 0.8)}>
+                  {'Not your Hospital?'}
+                </Subheading>
+                <ActionButtonContainer>
+                  <OutlineButton
+                    fullWidth
+                    loading={showButtonLoader}
+                    onPress={() => {}}>
+                    {'Search'}
+                  </OutlineButton>
+                </ActionButtonContainer>
+              </>
+            )}
+          </BottomContainerView>
+        )}
       </MainView>
     </>
   );
@@ -131,4 +196,5 @@ const SelectHospital = ({
 export default connect(state => ({ fetchHospital: getHospital(state) }), {
   loadHospitalList,
   showOnboarding,
+  setLoginResponse,
 })(SelectHospital);

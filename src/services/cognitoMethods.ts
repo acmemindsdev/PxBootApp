@@ -25,6 +25,7 @@ import {
   setUsername,
   setMobileNumber,
   showOnboarding,
+  setLoginResponse,
 } from 'src/state/auth/authActions';
 import { fillLoginData } from 'src/storage/UserData';
 import get from 'lodash/get';
@@ -102,32 +103,54 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
         });
       }
       if (payload.event === 'signIn') {
-        // Check is phone verified
-        const phoneVerified = get(
-          payload.data,
-          'signInUserSession.idToken.payload.phone_number_verified',
-          false,
-        );
-        // check is birth date entered
-        const isBirthDateAdded = !isEmpty(
-          get(payload.data, 'signInUserSession.idToken.payload.birthdate', ''),
-        );
         // store on redux for temporary
         dispatch({
           type: SOCIAL_LOGIN_SUCCESS,
           payload: JSON.stringify(payload.data),
         });
-        if (phoneVerified && isBirthDateAdded) {
-          // Store Login Data on app storage
-          fillLoginData(payload.data);
-          dispatch(showOnboarding(true));
-        }
+        checkCurrentAuthentication(dispatch);
       }
       if (payload.event === 'signOut') {
         console.log('a user has signed out!');
       }
     });
   };
+};
+
+/**
+ * @public Check Current Authentication Status and save to Async Storage
+ * @param dispatch function to redux action
+ */
+export const checkCurrentAuthentication = (dispatch: any) => {
+  Auth.currentAuthenticatedUser()
+    .then(user => {
+      // Check is phone verified
+      const phoneVerified = get(
+        user,
+        'signInUserSession.idToken.payload.phone_number_verified',
+        false,
+      );
+      // check is birth date entered
+      const isBirthDateAdded = !isEmpty(
+        get(user, 'signInUserSession.idToken.payload.birthdate', ''),
+      );
+      console.log(
+        'is verified ',
+        phoneVerified,
+        isBirthDateAdded,
+        JSON.stringify(user),
+      );
+      if (phoneVerified && isBirthDateAdded) {
+        // Store Login Data on app storage
+        fillLoginData(user);
+        dispatch(setLoginResponse(user));
+        dispatch(showOnboarding(true));
+      }
+    })
+    .catch(error => {
+      // get error on current authentication user
+      console.log('error fetch', error);
+    });
 };
 
 /* Adds a listener to under the UNIQUE name, to the channel

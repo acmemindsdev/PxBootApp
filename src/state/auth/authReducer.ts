@@ -84,7 +84,6 @@ const authReducer = (state = initialState, action) => {
           loading: false,
           error: false,
         },
-        loginData: JSON.parse(action.payload),
         jwtToken: get(
           JSON.parse(action.payload),
           'signInUserSession.idToken.jwtToken',
@@ -117,7 +116,7 @@ const authReducer = (state = initialState, action) => {
     case LOGGED_IN_SUCCESS:
       return {
         ...state,
-        loggedIn: action.payload,
+        loggedIn: JSON.parse(action.payload),
       };
     case ONBOARDING_SHOW:
       return {

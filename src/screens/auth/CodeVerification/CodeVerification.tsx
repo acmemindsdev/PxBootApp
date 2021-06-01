@@ -99,7 +99,6 @@ const CodeVerification = (props: IProps) => {
         },
         (error: any) => {
           setShowButtonLoader(false);
-          props.navigation?.push(NavigationScreen.verificationSuccess, {});
           setFetchError(true);
           console.log('error', error);
         },

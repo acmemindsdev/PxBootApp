@@ -4,10 +4,13 @@ import ListItem from './List_Item';
 import includes from 'lodash/includes';
 import filter from 'lodash/filter';
 import get from 'lodash/get';
+import times from 'lodash/times';
+import { SkeletonLoader } from '..';
 
 type IProp = {
   data: any[];
   selectedData: any;
+  loading?: boolean;
 };
 
 const ExceptionalCareList = (prop: IProp) => {
@@ -43,19 +46,27 @@ const ExceptionalCareList = (prop: IProp) => {
   }, [prop.data]);
 
   return (
-    <FlatList
-      data={Object(prop.data)}
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-      renderItem={({ item, index }) => (
-        <ListItem
-          dataItem={item}
-          selected={includes(selectedRowItem, item)}
-          handleRowClick={toggleRowSelection}
-        />
-      )}
-      keyExtractor={(item, index) => item.id}
-    />
+    <>
+      <FlatList
+        data={Object(prop.loading ? times(10) : prop.data)}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item, index }) => (
+          <>
+            {prop.loading ? (
+              <SkeletonLoader height={60} />
+            ) : (
+              <ListItem
+                dataItem={item}
+                selected={includes(selectedRowItem, item)}
+                handleRowClick={toggleRowSelection}
+              />
+            )}
+          </>
+        )}
+        keyExtractor={(item, index) => item.id}
+      />
+    </>
   );
 };
 

@@ -107,7 +107,7 @@ const Navigation = () => {
 
   // //Hide Splash screen on app load.
   useEffect(() => {
-    console.log(' showOnboarding dfdf', showOnboarding, dial);
+    console.log(' showOnboarding dfdf', showOnboarding, dial, loginData);
   }, [showOnboarding, dial]);
 
   return (

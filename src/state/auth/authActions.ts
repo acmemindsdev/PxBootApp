@@ -1,4 +1,5 @@
 import * as API from 'src/services/API_Path';
+import { checkCurrentAuthentication } from 'src/services/CognitoMethods';
 import { clientCall } from '../middleware';
 
 export const SELECTED_COUNTRY = 'SELECTED_COUNTRY';
@@ -137,7 +138,10 @@ export const verifyMobileOTP = (
         otp: code,
         phone: mobileNumber,
       },
-      onSuccess: onSuccess,
+      onSuccess: payload => {
+        checkCurrentAuthentication(dispatch);
+        onSuccess(payload);
+      },
       onError: onError,
     });
 };
