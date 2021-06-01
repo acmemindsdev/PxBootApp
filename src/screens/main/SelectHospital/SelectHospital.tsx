@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, Keyboard } from 'react-native';
+import { StatusBar, Keyboard, Platform } from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
@@ -50,30 +50,39 @@ const SelectHospital = ({
     );
     console.log('Permission is ', hasLocationPermission);
     if (hasLocationPermission === 'granted') {
-      Geolocation.getCurrentPosition(
-        position => {
-          console.log('Location data is ', position);
-          // Get nearest hospital by lat long
-          const params: SearchHospitalProp = {
-            coordinate: {
-              lat: position.coords.latitude,
-              long: position.coords.longitude,
-            },
-          };
-          // Load Hospital List
-          loadHospitalList(params);
-        },
-        error => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
-      );
+      getLocation();
     }
   };
 
+  // Get Location and find near by hospital
+  const getLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        console.log('Location data is ', position);
+        // Get nearest hospital by lat long
+        const params: SearchHospitalProp = {
+          coordinate: {
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
+          },
+        };
+        // Load Hospital List
+        loadHospitalList(params);
+      },
+      error => {
+        // See error code charts below.
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
+  };
+
   useEffect(() => {
-    getLocationPermission();
+    if (Platform.OS === 'ios') {
+      getLocationPermission();
+    } else {
+      getLocation();
+    }
 
     //30.31351593174034, 78.04782280120017
   }, []);
