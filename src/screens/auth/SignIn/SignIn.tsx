@@ -78,6 +78,14 @@ const SignInLayout = ({
             type: 'manual',
             message: 'Incorrect Mobile Number/Password. Try again',
           });
+        } else if (
+          get(error, 'payload.code', '') === 'UserNotConfirmedException'
+        ) {
+          // Navigate to confirm mobile number screen to confirm sign up
+          // navigation?.push(NavigationScreen.confirmMobileNumber, {
+          //   needConfirmSignUp: true,
+          // });
+          alert('Account not verified');
         } else {
           setError('mobileNumber', {
             type: 'manual',

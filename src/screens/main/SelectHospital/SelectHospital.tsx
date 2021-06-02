@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, Keyboard, Platform } from 'react-native';
+import {
+  StatusBar,
+  Keyboard,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import {
   MainView,
   ActionButtonContainer,
@@ -54,9 +59,12 @@ const SelectHospital = ({
   }, [hospitalLoading]);
 
   const getLocationPermission = async () => {
-    const hasLocationPermission = await Geolocation.requestAuthorization(
-      'always',
-    );
+    const hasLocationPermission =
+      Platform.OS === 'ios'
+        ? await Geolocation.requestAuthorization('always')
+        : await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
     console.log('Permission is ', hasLocationPermission);
     if (hasLocationPermission === 'granted') {
       getLocation();
@@ -82,21 +90,25 @@ const SelectHospital = ({
         loadHospitalList(params);
       },
       error => {
+        // Load Hospital List
+        loadHospitalList();
         setIsLoading(false);
         // See error code charts below.
         console.log(error.code, error.message);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        showLocationDialog: true,
+        forceRequestLocation: true,
+      },
     );
   };
 
   useEffect(() => {
     setIsLoading(true);
-    if (Platform.OS === 'ios') {
-      getLocationPermission();
-    } else {
-      getLocation();
-    }
+    getLocationPermission();
 
     //30.31351593174034, 78.04782280120017
   }, []);

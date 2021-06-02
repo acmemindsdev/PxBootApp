@@ -61,7 +61,7 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
   const launchImagePicker = () => {
     let options: ImageLibraryOptions = {
       quality: 0.7,
-      mediaType: 'mixed',
+      mediaType: 'photo',
       maxWidth: 500,
       maxHeight: 500,
     };

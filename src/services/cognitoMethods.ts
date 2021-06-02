@@ -122,7 +122,7 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
  * @param dispatch function to redux action
  */
 export const checkCurrentAuthentication = (dispatch: any) => {
-  Auth.currentAuthenticatedUser()
+  Auth.currentAuthenticatedUser({ bypassCache: true })
     .then(user => {
       // Check is phone verified
       const phoneVerified = get(
@@ -134,17 +134,11 @@ export const checkCurrentAuthentication = (dispatch: any) => {
       const isBirthDateAdded = !isEmpty(
         get(user, 'signInUserSession.idToken.payload.birthdate', ''),
       );
-      console.log(
-        'is verified ',
-        phoneVerified,
-        isBirthDateAdded,
-        JSON.stringify(user),
-      );
       if (phoneVerified && isBirthDateAdded) {
+        // dispatch(showOnboarding(true));
         // Store Login Data on app storage
         fillLoginData(user);
         dispatch(setLoginResponse(user));
-        dispatch(showOnboarding(true));
       }
     })
     .catch(error => {
@@ -293,6 +287,8 @@ export const confirmRegistration = (
           type: VERIFICATION_CODE_SUBMIT_SUCCESS,
           payload: json,
         });
+        dispatch(showOnboarding(true));
+        checkCurrentAuthentication(dispatch);
         onSuccess && onSuccess(success);
       })
       .catch(err => {

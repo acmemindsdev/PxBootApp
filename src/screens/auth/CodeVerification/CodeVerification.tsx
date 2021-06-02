@@ -17,7 +17,11 @@ import {
   confirmRegistration,
   resendRegistrationCode,
 } from 'src/services/CognitoMethods';
-import { fetchMobileOTP, verifyMobileOTP } from 'src/state/auth/authActions';
+import {
+  fetchMobileOTP,
+  verifyMobileOTP,
+  showOnboarding,
+} from 'src/state/auth/authActions';
 import { getUserName, getMobileNumber } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
 import { NavigationScreen } from 'src/navigation/Navigator';
@@ -34,6 +38,7 @@ interface IProps {
   resendRegistrationCode: any;
   fetchMobileOTP: any;
   verifyMobileOTP: any;
+  showOnboarding: any;
 }
 
 const CodeVerification = (props: IProps) => {
@@ -75,7 +80,9 @@ const CodeVerification = (props: IProps) => {
         response => {
           setShowButtonLoader(false);
           if (get(response, 'payload.data.verified', false) === true) {
-            props.navigation?.push(NavigationScreen.verificationSuccess, {});
+            console.log('success');
+            props.showOnboarding(true);
+            // props.navigation?.push(NavigationScreen.verificationSuccess, {});
           } else {
             setFetchError(true);
           }
@@ -95,7 +102,7 @@ const CodeVerification = (props: IProps) => {
         },
         () => {
           setShowButtonLoader(false);
-          props.navigation?.push(NavigationScreen.verificationSuccess, {});
+          // props.navigation?.push(NavigationScreen.verificationSuccess, {});
         },
         (error: any) => {
           setShowButtonLoader(false);
@@ -215,5 +222,6 @@ export default connect(
     resendRegistrationCode,
     verifyMobileOTP,
     fetchMobileOTP,
+    showOnboarding,
   },
 )(CodeVerification);
