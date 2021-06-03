@@ -21,6 +21,7 @@ import {
   fetchMobileOTP,
   verifyMobileOTP,
   showOnboarding,
+  HANDLE_LOGIN_ERROR,
 } from 'src/state/auth/authActions';
 import { getUserName, getMobileNumber } from 'src/state/auth/authReducer';
 import get from 'lodash/get';
@@ -62,6 +63,20 @@ const CodeVerification = (props: IProps) => {
     console.log('ref is', JSON.stringify(otpRef));
   }, [otpRef]);
 
+  // Get Need Confirm sign up if user try to login un-confirmed account
+  const sendAuthenticationCode = get(
+    props,
+    'route.params.needConfirmSignUp',
+    false,
+  );
+
+  useEffect(() => {
+    if (sendAuthenticationCode) {
+      // Send Authentication code again
+      resendCode();
+    }
+  }, [sendAuthenticationCode]);
+
   const onSubmit = () => {
     setFetchError(false);
     setShowButtonLoader(true);
@@ -92,8 +107,12 @@ const CodeVerification = (props: IProps) => {
         },
         (error: any) => {
           setShowButtonLoader(false);
-          setFetchError(true);
           console.log('error', error);
+          if (get(error, 'type', '') === HANDLE_LOGIN_ERROR) {
+            props.navigation?.navigate(NavigationScreen.login, {});
+          } else {
+            setFetchError(true);
+          }
         },
       );
     } else {
@@ -110,8 +129,12 @@ const CodeVerification = (props: IProps) => {
         },
         (error: any) => {
           setShowButtonLoader(false);
-          setFetchError(true);
           console.log('error', error);
+          if (get(error, 'type', '') === HANDLE_LOGIN_ERROR) {
+            props.navigation?.navigate(NavigationScreen.login, {});
+          } else {
+            setFetchError(true);
+          }
         },
       );
     }

@@ -15,7 +15,7 @@ import { Text1, FontWeights } from 'src/components/Typography';
 import theme from 'src/theme';
 import { connect } from 'react-redux';
 import { requestLogin } from 'src/services/CognitoMethods';
-import { showOnboarding } from 'src/state/auth/authActions';
+import { setUsername } from 'src/state/auth/authActions';
 import {
   isLoading,
   fetchError,
@@ -32,14 +32,14 @@ interface IProps {
   fetchError?: boolean;
   errorMessage?: string;
   loading?: boolean;
-  showOnboarding?: any;
+  setUsername?: any;
 }
 
 const SignInLayout = ({
   navigation,
   requestLogin,
   responseData,
-  showOnboarding,
+  setUsername,
   loading,
 }: IProps) => {
   const [dialCode, setDialCode] = useState('');
@@ -67,7 +67,7 @@ const SignInLayout = ({
       userName,
       data.password,
       () => {
-        showOnboarding(true);
+        console.log('Login Successful');
       },
       (error: any) => {
         if (
@@ -81,11 +81,13 @@ const SignInLayout = ({
         } else if (
           get(error, 'payload.code', '') === 'UserNotConfirmedException'
         ) {
-          // Navigate to confirm mobile number screen to confirm sign up
-          // navigation?.push(NavigationScreen.confirmMobileNumber, {
-          //   needConfirmSignUp: true,
-          // });
-          alert('Account not verified');
+          // set user name to confirm sign up
+          setUsername(userName);
+          // Navigate to confirm verification code screen to confirm sign up
+          navigation?.push(NavigationScreen.codeVerification, {
+            needConfirmSignUp: true,
+            password: data.password,
+          });
         } else {
           setError('mobileNumber', {
             type: 'manual',
@@ -191,7 +193,7 @@ export default connect(
     errorMessage: fetchErrorMessage(state),
   }),
   {
-    showOnboarding,
+    setUsername,
     requestLogin,
   },
 )(SignInLayout);
