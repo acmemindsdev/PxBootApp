@@ -65,6 +65,11 @@ export const ONBOARDING_SHOW = 'ONBOARDING_SHOW';
 // Login Response
 export const LOGIN_RESPONSE_DATA = 'LOGIN_RESPONSE_DATA';
 
+// Log Out
+export const LOG_OUT = 'LOG_OUT';
+export const LOG_OUT_SUCCESS = 'LOG_OUT_SUCCESS';
+export const LOG_OUT_ERROR = 'LOG_OUT_ERROR';
+
 // Redux Action to Set Selected Country object
 export const setSelectedCountry = item => ({
   type: SELECTED_COUNTRY,

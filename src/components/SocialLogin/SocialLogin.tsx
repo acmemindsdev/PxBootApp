@@ -54,7 +54,7 @@ const SocialLogin = (prop: IProp) => {
         prop.navigation?.push(NavigationScreen.confirmMobileNumber, {});
       } else {
         // Navigate to onboarding screen
-        dispatch(showOnboarding(true));
+        // dispatch(showOnboarding(true));
       }
     }
   }, [responseData]);

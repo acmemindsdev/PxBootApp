@@ -29,22 +29,22 @@ import { IconButton, Card } from 'react-native-paper';
 import { rgba } from 'polished';
 import theme from 'src/theme';
 import Geolocation from 'react-native-geolocation-service';
-import { setLoginResponse } from 'src/state/auth/authActions';
+import { signOut } from 'src/services/CognitoMethods';
 import { SkeletonLoader } from 'src/components';
-import AsyncStore from 'src/storage/AsyncStore';
+import { Auth } from 'aws-amplify';
 
 interface IProps {
   navigation: any;
   loadHospitalList: any;
   fetchHospital: any;
-  setLoginResponse: any;
+  signOut: any;
 }
 
 const SelectHospital = ({
   navigation,
   loadHospitalList,
   fetchHospital,
-  setLoginResponse,
+  signOut,
 }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -130,9 +130,7 @@ const SelectHospital = ({
             <IconButton
               icon="close"
               onPress={() => {
-                AsyncStore.removeItem('loginData').then(() => {
-                  setLoginResponse({});
-                });
+                signOut();
               }}
             />
           </TopContainerView>
@@ -208,5 +206,5 @@ const SelectHospital = ({
 export default connect(state => ({ fetchHospital: getHospital(state) }), {
   loadHospitalList,
   showOnboarding,
-  setLoginResponse,
+  signOut,
 })(SelectHospital);

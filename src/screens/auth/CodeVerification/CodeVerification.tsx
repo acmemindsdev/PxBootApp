@@ -72,6 +72,9 @@ const CodeVerification = (props: IProps) => {
       false,
     );
 
+    // Get Sign up password
+    const password = get(props, 'route.params.password', '');
+
     if (addMobileToSocialAccount) {
       // Verify OTP and Add number on social account
       props.verifyMobileOTP(
@@ -98,6 +101,7 @@ const CodeVerification = (props: IProps) => {
       props.confirmRegistration(
         {
           username: props.username,
+          password: password,
           authenticationCode: code,
         },
         () => {

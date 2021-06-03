@@ -22,6 +22,9 @@ import {
   RESEND_CODE,
   RESEND_CODE_SUCCESS,
   RESEND_CODE_ERROR,
+  LOG_OUT,
+  LOG_OUT_SUCCESS,
+  LOG_OUT_ERROR,
   setUsername,
   setMobileNumber,
   showOnboarding,
@@ -33,6 +36,7 @@ import TokenBridge from 'src/storage/Token.bridge';
 import InAppBrowser from 'react-native-inappbrowser-reborn';
 import { Linking } from 'react-native';
 import isEmpty from 'lodash/isEmpty';
+import AsyncStore from 'src/storage/AsyncStore';
 
 const busListeners = {};
 
@@ -45,12 +49,17 @@ Amplify.configure({
 });
 
 async function urlOpener(url, redirectUrl) {
-  await InAppBrowser.isAvailable();
+  await InAppBrowser.close();
+  console.log('urls ', url, redirectUrl);
+  if (redirectUrl === undefined) {
+    return;
+  }
   const result = await InAppBrowser.openAuth(url, redirectUrl, {
     showTitle: true,
     enableUrlBarHiding: true,
     enableDefaultShare: false,
-    ephemeralWebSession: false,
+    ephemeralWebSession: true,
+    forceCloseOnRedirection: true,
   });
 
   if (result.type === 'success') {
@@ -108,7 +117,23 @@ export const socialLogin = (provider: CognitoHostedUIIdentityProvider) => {
           type: SOCIAL_LOGIN_SUCCESS,
           payload: JSON.stringify(payload.data),
         });
-        checkCurrentAuthentication(dispatch);
+        // Check is phone verified
+        const phoneVerified = get(
+          payload.data,
+          'signInUserSession.idToken.payload.phone_number_verified',
+          false,
+        );
+        // check is birth date entered
+        const isBirthDateAdded = !isEmpty(
+          get(payload.data, 'signInUserSession.idToken.payload.birthdate', ''),
+        );
+        if (phoneVerified && isBirthDateAdded) {
+          // dispatch(showOnboarding(true));
+          // Store Login Data on app storage
+          fillLoginData(payload.data);
+          dispatch(setLoginResponse(payload.data));
+        }
+        // checkCurrentAuthentication(dispatch);
       }
       if (payload.event === 'signOut') {
         console.log('a user has signed out!');
@@ -134,6 +159,7 @@ export const checkCurrentAuthentication = (dispatch: any) => {
       const isBirthDateAdded = !isEmpty(
         get(user, 'signInUserSession.idToken.payload.birthdate', ''),
       );
+      console.log('is verified', phoneVerified, isBirthDateAdded, user);
       if (phoneVerified && isBirthDateAdded) {
         // dispatch(showOnboarding(true));
         // Store Login Data on app storage
@@ -268,11 +294,12 @@ export const forgotPasswordSubmit = (
 
 interface ConfirmRegistrationProps {
   username: string;
+  password: string;
   authenticationCode: string;
 }
 
 export const confirmRegistration = (
-  { username, authenticationCode }: ConfirmRegistrationProps,
+  { username, password, authenticationCode }: ConfirmRegistrationProps,
   onSuccess?: any,
   onError?: any,
 ) => {
@@ -283,13 +310,34 @@ export const confirmRegistration = (
 
     return Auth.confirmSignUp(username, authenticationCode)
       .then(json => {
-        const success = dispatch({
+        dispatch({
           type: VERIFICATION_CODE_SUBMIT_SUCCESS,
           payload: json,
         });
         dispatch(showOnboarding(true));
-        checkCurrentAuthentication(dispatch);
-        onSuccess && onSuccess(success);
+
+        dispatch(
+          requestLogin(
+            username,
+            password,
+            response => {
+              const payload = get(response, 'payload', {});
+              fillLoginData(payload);
+              dispatch(setLoginResponse(payload));
+              onSuccess && onSuccess(response);
+            },
+            error => {
+              console.log('error while sign in', error);
+              onError && onError(error);
+            },
+          ),
+        );
+
+        // return registerListener('auth', 'signup', data => {
+        //   const { payload } = data;
+        //   console.log('data retre', payload);
+        // }),
+        // checkCurrentAuthentication(dispatch);
       })
       .catch(err => {
         console.log('error:', err);
@@ -361,11 +409,30 @@ export const checkTokenValidity = async () => {
   });
 };
 
-export const signOut = async () => {
-  try {
-    await Auth.signOut().then(data => console.log(data));
-    console.log('user successfully signed out!');
-  } catch (error) {
-    console.log('error signing out: ', error);
-  }
+export const signOut = (onSuccess?: any, onError?: any) => {
+  return dispatch => {
+    dispatch({
+      type: LOG_OUT,
+    });
+
+    return Auth.signOut({ global: true })
+      .then(json => {
+        console.log('user successfully signed out!');
+        dispatch(setLoginResponse({}));
+        AsyncStore.removeItem('loginData');
+        const success = dispatch({
+          type: LOG_OUT_SUCCESS,
+          payload: json,
+        });
+        onSuccess && onSuccess(success);
+      })
+      .catch(err => {
+        console.log('error signing out: ', err);
+        const error = dispatch({
+          type: LOG_OUT_ERROR,
+          payload: err,
+        });
+        onError && onError(error);
+      });
+  };
 };

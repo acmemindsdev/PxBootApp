@@ -85,7 +85,9 @@ const SignUp = (props: IProps) => {
       data.email,
       data.confirmPassword,
       () => {
-        props.navigation?.push(NavigationScreen.codeVerification, {});
+        props.navigation?.push(NavigationScreen.codeVerification, {
+          password: data.confirmPassword,
+        });
         setShowButtonLoader(false);
       },
       (error: any) => {
