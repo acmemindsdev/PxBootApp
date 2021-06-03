@@ -332,12 +332,6 @@ export const confirmRegistration = (
             },
           ),
         );
-
-        // return registerListener('auth', 'signup', data => {
-        //   const { payload } = data;
-        //   console.log('data retre', payload);
-        // }),
-        // checkCurrentAuthentication(dispatch);
       })
       .catch(err => {
         console.log('error:', err);

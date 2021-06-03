@@ -154,7 +154,7 @@ const CodeVerification = (props: IProps) => {
         props.mobileNumber,
         response => {
           console.log('Payload', response);
-          if (get(response, 'payload.data.otp', '') !== '') {
+          if (get(response, 'payload.data.data.otp', '') !== '') {
             setShowSnackbar(true);
             setSnackbarMessage('Code Sent Successfully');
           } else {
