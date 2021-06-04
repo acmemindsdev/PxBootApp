@@ -56,6 +56,7 @@ export const fetchData = async <T = any>({
   if (noAuth === false) {
     try {
       await checkTokenValidity().then(token => {
+        console.log('Authorization Token ', token);
         headers.Authorization = token;
       });
     } catch (e) {

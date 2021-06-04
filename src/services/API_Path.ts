@@ -20,6 +20,9 @@ export const getContent = baseApi + '/content/getSignedURL';
 // submitContent Content token for upload media
 export const submitContent = baseApi + '/content/submitcontent';
 
+// Get Media list
+export const mediaContentList = baseApi + '/content/list';
+
 // Patient Related api
 export const patient = baseApi + '/patient';
 

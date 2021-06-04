@@ -36,7 +36,7 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
     const mediaParam: MediaContentProp = {
       file_Info: imageSrc,
       entity_type: 'USER',
-      entity_id: 1,
+      entity_id: 7,
       content_type: 'Image',
       content_tag: 'profile_picture',
     };
@@ -60,7 +60,6 @@ const ProfilePicture = ({ navigation, uploadMedia }: IProps) => {
   // Method for launch Native Image Gallery
   const launchImagePicker = () => {
     let options: ImageLibraryOptions = {
-      quality: 0.7,
       mediaType: 'photo',
       maxWidth: 500,
       maxHeight: 500,

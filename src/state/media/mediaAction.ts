@@ -2,15 +2,22 @@ import get from 'lodash/get';
 import * as API from 'src/services/API_Path';
 import { clientCall } from '../middleware';
 import { fetchData } from 'src/services/Fetch';
+import fs from 'react-native-fs';
+import { decode } from 'base64-arraybuffer';
 
-// Get Content
+// Upload Media
 export const UPLOAD_MEDIA = 'UPLOAD_MEDIA';
 export const UPLOAD_MEDIA_SUCCESS = 'UPLOAD_MEDIA_SUCCESS';
 export const UPLOAD_MEDIA_ERROR = 'UPLOAD_MEDIA_ERROR';
 
+// Get Media
+export const GET_MEDIA = 'GET_MEDIA';
+export const GET_MEDIA_SUCCESS = 'GET_MEDIA_SUCCESS';
+export const GET_MEDIA_ERROR = 'GET_MEDIA_ERROR';
+
 export interface MediaContentProp {
   file_Info: any;
-  entity_type: string;
+  entity_type: 'USER' | 'HOSPITAL';
   entity_id: number;
   content_type: string;
   content_title?: string;
@@ -20,16 +27,52 @@ export interface MediaContentProp {
   content_tag: string;
 }
 
+// Prop to fetch media
+export interface GetMediaContentProp {
+  entity_type: 'USER' | 'HOSPITAL';
+  entity_id: number;
+  content_tag: string;
+}
+
 /**
  * @private Create File Blob for upload on server
  * @param fileSrc Information About Media Content
  */
 const createFileBlob = async (fileSrc: any) => {
-  const uri = fileSrc.uri;
-  const response = await fetch(uri);
-  const fileBlob = await response.blob();
+  // const uri = fileSrc.uri;
+  // const response = await fetch(uri);
+  // const fileBlob = await response.blob();
+  const base64 = await fs.readFile(fileSrc.uri, 'base64');
+  const arrayBuffer = decode(base64);
 
-  return fileBlob;
+  return arrayBuffer;
+};
+
+/**
+ * @public Get list of content media
+ * @param params Information About Media Content
+ * @param onSuccess Call Back Method for Success response
+ * @param onError Call Back Method for Error response
+ */
+export const loadMedia = (
+  params: GetMediaContentProp,
+  onSuccess: any,
+  onError: any,
+) => {
+  return (dispatch: any) =>
+    clientCall({
+      dispatch: dispatch,
+      types: {
+        ACTION: GET_MEDIA,
+        SUCCESS: GET_MEDIA_SUCCESS,
+        ERROR: GET_MEDIA_ERROR,
+      },
+      path: API.mediaContentList,
+      body: params,
+      method: 'GET',
+      onSuccess: onSuccess,
+      onError: onError,
+    });
 };
 
 /**

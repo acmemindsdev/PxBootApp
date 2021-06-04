@@ -4,6 +4,7 @@ import {
   Keyboard,
   Platform,
   PermissionsAndroid,
+  ActivityIndicator,
 } from 'react-native';
 import {
   MainView,
@@ -13,12 +14,14 @@ import {
   HospitalName,
   Address,
   BottomContainerView,
+  ImageLoadingView,
 } from './SelectHospital.styled';
 import { ContainedButton, OutlineButton } from 'src/components/Button';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { showOnboarding } from 'src/state/auth/authActions';
+import { loadMedia, GetMediaContentProp } from 'src/state/media/mediaAction';
+import { mediaLoading, fetchMediaData } from 'src/state/media/mediaReducer';
 import {
   loadHospitalList,
   SearchHospitalProp,
@@ -37,6 +40,9 @@ interface IProps {
   navigation: any;
   loadHospitalList: any;
   fetchHospital: any;
+  loadMedia: any;
+  fetchHospitalImage: any;
+  hospitalImageLoading: boolean;
   signOut: any;
 }
 
@@ -44,19 +50,35 @@ const SelectHospital = ({
   navigation,
   loadHospitalList,
   fetchHospital,
+  loadMedia,
+  fetchHospitalImage,
+  hospitalImageLoading,
   signOut,
 }: IProps) => {
   const [showButtonLoader, setShowButtonLoader] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const hospitalLoading = get(fetchHospital, 'loading', false);
   const nearestHospital = get(fetchHospital, 'list.[0]', {});
   const hospitalName = get(nearestHospital, 'name', '');
   const hospitalAddress = get(nearestHospital, 'formatted_address', '');
+  const hospitalImageUrl = get(fetchHospitalImage, 'signedURL', undefined);
 
   useEffect(() => {
     setIsLoading(hospitalLoading);
   }, [hospitalLoading]);
+
+  useEffect(() => {
+    if (!isEmpty(nearestHospital)) {
+      const getMediaProp: GetMediaContentProp = {
+        content_tag: 'hospital_picture',
+        entity_id: get(nearestHospital, 'id', 0),
+        entity_type: 'HOSPITAL',
+      };
+      loadMedia(getMediaProp);
+    }
+  }, [nearestHospital]);
 
   const getLocationPermission = async () => {
     const hasLocationPermission =
@@ -139,11 +161,19 @@ const SelectHospital = ({
           {isLoading ? (
             <SkeletonLoader height={200} />
           ) : (
-            <Card.Cover
-              source={{
-                uri: !isLoading ? 'https://picsum.photos/700' : undefined,
-              }}
-            />
+            <>
+              <Card.Cover
+                onLoadEnd={() => setImageLoaded(true)}
+                source={{
+                  uri: !isLoading ? hospitalImageUrl : undefined, // 'https://picsum.photos/700'
+                }}
+              />
+              {(hospitalImageLoading || !imageLoaded) && (
+                <ImageLoadingView>
+                  <ActivityIndicator color={theme.colors.gray50} />
+                </ImageLoadingView>
+              )}
+            </>
           )}
           <CardContent>
             {isLoading ? (
@@ -203,8 +233,15 @@ const SelectHospital = ({
   );
 };
 
-export default connect(state => ({ fetchHospital: getHospital(state) }), {
-  loadHospitalList,
-  showOnboarding,
-  signOut,
-})(SelectHospital);
+export default connect(
+  state => ({
+    fetchHospital: getHospital(state),
+    fetchHospitalImage: fetchMediaData(state),
+    hospitalImageLoading: mediaLoading(state),
+  }),
+  {
+    loadHospitalList,
+    loadMedia,
+    signOut,
+  },
+)(SelectHospital);

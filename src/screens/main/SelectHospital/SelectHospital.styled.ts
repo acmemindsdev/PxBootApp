@@ -42,3 +42,11 @@ export const BottomContainerView = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+export const ImageLoadingView = styled.View`
+  position: absolute;
+  height: 200px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+`;
