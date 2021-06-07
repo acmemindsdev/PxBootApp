@@ -12,12 +12,15 @@ const SearchTemplate = ({ navigation }: IProps) => {
       <StatusBar barStyle="dark-content" />
       <MainView>
         <ContentView>
-          <Image source={require('src/assets/images/verified-user.png')} />
+          <Image
+            style={{ height: 128 }}
+            resizeMode="center"
+            source={require('src/assets/images/search-patient.png')}
+          />
         </ContentView>
         <ContentView>
-          <Subheading>{'Verification Successful'}</Subheading>
           <TextStyled>
-            {'You have successfully verified your account.'}
+            {'Please wait while we fetch your patient record'}
           </TextStyled>
         </ContentView>
       </MainView>

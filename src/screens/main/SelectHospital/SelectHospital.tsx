@@ -35,6 +35,7 @@ import Geolocation from 'react-native-geolocation-service';
 import { signOut } from 'src/services/CognitoMethods';
 import { SkeletonLoader } from 'src/components';
 import { Auth } from 'aws-amplify';
+import { MainNavigationScreen } from 'src/navigation/Navigator';
 
 interface IProps {
   navigation: any;
@@ -137,6 +138,7 @@ const SelectHospital = ({
 
   const onSubmit = () => {
     Keyboard.dismiss();
+    navigation?.navigate(MainNavigationScreen.searchTemplate);
     // setShowButtonLoader(true);
   };
 

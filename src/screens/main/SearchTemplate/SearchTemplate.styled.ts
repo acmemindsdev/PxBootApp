@@ -12,8 +12,10 @@ export const MainView = styled.View`
 export const ContentView = styled.View`
   margin-bottom: 18px;
   align-items: center;
+  width: 70%;
 `;
 
 export const TextStyled = styled(Paragraph)`
   margin: 4px 0px;
+  text-align: center;
 `;

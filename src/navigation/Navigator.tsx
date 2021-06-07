@@ -65,7 +65,7 @@ export const OnboardingNavigationScreen = {
 // Set Main Navigation Enum
 export const MainNavigationScreen = {
   selectHospital: 'Select Hospital',
-  exceptionalCare: 'Exceptional Care',
+  searchTemplate: 'Search',
 };
 
 const Navigation = () => {
