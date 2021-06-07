@@ -33,6 +33,18 @@ export const HeaderLogo = () => {
   );
 };
 
+// Navigation Header Back button
+export const HeaderBack = () => {
+  return (
+    <Icon
+      style={{ marginLeft: 16 }}
+      color={theme.colors.white}
+      size={28}
+      name="arrow-back"
+    />
+  );
+};
+
 // Navigation Header Bar Style
 export const customHeaderStyle = {
   backgroundColor: theme.colors.secondary,
@@ -66,6 +78,7 @@ export const OnboardingNavigationScreen = {
 export const MainNavigationScreen = {
   selectHospital: 'Select Hospital',
   searchTemplate: 'Search',
+  patientProfileList: 'Your Patient Profile',
 };
 
 const Navigation = () => {

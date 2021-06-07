@@ -9,9 +9,12 @@ import {
   MainNavigationScreen,
   HeaderLogo,
   customHeaderStyle,
+  HeaderBack,
 } from './Navigator';
+
 // Main Screens
 import SelectHospital from 'src/screens/main/SelectHospital';
+import PatientProfileList from 'src/screens/main/PatientProfileList';
 
 // Modal Screens
 import SearchTemplate from 'src/screens/main/SearchTemplate';
@@ -29,11 +32,18 @@ const MainNavigator = () => {
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         headerBackTitleVisible: false,
+        headerBackImage: () => <HeaderBack />,
+        headerStyle: customHeaderStyle,
+        headerTintColor: 'white',
       }}>
       <MainStack.Screen
         name={MainNavigationScreen.selectHospital}
         options={{ headerShown: false }}
         component={SelectHospital}
+      />
+      <MainStack.Screen
+        name={MainNavigationScreen.patientProfileList}
+        component={PatientProfileList}
       />
     </MainStack.Navigator>
   );

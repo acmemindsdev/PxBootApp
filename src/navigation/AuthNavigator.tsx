@@ -5,7 +5,12 @@ import {
 } from '@react-navigation/stack';
 import theme from 'src/theme';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { NavigationScreen, HeaderLogo, customHeaderStyle } from './Navigator';
+import {
+  NavigationScreen,
+  HeaderLogo,
+  customHeaderStyle,
+  HeaderBack,
+} from './Navigator';
 
 // Screens
 import SignIn from 'src/screens/auth/SignIn';
@@ -30,42 +35,23 @@ const AuthNavigator = () => {
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         headerBackTitleVisible: false,
-        headerBackImage: () => (
-          <Icon
-            style={{ marginLeft: 16 }}
-            color={theme.colors.white}
-            size={28}
-            name="arrow-back"
-          />
-        ),
+        headerBackImage: () => <HeaderBack />,
+        headerTitle: () => <HeaderLogo />,
+        headerStyle: customHeaderStyle,
+        headerTintColor: 'white',
       }}>
       <RootStack.Screen
         name={NavigationScreen.login}
         component={SignIn}
         options={{ headerShown: false }}
       />
-      <RootStack.Screen
-        name={NavigationScreen.signUp}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
-        component={SignUp}
-      />
+      <RootStack.Screen name={NavigationScreen.signUp} component={SignUp} />
       <RootStack.Screen
         name={NavigationScreen.forgotPassword}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
         component={ForgotPassword}
       />
       <RootStack.Screen
         name={NavigationScreen.resetPassword}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
         component={ResetPassword}
       />
       <RootStack.Screen
@@ -80,10 +66,6 @@ const AuthNavigator = () => {
       />
       <RootStack.Screen
         name={NavigationScreen.selectCountry}
-        options={{
-          headerStyle: customHeaderStyle,
-          headerTintColor: 'white',
-        }}
         component={CountryList}
       />
       <RootStack.Screen
@@ -93,34 +75,18 @@ const AuthNavigator = () => {
       />
       <RootStack.Screen
         name={NavigationScreen.confirmMobileNumber}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
         component={ConfirmMobileNumber}
       />
       <RootStack.Screen
         name={NavigationScreen.codeVerification}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
         component={CodeVerification}
       />
       <RootStack.Screen
         name={NavigationScreen.contentWebView}
-        options={{
-          headerStyle: customHeaderStyle,
-          headerTintColor: 'white',
-        }}
         component={ContentWebView}
       />
       <RootStack.Screen
         name={NavigationScreen.addBirthDate}
-        options={{
-          headerTitle: () => <HeaderLogo />,
-          headerStyle: customHeaderStyle,
-        }}
         component={AddBirthDate}
       />
     </RootStack.Navigator>

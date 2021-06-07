@@ -138,7 +138,8 @@ const SelectHospital = ({
 
   const onSubmit = () => {
     Keyboard.dismiss();
-    navigation?.navigate(MainNavigationScreen.searchTemplate);
+    //  navigation?.navigate(MainNavigationScreen.searchTemplate);
+    navigation?.push(MainNavigationScreen.patientProfileList);
     // setShowButtonLoader(true);
   };
 
